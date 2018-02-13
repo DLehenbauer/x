@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+/src/firmware/arduino-gm-synth/Release
+/src/firmware/arduino-gm-synth/Debug
