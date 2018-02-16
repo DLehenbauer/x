@@ -36,6 +36,13 @@ volatile InstrumentFlags _voiceFlags[Synth::numVoices] = { InstrumentFlags_None 
 uint8_t        v_waveform[256]                      = { 0 };
 #endif
 
+#ifdef __EMSCRIPTEN__
+uint16_t retValFromSample;
+#endif // __EMSCRIPTEN__
+
+// Audio output as biased/unsigned (0 signed -> 0x8000).
+uint16_t wavOut = 0x8000;	
+
 SIGNAL(TIMER2_COMPA_vect) {
     TIMSK2 = 0;         // Disable timer2 interrupts to prevent reentrancy.
     sei();              // Re-enable interrupts to ensure we do not miss MIDI events.
@@ -67,10 +74,7 @@ SIGNAL(TIMER2_COMPA_vect) {
 
     // Each interrupt, we transmit the previous output to the DAC concurrently with calculating
     // the next wavOut.  This avoids unproductive busy-waiting for SPI to finish.
-    
-    static uint16_t wavOut = 0x8000;                                    // Audio output calculated by previous ISR as
-                                                                        // biased/unsigned (0 signed -> 0x8000).
-    
+        
 #ifdef DAC    
     PORTB &= ~_BV(DDB2);                                                // Begin transmitting upper 8-bits to DAC.
     SPDR = wavOut >> 8;                                                 
@@ -119,9 +123,6 @@ SIGNAL(TIMER2_COMPA_vect) {
     
     wavOut = mix + 0x8000;                                              // Store resulting wave output for transmission on next interrupt.
 
-#ifdef __EMSCRIPTEN__
-	retValFromSample = wavOut;
-#else
 #ifdef DAC
     while (!(SPSR & _BV(SPIF)));                                        // SPI transfer should already be finished (i.e., loop exits immediately).
     PORTB |= _BV(DDB2);
@@ -131,9 +132,16 @@ SIGNAL(TIMER2_COMPA_vect) {
     OCR1B = wavOut >> 7;
     OCR1A = wavOut & 0x7F;
 #endif
-#endif    
+
     TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.
 }
+
+#ifdef __EMSCRIPTEN__
+double Synth::sample() {
+	TIMER2_COMPA_vect();
+	return (static_cast<double>(wavOut) - 32768L) / 32768L;
+}
+#endif // __EMSCRIPTEN__
 
 // Returns the next idle voice, if any.  If no voice is idle, uses ADSR stage and amplitude to
 // choose the best candidate for note-stealing.

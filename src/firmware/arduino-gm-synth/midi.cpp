@@ -84,7 +84,7 @@ void dispatchCommand() {
     }
 }
 
-void decode(uint8_t nextByte) {
+void midi_decode_byte(uint8_t nextByte) {
     if (nextByte & 0x80) {
         if (midiCmd == MidiCommand_Extended) {
             sysex(midiDataIndex, midiData);
@@ -114,6 +114,6 @@ void decode(uint8_t nextByte) {
 void midi_process() {
     uint8_t received;
     while (_midiBuffer.dequeue(received)) {
-        decode(received);
+        midi_decode_byte(received);
     }
 }

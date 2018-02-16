@@ -1,6 +1,6 @@
 ﻿#include <stdint.h>
 #include "midi.h"
-#include "synth.h"
+#include "midisynth.h"
 #include "instruments.h"
 #include "ssd1306.h"
 
@@ -25,44 +25,18 @@
 ssd1306 display;
 bool isEditing = false;
 
-uint8_t voiceToNote[Synth::numVoices];
-uint8_t voiceToChannel[Synth::numVoices];
-
-Synth synth;        //-Make a synth
-Instrument channels[16];
+MidiSynth synth;
 
 void noteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-    if (channel == 9) {
-        uint8_t index = note - 35;
-        if (index >= 46) { index = 45; }
-        
-        PercussiveInstrument drum;
-        Instruments::getDrum(index, drum);
-
-        Instruments::getInstrument(0x80 + index, channels[9]);
-        note = drum.note;
-    }
-    
-    uint8_t voice = synth.getNextVoice();
-    const Instrument& ch = channels[channel];
-    
-    synth.noteOn(voice, note, velocity, ch);
-
-    voiceToNote[voice] = note;
-    voiceToChannel[voice] = channel;
+	synth.midiNoteOn(channel, note, velocity);
 }
 
 void noteOff(uint8_t channel, uint8_t note) {
-    for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {
-        if (voiceToNote[voice] == note && voiceToChannel[voice] == channel) {
-            synth.noteOff(voice);
-            voiceToChannel[voice] = 0xFF;
-            voiceToNote[voice] = 0xFF;
-        }
-    }
+	synth.midiNoteOff(channel, note);
 }
 
 void sysex(uint8_t cbData, uint8_t data[]) {
+#if false
     if (data[0] != 0x7D) {
         return;
     }
@@ -121,13 +95,17 @@ void sysex(uint8_t cbData, uint8_t data[]) {
             }
         }
     }
+#endif
 }
 
+#if false
 void setWaveform(int8_t delta) {
     channels[0].wave += delta * 64;
 }
+#endif
 
 void controlChange(uint8_t channel, uint8_t knob, uint8_t value) {
+#if false
     if (!isEditing && knob != RECORD_BUTTON) {
         return;
     }
@@ -182,18 +160,15 @@ void controlChange(uint8_t channel, uint8_t knob, uint8_t value) {
         }
         */
     }
+#endif	
 }
 
-void programChange(uint8_t channel, uint8_t program) {
-    Instruments::getInstrument(program, channels[channel]);
+void programChange(uint8_t channel, uint8_t value) {
+    synth.midiPitchBend(channel, value);
 }
 
-void pitchBend(uint8_t midiChannel, int16_t value) {
-    for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {
-        if (voiceToChannel[voice] == midiChannel) {
-            synth.pitchBend(voice, value);
-        }
-    }
+void pitchBend(uint8_t channel, int16_t value) {
+	synth.midiPitchBend(channel, value);
 }
 
 #include <avr/io.h>
@@ -201,15 +176,6 @@ void pitchBend(uint8_t midiChannel, int16_t value) {
 void setup() {   
     midi_setup();
 
-    for (int i = 0; i < 16; i++) {
-        Instruments::getInstrument(0, channels[i]);
-    }
-
-    for (int i = 0; i < Synth::numVoices; i++) {
-        voiceToNote[i] = 0xFF;
-        voiceToChannel[i] = 0xFF;
-    }
-    
     display.begin();
     display.reset();
     display.setRegion(0, 127, 0, 7, 0);
@@ -259,6 +225,7 @@ void loop() {
     }
 }
 
+#ifndef __EMSCRIPTEN__
 int main() {
     setup();
     
@@ -268,3 +235,4 @@ int main() {
     
     return 0;
 }
+#endif // !__EMSCRIPTEN__

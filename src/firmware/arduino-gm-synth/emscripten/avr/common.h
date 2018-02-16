@@ -1,13 +1,13 @@
 /*
- * io.h
+ * common.h
  *
- * Created: 2/10/2018 3:40:05 PM
+ * Created: 2/10/2018 3:40:19 PM
  *  Author: danlehen
  */ 
 
 
-#ifndef IO_H_
-#define IO_H_
+#ifndef COMMON_H_
+#define COMMON_H_
 
 #include <stdint.h>
 
@@ -111,6 +111,9 @@ extern uint8_t ICR1H;
 #define ICR1H6 6
 #define ICR1H7 7
 
+extern uint8_t OCR1A;
+extern uint8_t OCR1B;
+
 extern uint8_t OCR2A;
 #define OCR2_0 0
 #define OCR2_1 1
@@ -169,4 +172,42 @@ extern uint8_t UCSR0B;
 #define TXCIE0 6
 #define RXCIE0 7
 
-#endif /* IO_H_ */
+extern uint8_t DDRD;
+#define DDD0 0
+#define DDD1 1
+#define DDD2 2
+#define DDD3 3
+#define DDD4 4
+#define DDD5 5
+#define DDD6 6
+#define DDD7 7
+
+extern uint8_t PORTD;
+#define PORTD0 0
+#define PORTD1 1
+#define PORTD2 2
+#define PORTD3 3
+#define PORTD4 4
+#define PORTD5 5
+#define PORTD6 6
+#define PORTD7 7
+
+void cli();
+void sei();
+
+extern uint8_t TIMSK1;
+#define TOIE1 0
+#define OCIE1A 1
+#define OCIE1B 2
+#define ICIE1 5
+
+extern uint8_t TIMSK2;
+#define OCIE2A 1
+
+#define SIGNAL(vector) \
+void vector()
+
+#define ISR(vector) \
+void vector()
+
+#endif /* COMMON_H_ */

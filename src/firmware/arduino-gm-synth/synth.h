@@ -11,9 +11,7 @@
 #define DAC
 
 #ifdef __EMSCRIPTEN__
-	//#define WAVE_EDIT
-	#undef DAC
-	static uint16_t retValFromSample;
+	#define DAC
 	void TIMER2_COMPA_vect();
 #endif
 
@@ -44,37 +42,17 @@ class Synth {
         }
         
         void setWaveform(uint8_t start, uint8_t bytes[], uint8_t length);
-		
+	
 #ifdef __EMSCRIPTEN__
 		Instrument instrument0;
 
-		void noteOnEm(uint8_t voice, uint8_t note, uint8_t midiVelocity, uint8_t instrumentIndex) {
+		void noteOnEm(uint8_t voice, uint8_t note, uint8_t velocity, uint8_t instrumentIndex) {
 			Instruments::getInstrument(instrumentIndex, instrument0);
-			this->noteOn(voice, note, midiVelocity, instrument0);
+			this->noteOn(voice, note, velocity, instrument0);
 		}
-
-		double sample() {
-			TIMER2_COMPA_vect();
-			return (static_cast<double>(retValFromSample) - 32768L) / 32768L;
-		}
-#endif
+		
+		double sample();
+#endif // __EMSCRIPTEN__
 };
-
-#ifdef __EMSCRIPTEN__
-#undef min
-#undef max
-#include <emscripten/bind.h>
-
-using namespace emscripten;
-
-EMSCRIPTEN_BINDINGS(my_class_example) {
-	class_<Synth>("Synth")
-	.constructor<>()
-	.function("sample", &Synth::sample)
-	.function("noteOn", &Synth::noteOnEm)
-	.function("noteOff", &Synth::noteOff);
-}
-
-#endif
 
 #endif // __SYNTH_H__

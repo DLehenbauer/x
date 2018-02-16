@@ -59,3 +59,4 @@ typings/
 
 /src/firmware/arduino-gm-synth/Release
 /src/firmware/arduino-gm-synth/Debug
+/src/firmware/.vs

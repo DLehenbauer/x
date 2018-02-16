@@ -188,19 +188,25 @@
     <Compile Include="adsr.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="emcc\avr\common.h">
+    <None Include="emscripten\avr\common.h">
       <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="emcc\avr\interrupt.h">
+    </None>
+    <None Include="emscripten\avr\interrupt.h">
       <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="emcc\avr\io.h">
+    </None>
+    <None Include="emscripten\avr\io.h">
       <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="emcc\avr\pgmspace.cpp">
+    </None>
+    <None Include="emscripten\avr\mocks.cpp">
       <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="emcc\avr\pgmspace.h">
+    </None>
+    <None Include="emscripten\avr\pgmspace.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="emscripten\bindings.cpp">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="emscripten\util\delay.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="instruments.cpp">
@@ -216,6 +222,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="midi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="midisynth.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="midisynth.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ringbuffer.h">
@@ -240,8 +252,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="emcc" />
-    <Folder Include="emcc\avr" />
+    <Folder Include="emscripten" />
+    <Folder Include="emscripten\avr" />
+    <Folder Include="emscripten\util" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

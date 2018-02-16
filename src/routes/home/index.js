@@ -9,7 +9,7 @@ export default class Home extends Component {
 		if (typeof window !== 'undefined') {
 			let buffered = null;
 
-			const worker = new Worker('../../firmware/synth-worker.js');
+			const worker = new Worker('../../firmware/worker.js');
 			
 			worker.addEventListener('message', e => {
 				const msg = e.data;
@@ -22,11 +22,14 @@ export default class Home extends Component {
 			});
 
 			const synth = {
-				noteOn: (voice, note, velocity, instrument) => worker.postMessage({
-					type: 'noteOn', voice, note, velocity, instrument
+				midi: (data) => worker.postMessage({
+					type: 'midi', data
 				}),
-				noteOff: (voice) => worker.postMessage({
-					type: 'noteOff', voice
+				noteOn: (channel, note, velocity) => worker.postMessage({
+					type: 'noteOn', channel, note, velocity
+				}),
+				noteOff: (channel, note) => worker.postMessage({
+					type: 'noteOff', channel, note
 				}),
 				sample: (length, rate) => worker.postMessage({
 					type: 'sample', length, rate
@@ -38,17 +41,7 @@ export default class Home extends Component {
 					midi.inputs.forEach(device => {
 						device.open().then(() => {
 							device.onmidimessage = ev => {
-								const cmd = ev.data[0] >> 4;
-								const channel = ev.data[0] & 0xf;
-								const noteNumber = ev.data[1];
-								const velocity = ev.data.length > 2 ? ev.data[2] : 0;
-							
-								// MIDI noteon with velocity=0 is the same as noteoff
-								if (cmd ===8 || ((cmd === 9) && (velocity === 0))) {
-									synth.noteOff(0);
-								} else if (cmd == 9) { // note on
-									synth.noteOn(0, noteNumber, velocity, 0);
-								}
+								synth.midi(ev.data);
 							}
 						});
 					});

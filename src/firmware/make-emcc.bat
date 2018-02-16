@@ -1,1 +1,0 @@
-emcc --bind -o synth.js -O0 -g -std=c++11 -DF_CPU=16000000 -Iarduino-gm-synth\emcc arduino-gm-synth\emcc\avr\pgmspace.cpp arduino-gm-synth\synth.cpp arduino-gm-synth\instruments.cpp arduino-gm-synth\midi.cpp

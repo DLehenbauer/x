@@ -1,18 +1,24 @@
-importScripts('./synth.js');
+importScripts('./firmware.js');
 
-const synth = new Module["Synth"]
+const synth = new Module["MidiSynth"]
 
 onmessage = e => {
     const msg = e.data;
     switch (msg.type) {
+        case 'midi': {
+            for (const byte of msg.data) {
+                Module.midi_decode_byte(byte);
+            }
+            break;
+        }
         case 'noteOn': {
             console.log(JSON.stringify(msg));
-            synth.noteOn(msg.voice, msg.note, msg.velocity, msg.instrument);
+            synth.midiNoteOn(msg.channel, msg.note, msg.velocity);
             break;
         }
         case 'noteOff': {
             console.log(JSON.stringify(msg));
-            synth.noteOff(msg.voice);
+            synth.midiNoteOff(msg.channel, msg.note);
             break;
         }
         case 'sample': {

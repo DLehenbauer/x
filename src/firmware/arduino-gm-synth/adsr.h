@@ -128,4 +128,7 @@ class ADSR {
         friend class Synth;
 };
 
+#undef min
+#undef max
+
 #endif
