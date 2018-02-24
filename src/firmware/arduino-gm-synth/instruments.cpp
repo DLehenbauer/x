@@ -67,3 +67,7 @@ void Instruments::getDrum(uint8_t index, PercussiveInstrument& drum) {
 const int8_t* Instruments::getWavetableAddress(uint16_t offset) {
     return &Waveforms[offset];
 }
+
+uint16_t Instruments::getWavetableByteLength() {
+	return sizeof(Waveforms);
+}

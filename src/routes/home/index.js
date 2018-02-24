@@ -1,60 +1,20 @@
 import Scope from '../../components/scope';
+import WaveEditor from '../../components/waveeditor';
 import { h, Component } from 'preact';
 import style from './style';
+import Firmware from '../../firmware/firmware-client';
 
 export default class Home extends Component {
 	constructor() {
 		super();
 
 		if (typeof window !== 'undefined') {
-			let buffered = null;
+			this.firmware = new Firmware();
 
-			const worker = new Worker('../../firmware/worker.js');
-			
-			worker.addEventListener('message', e => {
-				const msg = e.data;
-				switch (msg.type) {
-					case 'audio': {
-						buffered = new Float32Array(msg.buffer);
-						break;
-					}
-				}
-			});
-
-			const synth = {
-				midi: (data) => worker.postMessage({
-					type: 'midi', data
-				}),
-				noteOn: (channel, note, velocity) => worker.postMessage({
-					type: 'noteOn', channel, note, velocity
-				}),
-				noteOff: (channel, note) => worker.postMessage({
-					type: 'noteOff', channel, note
-				}),
-				sample: (length, rate) => worker.postMessage({
-					type: 'sample', length, rate
-				})
-			}
-
-			navigator.requestMIDIAccess().then( 
-				midi => {
-					midi.inputs.forEach(device => {
-						device.open().then(() => {
-							device.onmidimessage = ev => {
-								synth.midi(ev.data);
-							}
-						});
-					});
-				});
+			this.buffered = new Float32Array();
 
 			const audioContext = new AudioContext();
 			const stream = audioContext.createScriptProcessor(/* bufferSize */ 512, /* inputs */ 0, /* outputs */ 1);
-			stream.onaudioprocess = e => {
-				const outputBuffer = e.outputBuffer;
-				synth.sample(outputBuffer.length, outputBuffer.sampleRate);
-				outputBuffer.getChannelData(0).set(buffered);
-				buffered = null;
-			};
 
 			const lowpass = audioContext.createBiquadFilter();
 			lowpass.type = 'lowpass';
@@ -63,20 +23,49 @@ export default class Home extends Component {
 			stream.connect(lowpass);
 
 			const gain = audioContext.createGain();
-			gain.gain.value = 12.0;
+			gain.gain.value = 8.0;
 			lowpass.connect(gain);
 			gain.connect(audioContext.destination);
 
-			this.setState({ audioContext, synth, source: gain });
+			this.setState({ audioContext, source: gain, wavetable: new Int8Array(256) });
+
+			this.firmware.connected.then(() => {
+				navigator.requestMIDIAccess().then(
+					midi => {
+						midi.inputs.forEach(device => {
+							device.open().then(() => {
+								device.onmidimessage = ev => {
+									this.firmware.midi(ev.data);
+								}
+							});
+						});
+					});
+
+				stream.onaudioprocess = e => {
+					const outputBuffer = e.outputBuffer;
+					this.firmware.sample(outputBuffer.length, outputBuffer.sampleRate).then(buffer => {
+						this.buffered = buffer;
+					});
+	
+					outputBuffer.getChannelData(0).set(this.buffered);
+				};
+			});
 		}
 	}
 
+	setWave = (index, value) => {
+		this.state.wavetable[index] = value;
+		this.firmware.setWavetable(0, this.state.wavetable);
+	}
+
 	startClicked = () => {
-		this.state.synth.noteOn(0, 48, 127, 0);
+		this.firmware.noteOn(0, 48, 127, 0);
 	}
 
 	stopClicked = () => {
-		this.state.synth.noteOff(0);
+		this.firmware.noteOff(0, 48);
+		const bytes = new Int8Array(128);
+		this.firmware.setWavetable(0, bytes);
 	}
 
 	render() {
@@ -86,7 +75,9 @@ export default class Home extends Component {
 				<button onclick={this.stopClicked}>Stop</button>
 				Scope:
 				<div class={style.scope}>
-				  <Scope audioContext={ this.state.audioContext } source={ this.state.source }></Scope>
+				  <Scope audioContext={ this.state.audioContext } source={ this.state.source } />
+				  <WaveEditor isEditing={ true } instrument={{ xor: 0, waveOffset: 0 }} wave={ this.state.wavetable } setWave={ this.setWave } />
+				  <LerpEditor />
 				</div>
 			</div>
 		);

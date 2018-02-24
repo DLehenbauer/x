@@ -258,7 +258,7 @@ void Synth::begin() {
 
     TCCR2A = _BV(WGM21);                // CTC Mode (Clears timer and raises interrupt when OCR2B reaches OCR2A)
     TCCR2B = _BV(CS21);                 // Prescale None = C_FPU / 8 tick frequency
-    OCR2A  = 0x67;                      // ~19.4 kHz sampling/mixing frequency
+    OCR2A  = sampleDivider;             // Sample rate
 #if DEBUG
     OCR2A  <<= 1;                       // Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
 #endif                                  // avoid starving MIDI dispatch.

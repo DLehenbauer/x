@@ -26,6 +26,7 @@ class Instruments {
         static void getInstrument(uint8_t index, Instrument& instrument);
         static void getDrum(uint8_t index, PercussiveInstrument& drum);
         static const int8_t* getWavetableAddress(uint16_t offset);
+        static uint16_t getWavetableByteLength();
 };
 
 #endif // __INSTRUMENT_H__

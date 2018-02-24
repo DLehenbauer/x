@@ -19,6 +19,7 @@ class Synth {
     public:
         constexpr static uint8_t numVoices = 16;
         constexpr static uint8_t maxVoice = Synth::numVoices - 1;
+		constexpr static uint8_t sampleDivider = 0x67;
 
         void begin();
         uint8_t getNextVoice();
