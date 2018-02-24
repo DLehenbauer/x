@@ -42,34 +42,37 @@ export default class WaveView extends Canvas {
 		return (255 - (s + 128)) / 255;
 	}
 
-	paint(draw) {
+    drawWave(context2d, width, height) {
         const state = this.state;
-		const width = state.canvasWidth;
-		const height = state.canvasHeight;
-
-		draw.clearRect(0, 0, width, height);
-        this.drawGrid(draw, 10, 10);
-        
-        draw.beginPath();
-        draw.strokeStyle = 'red';
-        draw.rect(0, 0, width, height);
-        draw.stroke();
-
-		draw.strokeStyle = state.strokeStyle;
-        draw.lineWidth = this.state.lineWidth;
-        const hw = draw.lineWidth / 2;
-        draw.beginPath();
+		context2d.strokeStyle = state.strokeStyle;
+        context2d.lineWidth = this.state.lineWidth;
+        const hw = context2d.lineWidth / 2;
+        context2d.beginPath();
 
         const sx = Math.floor(height - this.state.lineWidth);
         const s = this.waveToHomogenous(this.sample(0)) * sx
-        draw.moveTo(0, s + hw);
+        context2d.moveTo(0, s + hw);
 
         for (let index = 0; index < width; index++) {
 			const s = this.waveToHomogenous(this.sample(index)) * sx;
-           	draw.lineTo(index, s + hw);
+           	context2d.lineTo(index, s + hw);
         }
 
-        draw.stroke();
+        context2d.stroke();
+    }
+
+	paint(context2d, width, height) {
+        const state = this.state;
+
+		context2d.clearRect(0, 0, width, height);
+        this.drawGrid(context2d, 10, 10);
+        this.drawWave(context2d, width, height);
+
+        // Draw outline to test CSS layout
+        // draw.beginPath();
+        // draw.strokeStyle = 'red';
+        // draw.rect(0, 0, width, height);
+        // draw.stroke();
     }
     
     componentDidMount() {

@@ -45,8 +45,20 @@ export default class Firmware {
         this.port.postMessage({type: 'midi', data});
     }
 
+    getSampleRate() {
+        return this.send({type: 'getSampleRate'}).then(response => {
+            return response.rate;
+        });
+    }
+
     setWavetable(offset, bytes) {
         this.port.postMessage({type: 'setWavetable', offset, bytes});        
+    }
+
+    getWavetable() {
+        return this.send({type: 'getWavetable'}).then(response => {
+            return Array.prototype.slice.apply(new Int8Array(response.buffer));
+        });
     }
 
     sample(length, rate) {

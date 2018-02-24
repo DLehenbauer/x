@@ -9,6 +9,13 @@ const port = channel.port1;
 port.onmessage = e => {
     const msg = e.data;
     switch (msg.type) {
+        case 'getSampleRate': {
+            port.postMessage({
+                type: 'sampleRate',
+                rate: originalSampleRate
+            });
+            break;
+        }
         case 'midi': {
             for (const byte of msg.data) {
                 Module.midi_decode_byte(byte);
@@ -31,9 +38,13 @@ port.onmessage = e => {
             break;
         }
         case 'getWavetable': {
-            const addr = Module.getWavetableAddress(msg.offset);
-            const length = Module.getWavetableLength();
-            Module.HEAP8.slice(addr, addr + length);
+            const addr = Module.getWavetableAddress(0);
+            const length = Module.getWavetableByteLength();
+            const buffer = Module.HEAP8.slice(addr, addr + length).buffer;
+            port.postMessage({
+                type: 'wavetable',
+                buffer: buffer
+            }, [buffer]);
             break;
         }
         case 'sample': {

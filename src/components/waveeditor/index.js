@@ -27,7 +27,7 @@ export default class WaveEditor extends WaveView {
 			y: this.yToWave(y)
 		};
 
-		console.log(`${JSON.stringify(p)}`);
+		//console.log(`${JSON.stringify(p)}`);
 		return p;
 	}
 
@@ -55,32 +55,28 @@ export default class WaveEditor extends WaveView {
 	}
 
 	line(x0, y0, x1, y1, xMin, xMax) {
-		this.props.actions.updateModel(['wavetable'], old => {
-			return old.withMutations(wavetable => {
-				const dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
-				const dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; 
-				let err = (dx > dy ? dx : -dy) / 2;
-				 
-				while (x0 < xMax) {
-					if (x0 >= xMin) {
-						wavetable.set(x0, y0);
-					}
-					if (x0 === x1 && y0 === y1) {
-						break;
-					}
-					
-					const e2 = err;
-					if (e2 > -dx) {
-						err -= dy;
-						x0 += sx;
-					}
-					if (e2 < dy) {
-						err += dx;
-						y0 += sy;
-					}
-				}
-			});
-		});
+		const dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+		const dy = Math.abs(y1 - y0), sy = y0 < y1 ? 1 : -1; 
+		let err = (dx > dy ? dx : -dy) / 2;
+		 
+		while (x0 < xMax) {
+			if (x0 >= xMin) {
+				this.props.setWave(x0, y0);
+			}
+			if (x0 === x1 && y0 === y1) {
+				break;
+			}
+			
+			const e2 = err;
+			if (e2 > -dx) {
+				err -= dy;
+				x0 += sx;
+			}
+			if (e2 < dy) {
+				err += dx;
+				y0 += sy;
+			}
+		}
 	}
 
 	onPointerMove(ev) {
@@ -103,8 +99,7 @@ export default class WaveEditor extends WaveView {
 				offset,
 				offset + 256);
 		} else {
-			this.props.actions.updateInstrument(['waveOffset'], value =>
-				Math.min(Math.max(newValue, 0), this.props.wavetable.size - 256));
+			this.props.updateInstrument(['waveOffset'], Math.min(Math.max(newValue, 0), this.props.wave.length - 256));
 		}
 
 		this.setState({
@@ -112,10 +107,24 @@ export default class WaveEditor extends WaveView {
 		});
 	}
 
+	paint(context2d, width, height) {
+		const state = this.state;
+		const instrument = this.props.instrument;
+
+		context2d.clearRect(0, 0, width, height);
+		this.drawGrid(context2d, 10, 10);
+		
+		context2d.fillStyle = this.props.isEditing
+			? "rgba(255, 128, 64, 0.4)"
+			: "rgba(64, 128, 255, 0.4)";			
+		context2d.fillRect(instrument.waveOffset, 0, 256, height);
+
+        this.drawWave(context2d, width, height);
+    }
+
 	sample(index) {
-		// const xor = this.props.instrument.xor;
-		// const s = this.props.wavetable.get(index);
-        // return this.toInt8((s & 0xFF) ^ xor);
-        return -1;
+		const xor = this.props.instrument.xor;
+		const s = this.props.wave[index];
+        return this.toInt8((s & 0xFF) ^ xor);
     }
 }

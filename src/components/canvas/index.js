@@ -25,19 +25,21 @@ export default class Canvas extends Component {
     rafHandler = () => {
         this.isPaintPending = false;
 
+        const state = this.state;
+        const canvas = this.canvas;
+
         if (this.isSizeInvalid) {
             this.isSizeInvalid = false;
-            const canvas = this.canvas;
             const canvasWidth = canvas.offsetWidth;
             const canvasHeight = canvas.offsetHeight;
-            if (canvasWidth !== this.state.canvasWidth || canvasHeight !== this.state.canvasHeight) {
+            if (canvasWidth !== state.canvasWidth || canvasHeight !== state.canvasHeight) {
                 canvas.width  = canvasWidth;
                 canvas.height = canvasHeight;            
                 this.setState({ canvasWidth, canvasHeight });
             }
         }
 
-        this.paint(this.canvas.getContext('2d'));
+        this.paint(canvas.getContext('2d'), state.canvasWidth, state.canvasHeight);
     };
 
     invalidate() {
@@ -48,7 +50,7 @@ export default class Canvas extends Component {
         requestAnimationFrame(this.rafHandler);
     }
 
-    paint(draw) {
+    paint(context2d, width, height) {
         // Subclasses draw here
     }
 
@@ -63,6 +65,6 @@ export default class Canvas extends Component {
 	}
 
 	componentDidUpdate() {
-        this.invalidate();
+        this.onResize();
 	}
 }
