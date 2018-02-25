@@ -64,6 +64,17 @@ export default class App extends Component {
 
 				outputBuffer.getChannelData(0).set(this.buffered);
 			};
+
+			navigator.requestMIDIAccess().then(
+				midi => {
+					midi.inputs.forEach(device => {
+						device.open().then(() => {
+							device.onmidimessage = ev => {
+								this.firmware.midi(ev.data);
+							}
+						});
+					});
+				});
 		})
 	}
 

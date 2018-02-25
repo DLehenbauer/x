@@ -1,18 +1,18 @@
 #ifndef __INSTRUMENT_H__
 #define __INSTRUMENT_H__
 
-#include "adsr.h"
+#include "lerp.h"
 
 enum InstrumentFlags : uint8_t {
     InstrumentFlags_None = 0,
     InstrumentFlags_Noise         = (1 << 0),
     InstrumentFlags_HalfAmplitude = (1 << 1),
-    InstrumentFlags_Damped        = (1 << 2),
 };
 
 struct Instrument {
     const int8_t* wave;
-    ADSRParameters adsr;
+    uint8_t ampMod;
+	uint8_t freqMod;
     uint8_t xorBits;
     InstrumentFlags flags;
 };
@@ -27,6 +27,8 @@ class Instruments {
         static void getDrum(uint8_t index, PercussiveInstrument& drum);
         static const int8_t* getWavetableAddress(uint16_t offset);
         static uint16_t getWavetableByteLength();
+		static void getLerpProgram(uint8_t programIndex, LerpProgram& program);
+		static void getLerpStage(uint8_t progStart, uint8_t stageIndex, LerpStage& stage);
 };
 
 #endif // __INSTRUMENT_H__

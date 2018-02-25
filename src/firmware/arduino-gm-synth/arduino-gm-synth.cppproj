@@ -185,9 +185,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="adsr.h">
-      <SubType>compile</SubType>
-    </Compile>
     <None Include="emscripten\avr\common.h">
       <SubType>compile</SubType>
     </None>
@@ -213,6 +210,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="instruments.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lerp.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="lerp.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.cpp">

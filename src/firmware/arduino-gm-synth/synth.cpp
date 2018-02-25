@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "synth.h"
+#include "lerp.h"
 
 // Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval at ~19.4 kHz
 constexpr static uint16_t _midiToPitch[] PROGMEM = {
@@ -25,7 +26,8 @@ volatile int8_t         v_xor[Synth::numVoices]     = { 0 };        // XOR bits 
 volatile uint8_t        v_amp[Synth::numVoices]     = { 0 };        // 6-bit amplitude scale applied to each sample.
 volatile bool           v_isNoise[Synth::numVoices] = { 0 };        // If true, '_xor' is periodically overwritten with random values.
 
-volatile ADSR           v_adsr[Synth::numVoices]    = {};           // ADSR generator for amplitude.
+volatile Lerp           v_ampMod[Synth::numVoices]  = {};           // Amplitude modulation
+volatile Lerp           v_freqMod[Synth::numVoices] = {};			// Custom modulation
 volatile uint8_t        v_vol[Synth::numVoices]     = { 0 };        // 7-bit volume scalar applied to ADSR output.
 
 volatile uint16_t _basePitch[Synth::numVoices]      = { 0 };                            // Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
@@ -62,10 +64,16 @@ SIGNAL(TIMER2_COMPA_vect) {
 
         const uint8_t fn = divider & 0xF0;                  // Top 4 bits of 'divider' selects which additional work to perform.
         switch (fn) {
+			case 0x20: {
+				int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
+				v_pitch[voice] = _basePitch[voice] + freqMod;
+				break;
+			}
+
             case 0x00:
             case 0x50:
 			case 0xA0: {                                    // Advance the ADSR and update '_amp' for the current voice.
-                uint16_t amp = v_adsr[voice].sample();
+                uint16_t amp = v_ampMod[voice].sample();
                 v_amp[voice] = (amp * v_vol[voice]) >> 8;
                 break;
             }
@@ -146,33 +154,42 @@ double Synth::sample() {
 // Returns the next idle voice, if any.  If no voice is idle, uses ADSR stage and amplitude to
 // choose the best candidate for note-stealing.
 uint8_t Synth::getNextVoice() {
-    uint8_t voice = maxVoice;   
-    for (int8_t candidate = maxVoice - 1; candidate >= 0; candidate--) {
-        const volatile ADSR& left   = v_adsr[candidate];
-        const volatile ADSR& right  = v_adsr[voice];
+    uint8_t current = maxVoice;   
+	uint8_t currentStage;
+	int8_t currentAmp;
+	
+	{
+		const volatile Lerp& currentMod		= v_ampMod[current];
+		currentStage = currentMod.stageIndex;
+		currentAmp = currentMod.amp;
+	}
 
-        const int8_t leftStage = left.stage;
-        const int8_t rightStage = right.stage;
+    for (int8_t candidate = maxVoice - 1; candidate >= 0; candidate--) {
+        const volatile Lerp& candidateMod   = v_ampMod[candidate];
+        const uint8_t candidateStage = candidateMod.stageIndex;
         
-        if (leftStage >= rightStage) {                                  // If the currently chosen voice is in a later ADSR stage, keep it.
-            if (leftStage == rightStage) {                              // Otherwise, if both voices are in the same ADSR stage
-                const int8_t leftAmp = left.amp;                        //   compare amplitudes to determine which voice to steal.
-                const int8_t rightAmp = right.amp;
+        if (candidateStage >= currentStage) {                                  // If the currently chosen voice is in a later ADSR stage, keep it.
+            if (candidateStage == currentStage) {                              // Otherwise, if both voices are in the same ADSR stage
+                const int8_t candidateAmp = candidateMod.amp;                  //   compare amplitudes to determine which voice to steal.
             
-                bool selectCandidate = leftStage == ADSRStage_Attack    // If attacking...
-                    ? leftAmp >= rightAmp                               //   steal the lower amplitude voice
-                    : leftAmp <= rightAmp;                              //   otherwise the higher amplitude voice
+                bool selectCandidate = candidateMod.slope > 0                  // If amplitude is increasing...
+                    ? candidateAmp >= currentAmp                               //   steal the lower amplitude voice
+                    : candidateAmp <= currentAmp;                              //   otherwise the higher amplitude voice
 
                 if (selectCandidate) {
-                    voice = candidate;
+                    current = candidate;
+					currentStage = candidateStage;
+					currentAmp = candidateAmp;
                 }
             } else {
-                voice = candidate;                                      // Else, if the candidate is in a later ADSR stage, steal it.
+                current = candidate;											// Else, if the candidate is in a later ADSR stage, steal it.
+				currentStage = candidateStage;
+				currentAmp = candidateMod.amp;
             }
         }
     }
     
-    return voice;
+    return current;
 }
 
 void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Instrument& instrument) {
@@ -186,6 +203,9 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     _note[voice] = note;
 
     uint16_t pitch = pgm_read_word(&_midiToPitch[note]);
+#if DEBUG
+	pitch <<= 1;						// Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
+#endif                                  // avoid starving MIDI dispatch.
     _basePitch[voice] = pitch;
 
     // Suspend audio processing before updating state shared with the ISR.
@@ -197,19 +217,17 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     v_xor[voice] = instrument.xorBits;
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
-    v_adsr[voice].parameters = &instrument.adsr;
     v_vol[voice] = midiVelocity;
-    v_adsr[voice].noteOn();
+    v_ampMod[voice].start(instrument.ampMod);
+	v_freqMod[voice].start(instrument.freqMod);
     
     resume();
 }
 
 void Synth::noteOff(uint8_t voice) {
-    bool isDamped = _voiceFlags[voice] & InstrumentFlags_Damped;
-
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
-    v_adsr[voice].noteOff(isDamped);
+    v_ampMod[voice].stop(0x08);
     resume();
 }
 

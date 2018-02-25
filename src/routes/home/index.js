@@ -4,23 +4,6 @@ import { h, Component } from 'preact';
 import style from './style';
 
 export default class Home extends Component {
-	constructor() {
-		super();
-
-		if (typeof window !== 'undefined') {
-			navigator.requestMIDIAccess().then(
-				midi => {
-					midi.inputs.forEach(device => {
-						device.open().then(() => {
-							device.onmidimessage = ev => {
-								this.firmware.midi(ev.data);
-							}
-						});
-					});
-				});
-		}
-	}
-
 	setWave = (index, value) => {
 		this.state.wavetable[index] = value;
 		this.firmware.setWavetable(0, this.state.wavetable);
@@ -46,7 +29,7 @@ export default class Home extends Component {
 				<div style='overflow-x: scroll; overflow-y: hidden'>
 					<div class={style.waveEditor} style={`width: ${props.wavetable.length}px`}>
 						<WaveEditor 
-							isEditing={ false }
+							isEditing={ true }
 							instrument={ props.instrument }
 							wave={ props.wavetable }
 							setWave={ props.actions.setWavetable }

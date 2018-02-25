@@ -71,3 +71,12 @@ const int8_t* Instruments::getWavetableAddress(uint16_t offset) {
 uint16_t Instruments::getWavetableByteLength() {
 	return sizeof(Waveforms);
 }
+
+void Instruments::getLerpProgram(uint8_t programIndex, LerpProgram& program) {
+	PROGMEM_readAnything(&LerpPrograms[programIndex], program);
+}
+
+void Instruments::getLerpStage(uint8_t progressionStart, uint8_t stageIndex, LerpStage& stage) {
+	const uint8_t index = pgm_read_byte(&LerpProgressions[progressionStart + stageIndex]);
+	PROGMEM_readAnything(&LerpStages[index], stage);
+}
