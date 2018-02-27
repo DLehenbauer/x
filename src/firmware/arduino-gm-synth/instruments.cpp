@@ -80,3 +80,19 @@ void Instruments::getLerpStage(uint8_t progressionStart, uint8_t stageIndex, Ler
 	const uint8_t index = pgm_read_byte(&LerpProgressions[progressionStart + stageIndex]);
 	PROGMEM_readAnything(&LerpStages[index], stage);
 }
+
+const uint8_t* Instruments::getLerpProgramsAddress() {
+	return reinterpret_cast<const uint8_t*>(&LerpPrograms[0]);
+}
+
+const LerpStage* Instruments::getLerpStagesAddress() {
+	return &LerpStages[0];
+}
+
+uint16_t Instruments::getLerpStagesByteLength() {
+	return sizeof(LerpStages);
+}
+
+const uint8_t* Instruments::getLerpProgressionsAddress() {
+	return &LerpProgressions[0];
+}

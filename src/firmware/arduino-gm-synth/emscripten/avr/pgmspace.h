@@ -14,8 +14,8 @@
 
 #define PROGMEM
 
-uint8_t pgm_read_byte(const volatile int8_t* ptr);
-uint16_t pgm_read_word(const volatile uint16_t* ptr);
+uint8_t pgm_read_byte(const volatile void* ptr);
+uint16_t pgm_read_word(const volatile void* ptr);
 
 #define memcpy_P memcpy
 

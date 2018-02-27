@@ -7,8 +7,7 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 
 struct LerpStage {
-	uint8_t divider;
-	int8_t slope;
+	int16_t slope;
 	int8_t limit;
 };
 
@@ -23,48 +22,37 @@ class Lerp {
 		uint8_t loopStart = 0xFF;
 		uint8_t loopEnd = 0xFF;
 		uint8_t stageIndex = 0xFF;
-		uint8_t divider = 0;
-		int8_t amp = 0;
-		
-		uint8_t dividerLimit = 0xFF;
-		int8_t slope;
+		int16_t amp = 0;
+		int16_t slope;
 		int8_t limit;
 	
 		void loadStage() volatile;
 	
 	public:
 		uint8_t sample() volatile {
-			// Divider is a 7-bit counter looping from 0x00..0x7F.  This allows us to use a mask of 0x80+
-			// as an infinite hold.
-			divider = (divider + 1) & 0x7F;
-		
-			if (divider < dividerLimit) {
-				return amp;
-			}
-
-			divider = 0;
 			amp += slope;
+			int8_t out = amp >> 8;
 
-			const bool nextStage = amp < 0 || (
+			const bool nextStage = (out < 0) ||
 				(slope < 0)
-					? amp < limit
-					: amp > limit);
+					? out < limit
+					: out > limit;
 		
 			if (nextStage) {
-				amp = limit;
+				out = limit;
+				amp = limit << 8;
 				stageIndex = stageIndex == loopEnd
 					 ? loopStart
 					 : stageIndex + 1;
 				loadStage();
 			}
 		
-			return amp;
+			return out;
 		}
-	
+		
 		void start(uint8_t program) volatile;
 
-		void stop(uint8_t stopIndex) volatile {
-			
+		void stop() volatile {
 			if (stageIndex < loopEnd) {
 				stageIndex = loopEnd;
 				loadStage();
@@ -72,6 +60,14 @@ class Lerp {
 		}
 
 		friend class Synth;
+		
+		#ifdef __EMSCRIPTEN__
+
+		uint8_t sampleEm() { return sample(); }
+		void startEm(uint8_t program) { start(program); }
+		void stopEm() { stop(); }
+		
+		#endif // __EMSCRIPTEN__
 };
 
 #undef min

@@ -22,10 +22,14 @@ export default class App extends Component {
 		instruments: [{
 			name: "Acoustic Grand Piano",
 			waveOffset: 0,
-			adsr: [],
+			ampMod: 0,
+			freqMod: 0,
 			xor: 0,
 			instrumentFlags: 0
-		}]
+		}],
+		lerpStages: [],
+		lerpProgressions: [],
+		lerpPrograms: []
 	};
 
 	constructor() {
@@ -34,17 +38,9 @@ export default class App extends Component {
 		this.buffered = new Float32Array();
 		const audioContext = new AudioContext();
 		const stream = audioContext.createScriptProcessor(/* bufferSize */ 512, /* inputs */ 0, /* outputs */ 1);
+		stream.connect(audioContext.destination);
 
-		const lowpass = audioContext.createBiquadFilter();
-		lowpass.type = 'lowpass';
-		stream.connect(lowpass);
-
-		const gain = audioContext.createGain();
-		gain.gain.value = 8.0;
-		lowpass.connect(gain);
-		gain.connect(audioContext.destination);
-
-		this.setState({ audioContext, audioOutput: gain });
+		this.setState({ audioContext, audioOutput: stream });
 
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
@@ -52,8 +48,8 @@ export default class App extends Component {
 				this.setState({ wavetable: bytes })
 			});
 
-			this.firmware.getSampleRate().then(rate => {
-				lowpass.frequency.value = rate/4;
+			this.firmware.getLerpStages().then(bytes => {
+				this.setState({ lerpStages: bytes })
 			});
 
 			stream.onaudioprocess = e => {
@@ -96,6 +92,10 @@ export default class App extends Component {
 		updateInstrument: (path, value) => {
 			const state = this.state;
 			this.set(['instruments', state.channelToInstrument[state.currentChannel]].concat(path), value);
+		},
+		setLerpStage: (path, value) => {
+			this.set(`lerpStages${path}`, value);
+			this.firmware.setLerpStages(this.state.lerpStages);
 		}
 	};
 
@@ -105,9 +105,7 @@ export default class App extends Component {
 				<Header />
 				<Router onChange={this.handleRoute}>
 					<Home path="/"
-						wavetable={ state.wavetable }
-						audioContext={ state.audioContext }
-						audioOutput={ state.audioOutput }
+						appState={ state }
 						actions={ this.actions } 
 						instrument={ state.instruments[state.channelToInstrument[state.currentChannel]] }
 						/>

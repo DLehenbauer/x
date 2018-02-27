@@ -28,5 +28,5 @@ uint8_t TIMSK2;
 void cli() {}
 void sei() {}
 
-uint8_t pgm_read_byte(const volatile int8_t* ptr) { return *ptr; }
-uint16_t pgm_read_word(const volatile uint16_t* ptr) { return *ptr; }
+uint8_t pgm_read_byte(const volatile void* ptr) { return *(reinterpret_cast<const volatile uint8_t*>(ptr)); }
+uint16_t pgm_read_word(const volatile void* ptr) { return *(reinterpret_cast<const volatile uint16_t*>(ptr)); }

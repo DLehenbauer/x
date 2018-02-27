@@ -1,28 +1,29 @@
 static constexpr LerpStage LerpStages[] PROGMEM = {
-	//                   divider   slope   limit
-	/* 0x00:       hold */  { 0xFF,      0,      0 },
-	/* 0x01:        off */  { 0x00,	  0x40,   0x40 },
+	//                       slope   limit
+	/* 0x00:       hold */  {		 0,      0 },
+	/* 0x01:        off */  { 127 * 256,   0x40 },
 
-	/* 0x02:     attack */  { 0x00,     64,    127 },
-	/* 0x03:      decay */  { 0x00,     -1,     32 },
-	/* 0x04:    sustain */  { 0x04,     -1,      0 },
-	/* 0x05:    release */  { 0x00,     -4,      0 },
+	/* 0x02:     attack */  { 64 * 256,    127 },
+	/* 0x03:      decay */  { -1 * 256,     32 },
+	/* 0x04:    sustain */  {      -32,      0 },
+	/* 0x05:    release */  { -4 * 256,      0 },
 
-	/* 0x06:     attack */  { 0x00,    127,    127 },
-	/* 0x07:      decay */  { 0x00,    -32,     32 },
-	/* 0x08:    sustain */  { 0x04,     -8,      8 },
-	/* 0x09:    release */  { 0x00,     -4,      0 },
+	/* 0x06:     attack */  { 127 * 256,    127 },
+	/* 0x07:      decay */  { -32 * 256,     32 },
+	/* 0x08:    sustain */  { -8 * 256,       8 },
+	/* 0x09:    release */  { -4 * 256,       0 },
 };
 
 static constexpr uint8_t LerpProgressions[] PROGMEM = {
 	/* 0x00: */ 0x01, 0x00,
 	/* 0x02: */ 0x02, 0x03, 0x04, 0x05, 0x00,
 	/* 0x07: */ 0x06, 0x07, 0x08, 0x09, 0x00,
+	/* 0x0C: */ 
 };
 
 static constexpr LerpProgram LerpPrograms[] PROGMEM = {
 	//			  prog	   loop
-	/* 0x00: */ { 0x00,	   0x10 },
+	/* 0x00: */ { 0x00,	   0x00 },
 	/* 0x01: */ { 0x02,	   0x43 },
 	/* 0x02: */ { 0x07,	   0x43 },
 };

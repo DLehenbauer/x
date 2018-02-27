@@ -1,0 +1,15 @@
+.row {
+    display: grid;
+    grid-template-areas: 
+      "label value";
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+}
+
+.label {
+    grid-area: label;
+}
+
+.value {
+    grid-area: value;
+}

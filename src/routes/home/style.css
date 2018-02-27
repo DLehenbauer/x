@@ -31,3 +31,17 @@
 	border-color: black;
 	border-width: var(--borderWidth);
 }
+
+.lerp {
+    --borderWidth: 1px;
+    --height: calc(256px + var(--borderWidth) * 2);
+
+	width: 100%;
+	height: var(--height);
+	color: green;
+	stroke-width: 1px;
+	position: relative;
+	border-style: solid;
+	border-color: black;
+	border-width: var(--borderWidth);
+}
