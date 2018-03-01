@@ -34,7 +34,7 @@
 
 .lerp {
     --borderWidth: 1px;
-    --height: calc(256px + var(--borderWidth) * 2);
+    --height: calc(127px + var(--borderWidth) * 2);
 
 	width: 100%;
 	height: var(--height);

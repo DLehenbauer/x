@@ -23,8 +23,8 @@ class Lerp {
 		uint8_t loopEnd = 0xFF;
 		uint8_t stageIndex = 0xFF;
 		int16_t amp = 0;
-		int16_t slope;
-		int8_t limit;
+		int16_t slope = 0;
+		int8_t limit = -128;
 	
 		void loadStage() volatile;
 	
