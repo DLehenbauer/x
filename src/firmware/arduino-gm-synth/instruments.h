@@ -3,6 +3,24 @@
 
 #include "lerp.h"
 
+#ifdef __EMSCRIPTEN__
+
+#include <stddef.h>
+
+template<typename T> 
+struct HeapRegion {
+	size_t start;
+	size_t end;
+
+	HeapRegion() {}
+	
+	HeapRegion(const T* pStart, const size_t length) {
+		start = reinterpret_cast<size_t>(pStart);
+		end = start + length;
+	}
+};
+#endif
+
 enum InstrumentFlags : uint8_t {
     InstrumentFlags_None = 0,
     InstrumentFlags_Noise         = (1 << 0),
@@ -18,7 +36,7 @@ struct Instrument {
 };
 
 struct PercussiveInstrument {
-  uint8_t note;
+	uint8_t note;
 };
 
 class Instruments {
@@ -28,15 +46,12 @@ class Instruments {
 		static void getLerpProgram(uint8_t programIndex, LerpProgram& program);
 		static void getLerpStage(uint8_t progStart, uint8_t stageIndex, LerpStage& stage);
 
-        static const int8_t* getWavetableAddress(uint16_t offset);
-        static uint16_t getWavetableByteLength();
-
-		static const LerpStage* getLerpStagesAddress();
-		static uint16_t getLerpStagesByteLength();
-		
-		static const uint8_t* getLerpProgramsAddress();
-		
-		static const uint8_t* getLerpProgressionsAddress();
+#ifdef __EMSCRIPTEN__
+        static const HeapRegion<int8_t> getWavetable();
+		static const HeapRegion<LerpProgram> getLerpPrograms();
+		static const HeapRegion<uint8_t> getLerpProgressions();
+		static const HeapRegion<LerpStage> getLerpStages();
+#endif // __EMSCRIPTEN__
 };
 
 #endif // __INSTRUMENT_H__

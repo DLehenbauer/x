@@ -64,14 +64,6 @@ void Instruments::getDrum(uint8_t index, PercussiveInstrument& drum) {
     PROGMEM_readAnything(&drums[index], drum);
 }
 
-const int8_t* Instruments::getWavetableAddress(uint16_t offset) {
-    return &Waveforms[offset];
-}
-
-uint16_t Instruments::getWavetableByteLength() {
-	return sizeof(Waveforms);
-}
-
 void Instruments::getLerpProgram(uint8_t programIndex, LerpProgram& program) {
 	PROGMEM_readAnything(&LerpPrograms[programIndex], program);
 }
@@ -81,18 +73,22 @@ void Instruments::getLerpStage(uint8_t progressionStart, uint8_t stageIndex, Ler
 	PROGMEM_readAnything(&LerpStages[index], stage);
 }
 
-const uint8_t* Instruments::getLerpProgramsAddress() {
-	return reinterpret_cast<const uint8_t*>(&LerpPrograms[0]);
+#ifdef __EMSCRIPTEN__
+
+const HeapRegion<int8_t> Instruments::getWavetable() {
+    return HeapRegion<int8_t>(&Waveforms[0], sizeof(Waveforms));
 }
 
-const LerpStage* Instruments::getLerpStagesAddress() {
-	return &LerpStages[0];
+const HeapRegion<LerpProgram> Instruments::getLerpPrograms() {
+	return HeapRegion<LerpProgram>(&LerpPrograms[0], sizeof(LerpPrograms));
 }
 
-uint16_t Instruments::getLerpStagesByteLength() {
-	return sizeof(LerpStages);
+const HeapRegion<uint8_t> Instruments::getLerpProgressions() {
+	return HeapRegion<uint8_t>(&LerpProgressions[0], sizeof(LerpProgressions));
 }
 
-const uint8_t* Instruments::getLerpProgressionsAddress() {
-	return &LerpProgressions[0];
+const HeapRegion<LerpStage> Instruments::getLerpStages() {
+	return HeapRegion<LerpStage>(&LerpStages[0], sizeof(LerpStages));
 }
+
+#endif // __EMSCRIPTEN__

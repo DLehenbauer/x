@@ -6,6 +6,18 @@ const originalSampleRate = Module.getSampleRate();
 const channel = new MessageChannel();
 const port = channel.port1;
 
+const load = (memory, msgType) => {
+    const buffer = Module.HEAP8.slice(memory.start, memory.end).buffer;
+    port.postMessage({
+        type: msgType,
+        buffer: buffer
+    }, [buffer]);
+}
+
+const store = (memory, bytes) => {
+    Module.HEAP8.set(bytes, memory.start);
+}
+
 port.onmessage = e => {
     const msg = e.data;
     switch (msg.type) {
@@ -32,34 +44,36 @@ port.onmessage = e => {
             synth.midiNoteOff(msg.channel, msg.note);
             break;
         }
-        case 'setWavetable': {
-            const addr = Module.getWavetableAddress(msg.offset);
-            Module.HEAP8.set(msg.bytes, addr);
+        case 'getWavetable': {
+            load(Module.getWavetable(), 'wavetable');
             break;
         }
-        case 'getWavetable': {
-            const addr = Module.getWavetableAddress(0);
-            const length = Module.getWavetableByteLength();
-            const buffer = Module.HEAP8.slice(addr, addr + length).buffer;
-            port.postMessage({
-                type: 'wavetable',
-                buffer: buffer
-            }, [buffer]);
+        case 'setWavetable': {
+            store(Module.getWavetable(), msg.bytes);
+            break;
+        }
+        case 'getLerpPrograms': {
+            load(Module.getLerpPrograms(), 'lerpPrograms');
+            break;
+        }
+        case 'setLerpPrograms': {
+            store(Module.getLerpPrograms(), new Int8Array(msg.buffer));
+            break;
+        }
+        case 'getLerpProgressions': {
+            load(Module.getLerpProgressions(), 'lerpProgressions');
+            break;
+        }
+        case 'setLerpProgressions': {
+            store(Module.getLerpProgressions(), new Int8Array(msg.buffer));
             break;
         }
         case 'getLerpStages': {
-            const addr = Module.getLerpStagesAddress().$$.ptr;
-            const length = Module.getLerpStagesByteLength();
-            const buffer = Module.HEAP8.slice(addr, addr + length).buffer;
-            port.postMessage({
-                type: 'lerpStages',
-                buffer: buffer
-            }, [buffer]);
+            load(Module.getLerpStages(), 'lerpStages');
             break;
         }
         case 'setLerpStages': {
-            const addr = Module.getLerpStagesAddress().$$.ptr;
-            Module.HEAP8.set(new Int8Array(msg.buffer), addr);
+            store(Module.getLerpStages(), new Int8Array(msg.buffer));
             break;
         }
         case 'sample': {
