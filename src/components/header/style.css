@@ -46,3 +46,8 @@
 .header nav a.active {
 	background: rgba(0,0,0,0.4);
 }
+
+.icon {
+	font-family: sans-serif;
+	font-size: 140%;
+}

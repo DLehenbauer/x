@@ -23,6 +23,10 @@ export default class Canvas extends Component {
 	}
 
     rafHandler = () => {
+        if (!this.canvas) {
+            return;
+        }
+
         this.isPaintPending = false;
 
         const state = this.state;

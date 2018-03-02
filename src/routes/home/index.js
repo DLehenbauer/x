@@ -21,6 +21,11 @@ export default class Home extends Component {
 
 	render(props, state) {
 		const app = props.appState;
+		if (!app.ready) {
+			return;
+		}
+
+		const model = app.model;
 		const actions = props.actions;
 
 		return (
@@ -32,19 +37,19 @@ export default class Home extends Component {
 				  	<Scope audioContext={ app.audioContext } source={ app.audioOutput } />
 				</div>
 				<div style='overflow-x: scroll; overflow-y: hidden'>
-					<div class={style.waveEditor} style={`width: ${app.wavetable.length}px`}>
+					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
 						<WaveEditor 
-							isEditing={ true }
+							isEditing={ false }
 							instrument={ props.instrument }
-							wave={ app.wavetable }
+							wave={ model.wavetable }
 							setWave={ actions.setWavetable }
 							updateInstrument={ actions.updateInstrument }  />
 					</div>
 				</div>
 				<div class={style.lerp}>
-					<Lerp stages={ app.lerpStages } />
+					<Lerp stages={ app.model.lerpStages } />
 				</div>
-				<LerpEditor stages={ app.lerpStages } actions={ actions } />
+				<LerpEditor appState={ app } actions={ actions } />
 			</div>
 		);
 	}

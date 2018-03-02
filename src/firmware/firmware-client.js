@@ -88,6 +88,31 @@ export default class Firmware {
         this.port.postMessage({ type: 'setLerpStages', buffer }, [buffer]);
     }
 
+    getLerpPrograms() {
+        return this.send({type: 'getLerpPrograms'}).then(response => {
+            const dv = new DataView(response.buffer);
+
+            const programs = [];
+            for (let i = 0; i < response.buffer.byteLength;) {
+                const start = dv.getUint8(i++);
+                const loopStartAndEnd = dv.getUint8(i++);
+                programs.push({
+                    start,
+                    loopStart: loopStartAndEnd >> 4,
+                    loopEnd: loopStartAndEnd & 0x0F
+                })
+            }
+
+            return programs;
+        });
+    }
+
+    getLerpProgressions() {
+        return this.send({type: 'getLerpProgressions'}).then(response => {
+            return new Uint8Array(response.buffer);
+        });
+    }
+
     sample(length, rate) {
         return this.send({ type: 'sample', length, rate }).then(response => {
             return new Float32Array(response.buffer);

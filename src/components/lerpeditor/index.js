@@ -6,14 +6,19 @@ const toRadians = Math.PI / 180;
 
 export default class LerpEditor extends Component {
     getStartValue(stageIndex) {
-        // HACK:
+        const app = this.props.appState;
+        const model = app.model;
+        
         return stageIndex > 2
-            ? this.props.stages[stageIndex - 1].limit
+            ? model.lerpStages[stageIndex - 1].limit
             : 0;
     }
 
     getEndValue(stageIndex) {
-        return this.props.stages[stageIndex].limit;
+        const app = this.props.appState;
+        const model = app.model;
+        
+        return model.lerpStages[stageIndex].limit;
     }
 
     sliderToSlopeAngle(stageIndex, angle) {
@@ -62,17 +67,31 @@ export default class LerpEditor extends Component {
     };
 
 	render(props, state) {
-        let rows = props.stages.map((stageIndex, index) => {
-            const angle = this.slopeToSlider(index, stageIndex.slope);
-            return (
+        const app = this.props.appState;
+        if (!app.ready) {
+            return;
+        }
+
+        const model = app.model;
+        const programIndex = 1;
+
+        const program = model.lerpPrograms[programIndex];
+        const rows = [];
+        
+        for (let progressionIndex = program.start, stageIndex = model.lerpProgressions[progressionIndex];
+            stageIndex != 0;
+            stageIndex = model.lerpProgressions[++progressionIndex]) {
+
+            const stage = model.lerpStages[stageIndex];
+            const angle = this.slopeToSlider(stageIndex, stage.slope);
+            rows.push(
                 <div class={style.stage}>
-                    <span>{ index }: </span>
-                    <input name={ index } type='range' min='0' max='89' value={ angle } onchange={ this.slopeChanged } />
-                    <input name={ `[${index}].limit` }   type='number' min='-128' max='127' value={ stageIndex.limit } onchange={ this.lerpChanged } />
+                    <span>{ stageIndex }: </span>
+                    <input name={ stageIndex } type='range' min='0' max='89' value={ angle } onchange={ this.slopeChanged } />
+                    <input name={ `[${stageIndex}].limit` }   type='number' min='-128' max='127' value={ stage.limit } onchange={ this.lerpChanged } />
                 </div>
             );
-        });
-
+        }
 		return (
             <div>
                 { rows }

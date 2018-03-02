@@ -3,7 +3,7 @@ import { Router } from 'preact-router';
 
 import Header from './header';
 import Home from '../routes/home';
-import Profile from '../routes/profile';
+import Settings from '../routes/settings';
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -16,20 +16,19 @@ if (module.hot) {
 
 export default class App extends Component {
 	state = {
-		wavetable: [],
-		currentChannel: 0,
-		channelToInstrument: [0],
-		instruments: [{
-			name: "Acoustic Grand Piano",
-			waveOffset: 0,
-			ampMod: 0,
-			freqMod: 0,
-			xor: 0,
-			instrumentFlags: 0
-		}],
-		lerpStages: [],
-		lerpProgressions: [],
-		lerpPrograms: []
+		ready: false,
+		model: {
+			currentChannel: 0,
+			channelToInstrument: [0],
+			instruments: [{
+				name: "Acoustic Grand Piano",
+				waveOffset: 0,
+				ampMod: 0,
+				freqMod: 0,
+				xor: 0,
+				instrumentFlags: 0
+			}]
+		}
 	};
 
 	constructor() {
@@ -44,14 +43,14 @@ export default class App extends Component {
 
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
-			this.firmware.getWavetable().then(bytes => {
-				this.setState({ wavetable: bytes })
-			});
-
-			this.firmware.getLerpStages().then(bytes => {
-				this.setState({ lerpStages: bytes })
-			});
-
+			const modelAsJSON = localStorage.getItem('model');
+			return modelAsJSON
+				? new Promise(accept => {
+					this.setState({ model: JSON.parse(modelAsJSON) });
+					accept(this.sync());
+				})
+				: this.reset()
+		}).then(() => {
 			stream.onaudioprocess = e => {
 				const outputBuffer = e.outputBuffer;
 				this.firmware.sample(outputBuffer.length, outputBuffer.sampleRate).then(buffer => {
@@ -71,11 +70,48 @@ export default class App extends Component {
 						});
 					});
 				});
-		})
+
+			this.setState({ ready: true });
+		});
 	}
 
 	set = (path, value) => {
 		this.setState(uc.set(path, value, this.state));
+		localStorage.setItem('model', JSON.stringify(this.state.model));
+	}
+
+	sync = () => {
+		const state = this.state;
+		return Promise.all([
+			this.firmware.setWavetable(0, state.model.wavetable),
+			this.firmware.setLerpStages(state.model.lerpStages),				
+		]);
+	}
+
+	reset = () => {
+		let wavetable;
+		this.firmware.getWavetable().then(table => {
+			wavetable = table;
+		});
+
+		let lerpPrograms;
+		this.firmware.getLerpPrograms().then(programs => {
+			lerpPrograms = programs;
+		});
+
+		let lerpProgressions;
+		this.firmware.getLerpProgressions().then(progressions => {
+			lerpProgressions = progressions;
+		});
+
+		let lerpStages;
+		return this.firmware.getLerpStages().then(stages => {
+			lerpStages = stages;
+			this.set(['model', 'wavetable'], wavetable);
+			this.set(['model', 'lerpPrograms'], lerpPrograms);
+			this.set(['model', 'lerpProgressions'], lerpProgressions);
+			this.set(['model', 'lerpStages'], lerpStages);
+		});
 	}
 
 	actions = {
@@ -91,11 +127,15 @@ export default class App extends Component {
 		},
 		updateInstrument: (path, value) => {
 			const state = this.state;
-			this.set(['instruments', state.channelToInstrument[state.currentChannel]].concat(path), value);
+			const model = state.model;
+			this.set(['model', 'instruments', model.channelToInstrument[model.currentChannel]].concat(path), value);
 		},
 		setLerpStage: (path, value) => {
-			this.set(`lerpStages${path}`, value);
-			this.firmware.setLerpStages(this.state.lerpStages);
+			this.set(`model.lerpStages${path}`, value);
+			this.firmware.setLerpStages(this.state.model.lerpStages);
+		},
+		reset: () => {
+			this.reset(new Firmware());
 		}
 	};
 
@@ -107,10 +147,9 @@ export default class App extends Component {
 					<Home path="/"
 						appState={ state }
 						actions={ this.actions } 
-						instrument={ state.instruments[state.channelToInstrument[state.currentChannel]] }
+						instrument={ state.model.instruments[state.model.channelToInstrument[state.model.currentChannel]] }
 						/>
-					<Profile path="/profile/" user="me" />
-					<Profile path="/profile/:user" />
+					<Settings path="/settings/" actions={ this.actions } />
 				</Router>
 			</div>
 		);
