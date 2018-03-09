@@ -91,4 +91,8 @@ const HeapRegion<LerpStage> Instruments::getLerpStages() {
 	return HeapRegion<LerpStage>(&LerpStages[0], sizeof(LerpStages));
 }
 
+const HeapRegion<Instrument> Instruments::getInstruments() {
+	return HeapRegion<Instrument>(&instruments[0], sizeof(instruments));
+}
+
 #endif // __EMSCRIPTEN__

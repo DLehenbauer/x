@@ -164,7 +164,7 @@ void controlChange(uint8_t channel, uint8_t knob, uint8_t value) {
 }
 
 void programChange(uint8_t channel, uint8_t value) {
-    synth.midiPitchBend(channel, value);
+    synth.midiProgramChange(channel, value);
 }
 
 void pitchBend(uint8_t channel, int16_t value) {

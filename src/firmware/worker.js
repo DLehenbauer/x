@@ -52,6 +52,21 @@ port.onmessage = e => {
             store(Module.getWavetable(), msg.bytes);
             break;
         }
+        case 'getWavetableAddress': {
+            port.postMessage({
+                type: 'waveTableAddress',
+                start: Module.getWavetable().start
+            });
+            break;
+        }
+        case 'getInstruments': {
+            load(Module.getInstruments(), 'instruments');
+            break;
+        }
+        case 'setInstruments': {
+            store(Module.getInstruments(), new Int8Array(msg.buffer));
+            break;
+        }
         case 'getLerpPrograms': {
             load(Module.getLerpPrograms(), 'lerpPrograms');
             break;

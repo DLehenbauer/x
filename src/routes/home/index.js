@@ -6,6 +6,10 @@ import { h, Component } from 'preact';
 import style from './style';
 
 export default class Home extends Component {
+	state = {
+		isEditing: false
+	}
+
 	setWave = (index, value) => {
 		this.state.wavetable[index] = value;
 		this.firmware.setWavetable(0, this.state.wavetable);
@@ -17,6 +21,10 @@ export default class Home extends Component {
 
 	stopClicked = () => {
 		this.props.actions.noteOff();
+	}
+
+	editModeChanged = e => {
+		this.setState({ isEditing: e.target.checked })
 	}
 
 	render(props, state) {
@@ -39,13 +47,14 @@ export default class Home extends Component {
 				<div style='overflow-x: scroll; overflow-y: hidden'>
 					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
 						<WaveEditor 
-							isEditing={ false }
+							isEditing={ state.isEditing }
 							instrument={ props.instrument }
 							wave={ model.wavetable }
 							setWave={ actions.setWavetable }
-							updateInstrument={ actions.updateInstrument }  />
+							updateInstrument={ actions.updateInstrument } />
 					</div>
 				</div>
+				<input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
 				<div class={style.lerp}>
 					<Lerp stages={ app.model.lerpStages } />
 				</div>

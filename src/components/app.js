@@ -20,6 +20,7 @@ export default class App extends Component {
 		model: {
 			currentChannel: 0,
 			channelToInstrument: [0],
+			wavetable: [],
 			instruments: [{
 				name: "Acoustic Grand Piano",
 				waveOffset: 0,
@@ -44,12 +45,12 @@ export default class App extends Component {
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
 			const modelAsJSON = localStorage.getItem('model');
-			return modelAsJSON
-				? new Promise(accept => {
-					this.setState({ model: JSON.parse(modelAsJSON) });
-					accept(this.sync());
-				})
-				: this.reset()
+			if (modelAsJSON) {
+				this.setState({ model: JSON.parse(modelAsJSON) });
+				return this.sync();
+			} else {
+				return this.reset();
+			}
 		}).then(() => {
 			stream.onaudioprocess = e => {
 				const outputBuffer = e.outputBuffer;
@@ -84,39 +85,30 @@ export default class App extends Component {
 		const state = this.state;
 		return Promise.all([
 			this.firmware.setWavetable(0, state.model.wavetable),
-			this.firmware.setLerpStages(state.model.lerpStages),				
+			this.firmware.setInstruments(state.model.instruments),
+			this.firmware.setLerpStages(state.model.lerpStages),
 		]);
 	}
 
 	reset = () => {
-		let wavetable;
-		this.firmware.getWavetable().then(table => {
-			wavetable = table;
-		});
+		const instruments = this.firmware.getInstruments();
+		const wavetable = this.firmware.getWavetable();
+		const lerpPrograms = this.firmware.getLerpPrograms();
+		const lerpProgressions = this.firmware.getLerpProgressions();
+		const lerpStages = this.firmware.getLerpStages();
 
-		let lerpPrograms;
-		this.firmware.getLerpPrograms().then(programs => {
-			lerpPrograms = programs;
-		});
-
-		let lerpProgressions;
-		this.firmware.getLerpProgressions().then(progressions => {
-			lerpProgressions = progressions;
-		});
-
-		let lerpStages;
-		return this.firmware.getLerpStages().then(stages => {
-			lerpStages = stages;
-			this.set(['model', 'wavetable'], wavetable);
-			this.set(['model', 'lerpPrograms'], lerpPrograms);
-			this.set(['model', 'lerpProgressions'], lerpProgressions);
-			this.set(['model', 'lerpStages'], lerpStages);
+		return Promise.all([instruments, wavetable, lerpPrograms, lerpProgressions, lerpStages]).then(values => {
+			this.set(['model', 'instruments'], values[0]);
+			this.set(['model', 'wavetable'], values[1]);
+			this.set(['model', 'lerpPrograms'], values[2]);
+			this.set(['model', 'lerpProgressions'], values[3]);
+			this.set(['model', 'lerpStages'], values[4]);
 		});
 	}
 
 	actions = {
 		setWavetable: (index, value) => {
-			this.set(['wavetable', index], value);
+			this.set(['model', 'wavetable', index], value);
 			this.firmware.setWavetable(0, new Int8Array(this.state.wavetable));
 		},
 		noteOn: () => {
@@ -129,6 +121,8 @@ export default class App extends Component {
 			const state = this.state;
 			const model = state.model;
 			this.set(['model', 'instruments', model.channelToInstrument[model.currentChannel]].concat(path), value);
+			this.firmware.setInstruments(this.state.model.instruments);
+			this.firmware.midi([0xC0, 0x00]);
 		},
 		setLerpStage: (path, value) => {
 			this.set(`model.lerpStages${path}`, value);

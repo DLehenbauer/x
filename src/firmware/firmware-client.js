@@ -61,6 +61,46 @@ export default class Firmware {
         });
     }
 
+    getWavetableAddress() {
+        return this.send({type:'getWavetableAddress'}).then(response => response.start);
+    }
+
+    getInstruments() {
+        return this.getWavetableAddress().then(waveStart => {
+            return this.send({type: 'getInstruments'}).then(response => {
+                const dv = new DataView(response.buffer);
+    
+                const instruments = [];
+                for (let i = 0; i < response.buffer.byteLength;) {
+                    const waveOffset = dv.getUint32(i, /* littleEndian: */ true) - waveStart; i += 4;
+                    const ampMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+                    const freqMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+                    const xor = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+                    const flags = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+                    instruments.push({ waveOffset, ampMod, freqMod, xor, flags });
+                }
+
+                return instruments;
+            });
+        });
+    }
+
+    setInstruments(instruments) {
+        this.getWavetableAddress().then(waveStart => {
+            const buffer = new ArrayBuffer(instruments.length * 8);
+            const dv = new DataView(buffer);
+            let i = 0;
+            for (const instrument of instruments) {
+                const waveOffset = dv.setUint32(i, instrument.waveOffset + waveStart, /* littleEndian: */ true); i += 4;
+                const ampMod = dv.setUint8(i, instrument.ampMod); i += 1;
+                const freqMod = dv.setUint8(i, instrument.freqMod); i += 1;
+                const xor = dv.setUint8(i, instrument.xor); i += 1;
+                const flags = dv.setUint8(i, instrument.flags); i += 1;
+            }
+            this.port.postMessage({type: 'setInstruments', buffer}, [buffer]);
+        });
+    }
+
     getLerpStages() {
         return this.send({type: 'getLerpStages'}).then(response => {
             const dv = new DataView(response.buffer);
