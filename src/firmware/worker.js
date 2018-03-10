@@ -1,6 +1,6 @@
 importScripts('./firmware.js');
 
-const synth = new Module["MidiSynth"]
+const synth = Module.getSynth();
 const originalSampleRate = Module.getSampleRate();
 
 const channel = new MessageChannel();
@@ -35,13 +35,15 @@ port.onmessage = e => {
             break;
         }
         case 'noteOn': {
-            console.log(JSON.stringify(msg));
             synth.midiNoteOn(msg.channel, msg.note, msg.velocity);
             break;
         }
         case 'noteOff': {
-            console.log(JSON.stringify(msg));
             synth.midiNoteOff(msg.channel, msg.note);
+            break;
+        }
+        case 'programChange': {
+            synth.midiProgramChange(msg.channel, msg.program);
             break;
         }
         case 'getWavetable': {

@@ -27,6 +27,24 @@ export default class Home extends Component {
 		this.setState({ isEditing: e.target.checked })
 	}
 
+	get currentInstrument() {
+		const model = this.props.appState.model;
+		return model.channelToInstrument[model.currentChannel];
+	}
+
+	previousInstrument = () => {
+		this.props.actions.selectInstrument(this.currentInstrument - 1);
+	}
+
+	nextInstrument = () => {
+		this.props.actions.selectInstrument(this.currentInstrument + 1);
+	}
+
+	instrumentSelected = e => {
+		const instrument = parseInt(e.target.selectedOptions[0].value);
+		this.props.actions.selectInstrument(instrument);
+	}
+
 	render(props, state) {
 		const app = props.appState;
 		if (!app.ready) {
@@ -35,9 +53,20 @@ export default class Home extends Component {
 
 		const model = app.model;
 		const actions = props.actions;
+		const currentInstrument = this.currentInstrument;
+		const maxInstrument = app.instrumentNames.length - 1;
+		const instruments = app.instrumentNames.map((name, index) => {
+			const selected = index === currentInstrument;
+			return (
+				<option value={index} selected={selected}>{index}: {name}</option>	
+			);
+		});
 
 		return (
 			<div class={style.home}>
+				<button onclick={this.previousInstrument} disabled={currentInstrument <= 0}>&#x25c0;</button>
+				<select onchange={this.instrumentSelected}>{instruments}</select>
+				<button onclick={this.nextInstrument} disabled={currentInstrument >= maxInstrument}>&#x25ba;</button>
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
 				Scope:

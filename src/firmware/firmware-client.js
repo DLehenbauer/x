@@ -41,6 +41,10 @@ export default class Firmware {
         this.port.postMessage({type: 'noteOff', channel, note});
     }
 
+    programChange(channel, program) {
+        this.port.postMessage({type: 'programChange', channel, program});
+    }
+
     midi(data) {
         this.port.postMessage({type: 'midi', data});
     }
