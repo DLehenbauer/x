@@ -14,7 +14,9 @@ export default class Header extends Component {
 				<h1>Synth</h1>
 				<nav>
 					<span class={style.icon} onclick={this.resetClicked}>&#x21bb;</span>
-					<Link activeClassName={style.active} href="/">Home</Link>
+					<Link activeClassName={style.active} href="/">Play</Link>
+					<Link activeClassName={style.active} href="/edit">Edit</Link>
+					<Link activeClassName={style.active} href="/code">Code</Link>
 					<Link activeClassName={style.active} href="/settings"><div class={style.icon}>&#x2699;</div></Link>
 				</nav>
 			</header>

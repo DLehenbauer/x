@@ -2,7 +2,7 @@
 #include "instruments.h"
 
 void Lerp::start(uint8_t programIndex, uint8_t init) volatile {
-	amp = init;
+	amp = init << 8;
 	stageIndex = 0;
 
 	LerpProgram program;

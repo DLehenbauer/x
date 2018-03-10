@@ -1,0 +1,11 @@
+.container {    
+    height: 25%;
+    width: 80%;
+    overflow-x: auto;
+    overflow-y: scroll;
+    position: absolute;
+}
+
+.table {
+    font-family: monospace;
+}

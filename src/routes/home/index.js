@@ -6,6 +6,15 @@ import ArraySelector from '../../components/arrayselector';
 import { h, Component } from 'preact';
 import style from './style';
 
+// High pass FIR at ~7760hz
+const hiPass = [-0.075579, 0.800000, -0.075579];
+
+// Low pass FIR at ~7760hz
+const loPass = [0.187098, 0.800000, 0.187098];
+
+// Gaussian Low-Pass for smoothing wave edges for zero-crossing
+const zeroCross = [0.028532, 0.067234, 0.124009, 0.179044, 0.20236, 0.179044, 0.124009, 0.067234, 0.028532];
+
 export default class Home extends Component {
 	state = {
 		isEditing: false
@@ -28,13 +37,189 @@ export default class Home extends Component {
 		this.setState({ isEditing: e.target.checked })
 	}
 
-	get currentInstrument() {
+	get currentInstrumentIndex() {
 		const model = this.props.appState.model;
 		return model.channelToInstrument[model.currentChannel];
 	}
 
+	get currentInstrument() {
+		const model = this.props.appState.model;
+		return model.instruments[this.currentInstrumentIndex];
+	}
+
 	instrumentSelected = index => {
 		this.props.actions.selectInstrument(index);
+	}
+
+	onMoveWave = (delta) => {
+		const model = this.props.appState.model;
+		const original = this.currentInstrument.waveOffset;
+		const limit = model.wavetable.length - 256;
+		let updated = Math.round(original / Math.abs(delta)) * Math.abs(delta);
+		updated = Math.min(Math.max(0, updated + delta), limit)
+	
+		this.props.actions.updateInstrument(['waveOffset'], updated);
+	}
+
+	onFormulaChanged(e) {
+		try {
+			this.waveFormula = eval(`(t, i, s) => { const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
+		} catch (error) {
+			this.waveFormula = (t, i, s) => s(i);
+			this.waveFormulaBox.setCustomValidity(error);
+		}
+	}
+
+	createSampler() {
+		const wave = this.getWave();
+		return (index) => {
+			return wave[index & 0xFF];
+		};
+	}
+
+	createSamplerFromArray(wave) {
+		return (index) => {
+			return wave[index & 0xFF];
+		};		
+	}
+
+	modifyWave(fn) {
+		const offset = this.currentInstrument.waveOffset;
+		const s = this.createSampler();
+
+		this.props.actions.updateWavetable(
+			offset, offset + 256,
+			wave => {
+				const step = 1 / 255;
+				let t = 0;
+				for (let i = 0; i < 256; i++) {
+					const sample = Math.max(Math.min(Math.round(fn(t, i, i => s(i) / 127)), 127), -127) | 0;
+					wave[i] = sample;
+					t += step;
+				}
+			});
+	}
+
+	updateWave(fn) {
+		const offset = this.currentInstrument.waveOffset;
+		this.props.actions.updateWavetable(offset, offset + 256, fn);
+	}
+
+	onSetWave() {
+		this.modifyWave(this.waveFormula.bind(this));
+	}
+
+	getWaveLimits(wave) {
+		let min = +Infinity;
+		let max = -Infinity;
+
+		for (let i = 0; i < wave.length; i++) {
+			min = Math.min(min, wave[i]);
+			max = Math.max(max, wave[i]);
+		}
+
+		return { min: min, max: max, amplitude: max - min };
+	}
+
+	convolve(s, h) {
+		const y = new Array(256);
+		const m = Math.floor(h.length / 2);
+		for (let i = 0; i < 256; i++) {
+			y[i] = 0;
+			for (let j = 0; j < h.length; j++) {
+				y[i] += s(i - j + m) * h[j];
+			}
+		}
+
+		return y;
+	}
+
+	getWaveLimits(wave) {
+		let min = +Infinity;
+		let max = -Infinity;
+
+		for (let i = 0; i < wave.length; i++) {
+			min = Math.min(min, wave[i]);
+			max = Math.max(max, wave[i]);
+		}
+
+		return { min: min, max: max, amplitude: max - min };
+	}
+
+	getWave() {
+		const wavetable = this.props.appState.model.wavetable;
+		const offset = this.currentInstrument.waveOffset;
+		return wavetable.slice(offset, offset + 256);
+	}
+
+	onZeroCross() {
+		const w = this.getWave();
+		w[0] = 0;
+		w[254] = 0;
+		w[255] = 0;
+
+		const s = this.createSamplerFromArray(w);
+		const s2 = this.convolve(s, zeroCross);
+
+		const extent = 5;
+		for (let i = 0; i <= extent; i++) {
+			const a = (i / extent);
+			w[i] = (1 - a) * s2[i] + a * w[i];
+
+			const j = 254 - i;
+			w[j] = (1 - a) * s2[j] + a * w[j];
+		}
+		w[255] = 0
+
+		this.modifyWave((t, i) => {
+			return w[i];
+		});
+	}
+
+	onFilter(h) {
+		const priorLimits = this.getWaveLimits(this.getWave());
+
+		const s = this.createSampler();
+		const wave = this.convolve(s, h);
+
+		const newLimits = this.getWaveLimits(wave);
+		const scale = priorLimits.amplitude / newLimits.amplitude;
+
+		for (let i = 0; i < wave.length; i++) {
+			const n = (wave[i] - newLimits.min) / newLimits.amplitude;
+			wave[i] = (n + newLimits.min / newLimits.amplitude) * priorLimits.amplitude;
+		}
+
+		this.modifyWave((t, i) => {
+			return wave[i];
+		});
+	}
+
+	onLowPass() {
+		this.onFilter(loPass);
+	}
+
+	onHighPass() {
+		this.onFilter(hiPass);
+	}
+
+	onNormalizeWave() {
+		const wavetable = this.getWave();
+
+		let min = +Infinity;
+		let max = -Infinity;
+		for (let i = 0; i < 256; i++) {
+			min = Math.min(min, wavetable[i]);
+			max = Math.max(max, wavetable[i]);
+		}
+
+		const scale = 2 / (Math.abs(max) + Math.abs(min));
+		const s = this.createSampler();
+
+		this.modifyWave((t, i) => {
+			const n = (s(i) - min) * scale;
+			return (n - 1) * 127;
+		});
 	}
 
 	render(props, state) {
@@ -49,7 +234,7 @@ export default class Home extends Component {
 
 		return (
 			<div class={style.home}>
-				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrument} options={instrumentNames} />
+				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrumentIndex} options={instrumentNames} />
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
 				Scope:
@@ -60,15 +245,39 @@ export default class Home extends Component {
 					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
 						<WaveEditor 
 							isEditing={ state.isEditing }
-							instrument={ props.instrument }
+							instrument={ this.currentInstrument }
 							wave={ model.wavetable }
 							setWave={ actions.setWavetable }
 							updateInstrument={ actions.updateInstrument } />
 					</div>
 				</div>
-				<input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
+				<div>
+					<input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
+					<button onclick={() => this.onMoveWave(-(1 << 30))}>|&lt;</button>
+					<button onclick={() => this.onMoveWave(-256)}>&lt;&lt;</button>
+					<button onclick={() => this.onMoveWave(-64)}>&lt;</button>
+					<button onclick={() => this.onMoveWave(+64)}>&gt;</button>
+					<button onclick={() => this.onMoveWave(+256)}>&gt;&gt;</button>
+					<button onclick={() => this.onMoveWave(+(1 << 30))}>&gt;|</button>
+				</div>
+				<div>
+					<input ref={element => { this.waveFormulaBox = element; }} list="waveFormulaList" onchange={this.onFormulaChanged.bind(this)} class={style.waveFormula} />
+					<datalist id="waveFormulaList">
+						<option value="rand()"></option>
+						<option value="t < 0.5 ? 1 : -1"></option>
+						<option value="tan(pi * t)"></option>
+						<option value="sin(2 * pi * t)"></option>
+						<option value="t < 0.25 ? 4*t : t < 0.75 ? 2-4*t : 4*t - 4"></option>
+						<option value="(t < 0.5 ? (2*t): (2*t) - 2)"></option>
+					</datalist>
+					<button onclick={this.onSetWave.bind(this)}>Apply</button>
+					<button onclick={this.onLowPass.bind(this)}>Low Pass</button>
+					<button onclick={this.onHighPass.bind(this)}>High Pass</button>
+					<button onclick={this.onZeroCross.bind(this)}>Zero Cross</button>
+					<button onclick={this.onNormalizeWave.bind(this)}>Normalize</button>
+				</div>
 				<div class={style.lerp}>
-					<Lerp appState={ app } program={ model.instruments[this.currentInstrument].ampMod } />
+					<Lerp appState={ app } program={ this.currentInstrument.ampMod } />
 				</div>
 				<LerpEditor appState={ app } actions={ actions } />
 			</div>

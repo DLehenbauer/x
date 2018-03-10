@@ -3,7 +3,9 @@ import { Router } from 'preact-router';
 
 import Header from './header';
 import Home from '../routes/home';
+import Code from '../routes/code';
 import Settings from '../routes/settings';
+import Play from '../routes/play';
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -17,6 +19,7 @@ if (module.hot) {
 export default class App extends Component {
 	state = {
 		ready: false,
+		midiMessages: [],
 		model: {
 			currentChannel: 0,
 			channelToInstrument: [0],
@@ -250,11 +253,15 @@ export default class App extends Component {
 		const stream = audioContext.createScriptProcessor(/* bufferSize */ 512, /* inputs */ 0, /* outputs */ 1);
 		stream.connect(audioContext.destination);
 
+		const audioOutputY = audioContext.createGain();
+		audioOutputY.gain.value = 2;
+		stream.connect(audioOutputY);
+
 		const audioOutputX = audioContext.createGain();
 		audioOutputX.gain.value = 15;
 		stream.connect(audioOutputX);
 
-		this.setState({ audioContext, audioOutput: stream, audioOutputX });
+		this.setState({ audioContext, audioOutput: stream, audioOutputX, audioOutputY });
 
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
@@ -280,6 +287,12 @@ export default class App extends Component {
 					midi.inputs.forEach(device => {
 						device.open().then(() => {
 							device.onmidimessage = ev => {
+								let midiMessages = this.state.midiMessages;
+								midiMessages.push({ timeStamp: ev.timestamp, data: ev.data });
+								if (midiMessages.length > 25) {
+									midiMessages.shift();
+								}
+								this.set(['midiMessages'], midiMessages);
 								this.firmware.midi(ev.data);
 							}
 						});
@@ -305,6 +318,10 @@ export default class App extends Component {
 		this.firmware.programChange(channel, program);
 	}
 
+	syncWavetable = () => {
+		this.firmware.setWavetable(0, new Int8Array(this.state.model.wavetable));
+	}
+
 	reset = () => this.firmware.reset((path, value) => {
 		this.set(['model'].concat(path), value);
 	}).then(() => {
@@ -318,7 +335,15 @@ export default class App extends Component {
 	actions = {
 		setWavetable: (index, value) => {
 			this.set(['model', 'wavetable', index], value);
-			this.firmware.setWavetable(0, new Int8Array(this.state.model.wavetable));
+			this.syncWavetable();
+		},
+		updateWavetable: (start, end, fn) => {
+			const slice = this.state.model.wavetable.slice(start, end);
+			fn(slice);
+			const newWavetable = this.state.model.wavetable.slice(0);
+			newWavetable.splice(start, end - start, ...slice);
+			this.set(['model', 'wavetable'], newWavetable);
+			this.syncWavetable();
 		},
 		noteOn: () => {
 			this.firmware.noteOn(0, 48, 127, 0);
@@ -343,7 +368,7 @@ export default class App extends Component {
 			});
 		},
 		setLerpStage: (path, value) => {
-			this.set(`model.lerpStages${path}`, value);
+			this.set(`model.lerpStages${path}`, value | 0);
 			this.firmware.setLerpStages(this.state.model.lerpStages);
 			this.syncInstrument();
 		},
@@ -357,11 +382,12 @@ export default class App extends Component {
 			<div id="app">
 				<Header />
 				<Router onChange={this.handleRoute}>
-					<Home path="/"
+					<Play path="/"
+						appState={ state } />
+					<Home path="/edit/"
 						appState={ state }
-						actions={ this.actions } 
-						instrument={ state.model.instruments[state.model.channelToInstrument[state.model.currentChannel]] }
-						/>
+						actions={ this.actions } />
+					<Code path="/code/" appState={ state } />
 					<Settings path="/settings/" actions={ this.actions } />
 				</Router>
 			</div>

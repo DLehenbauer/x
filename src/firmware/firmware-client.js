@@ -112,7 +112,7 @@ export default class Firmware {
             const stages = [];
             for (let i = 0; i < response.buffer.byteLength;) {
                 const slope = dv.getInt16(i, /* littleEndian: */ true); i += 2;
-                const limit = dv.getUint8(i, /* littleEndian: */ true); i += 2;
+                const limit = dv.getInt8(i, /* littleEndian: */ true); i += 2;
                 stages.push({ slope, limit });
             }
 

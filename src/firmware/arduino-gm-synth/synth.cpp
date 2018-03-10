@@ -65,8 +65,8 @@ SIGNAL(TIMER2_COMPA_vect) {
         const uint8_t fn = divider & 0xF0;                  // Top 4 bits of 'divider' selects which additional work to perform.
         switch (fn) {
 			case 0x20: {
-				//int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
-				//v_pitch[voice] = _basePitch[voice] + freqMod;
+				int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
+				v_pitch[voice] = _basePitch[voice] + freqMod;
 				break;
 			}
 
