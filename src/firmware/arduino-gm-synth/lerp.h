@@ -34,7 +34,7 @@ class Lerp {
 			int8_t out = amp >> 8;
 
 			const bool nextStage = (out < 0) ||
-				(slope < 0)
+				(slope <= 0)
 					? out < limit
 					: out > limit;
 		
@@ -50,7 +50,7 @@ class Lerp {
 			return out;
 		}
 		
-		void start(uint8_t program) volatile;
+		void start(uint8_t program, uint8_t init) volatile;
 
 		void stop() volatile {
 			if (stageIndex < loopEnd) {
@@ -64,7 +64,7 @@ class Lerp {
 		#ifdef __EMSCRIPTEN__
 
 		uint8_t sampleEm() { return sample(); }
-		void startEm(uint8_t program) { start(program); }
+		void startEm(uint8_t program, uint8_t init) { start(program, init); }
 		void stopEm() { stop(); }
 		
 		#endif // __EMSCRIPTEN__

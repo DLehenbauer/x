@@ -49,27 +49,27 @@ export default class Firmware {
         this.port.postMessage({type: 'midi', data});
     }
 
-    getSampleRate() {
+    getSampleRate = () => {
         return this.send({type: 'getSampleRate'}).then(response => {
             return response.rate;
         });
     }
 
-    setWavetable(offset, bytes) {
+    setWavetable = (offset, bytes) => {
         this.port.postMessage({type: 'setWavetable', offset, bytes});        
     }
 
-    getWavetable() {
+    getWavetable = () => {
         return this.send({type: 'getWavetable'}).then(response => {
             return Array.prototype.slice.apply(new Int8Array(response.buffer));
         });
     }
 
-    getWavetableAddress() {
+    getWavetableAddress = () => {
         return this.send({type:'getWavetableAddress'}).then(response => response.start);
     }
 
-    getInstruments() {
+    getInstruments = () => {
         return this.getWavetableAddress().then(waveStart => {
             return this.send({type: 'getInstruments'}).then(response => {
                 const dv = new DataView(response.buffer);
@@ -89,8 +89,8 @@ export default class Firmware {
         });
     }
 
-    setInstruments(instruments) {
-        this.getWavetableAddress().then(waveStart => {
+    setInstruments = (instruments) => {
+        return this.getWavetableAddress().then(waveStart => {
             const buffer = new ArrayBuffer(instruments.length * 8);
             const dv = new DataView(buffer);
             let i = 0;
@@ -105,7 +105,7 @@ export default class Firmware {
         });
     }
 
-    getLerpStages() {
+    getLerpStages = () => {
         return this.send({type: 'getLerpStages'}).then(response => {
             const dv = new DataView(response.buffer);
 
@@ -120,7 +120,7 @@ export default class Firmware {
         });
     }
 
-    setLerpStages(stages) {
+    setLerpStages = (stages) => {
         const buffer = new ArrayBuffer(stages.length * 4);
         const dv = new DataView(buffer);
         let i = 0;
@@ -132,7 +132,7 @@ export default class Firmware {
         this.port.postMessage({ type: 'setLerpStages', buffer }, [buffer]);
     }
 
-    getLerpPrograms() {
+    getLerpPrograms = () => {
         return this.send({type: 'getLerpPrograms'}).then(response => {
             const dv = new DataView(response.buffer);
 
@@ -151,11 +151,28 @@ export default class Firmware {
         });
     }
 
-    getLerpProgressions() {
+    setLerpPrograms = programs => {
+        const buffer = new ArrayBuffer(programs.length * 2);
+        const dv = new DataView(buffer);
+        let i = 0;
+        programs.forEach(program => {
+            dv.setUint8(i, program.start, /* littleEndian: */ true); i++;
+            dv.setUint8(i, program.loopStart << 4 | program.loopEnd, /* littleEndian: */ true); i++;
+        });
+
+        this.port.postMessage({ type: 'setLerpPrograms', buffer }, [buffer]);
+    };
+
+    getLerpProgressions = () => {
         return this.send({type: 'getLerpProgressions'}).then(response => {
-            return new Uint8Array(response.buffer);
+            return Array.prototype.slice.call(new Uint8Array(response.buffer));
         });
     }
+
+    setLerpProgressions = progressions => {
+        const buffer = Uint8Array.from(progressions).buffer;
+        this.port.postMessage({ type: 'setLerpProgressions', buffer }, [buffer]);
+    };
 
     sample(length, rate) {
         return this.send({ type: 'sample', length, rate }).then(response => {
@@ -168,4 +185,24 @@ export default class Firmware {
             return new Uint8Array(response.buffer);
         });
     }
+
+    syncInfo = [
+        { path: "instruments", get: this.getInstruments, set: this.setInstruments },
+        { path: "wavetable", get: this.getWavetable, set: (table) => this.setWavetable(0, table) },
+        { path: "lerpPrograms", get: this.getLerpPrograms, set: this.setLerpPrograms },
+        { path: "lerpProgressions", get: this.getLerpProgressions, set: this.setLerpProgressions },
+        { path: "lerpStages", get: this.getLerpStages, set: this.setLerpStages },
+    ];
+
+	sync(model) {
+		return Promise.all(this.syncInfo.map(info => info.set(model[info.path])));
+	}
+
+	reset(set) {
+        return Promise.all(this.syncInfo.map(info => info.get())).then(values => {
+            values.forEach((value, index) => {
+                set([this.syncInfo[index].path], value);
+            });
+        })
+	}
 }

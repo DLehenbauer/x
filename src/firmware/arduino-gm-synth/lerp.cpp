@@ -1,20 +1,19 @@
 #include "lerp.h"
 #include "instruments.h"
 
-void Lerp::start(uint8_t programIndex) volatile {
+void Lerp::start(uint8_t programIndex, uint8_t init) volatile {
+	amp = init;
+	stageIndex = 0;
+
 	LerpProgram program;
 	Instruments::getLerpProgram(programIndex, program);
 	
 	progressionStart = program.progressionStart;
 	loopStart = program.loopStartAndEnd >> 4;
 	loopEnd = program.loopStartAndEnd & 0x0F;
-
-	amp = 0;
-	stageIndex = 0;
 	
 	loadStage();
 }
-
 
 void Lerp::loadStage() volatile {
 	 LerpStage stage;

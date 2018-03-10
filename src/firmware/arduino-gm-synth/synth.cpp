@@ -56,10 +56,10 @@ SIGNAL(TIMER2_COMPA_vect) {
         static uint8_t divider = 0;                         // Time division is used to spread lower-frequency / periodic work
         divider++;                                          // across interrupts.
         
-        const uint8_t voice = divider & 0x0F;               // Bottom 4 bits of 'divider' selects which voice to perform work on.
+        const uint8_t voice = divider & 0x0F;				// Bottom 4 bits of 'divider' selects which voice to perform work on.
         
-        if (v_isNoise[voice]) {                              // To avoid needing a large wavetable for noise, we use xor to combine
-            v_xor[voice] = static_cast<uint8_t>(noise);      // the a 256B wavetable with samples from the LFSR.
+        if (v_isNoise[voice]) {                             // To avoid needing a large wavetable for noise, we use xor to combine
+            v_xor[voice] = static_cast<uint8_t>(noise);     // the a 256B wavetable with samples from the LFSR.
         }
 
         const uint8_t fn = divider & 0xF0;                  // Top 4 bits of 'divider' selects which additional work to perform.
@@ -218,8 +218,8 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
     v_vol[voice] = midiVelocity;
-    v_ampMod[voice].start(instrument.ampMod);
-	v_freqMod[voice].start(instrument.freqMod);
+    v_ampMod[voice].start(instrument.ampMod, /* init */ 0x00);
+	v_freqMod[voice].start(instrument.freqMod, /* init */ 0x40);
     
     resume();
 }

@@ -2,6 +2,7 @@ import Scope from '../../components/scope';
 import WaveEditor from '../../components/waveeditor';
 import Lerp from '../../components/lerp';
 import LerpEditor from '../../components/lerpeditor';
+import ArraySelector from '../../components/arrayselector';
 import { h, Component } from 'preact';
 import style from './style';
 
@@ -32,17 +33,8 @@ export default class Home extends Component {
 		return model.channelToInstrument[model.currentChannel];
 	}
 
-	previousInstrument = () => {
-		this.props.actions.selectInstrument(this.currentInstrument - 1);
-	}
-
-	nextInstrument = () => {
-		this.props.actions.selectInstrument(this.currentInstrument + 1);
-	}
-
-	instrumentSelected = e => {
-		const instrument = parseInt(e.target.selectedOptions[0].value);
-		this.props.actions.selectInstrument(instrument);
+	instrumentSelected = index => {
+		this.props.actions.selectInstrument(index);
 	}
 
 	render(props, state) {
@@ -53,25 +45,16 @@ export default class Home extends Component {
 
 		const model = app.model;
 		const actions = props.actions;
-		const currentInstrument = this.currentInstrument;
-		const maxInstrument = app.instrumentNames.length - 1;
-		const instruments = app.instrumentNames.map((name, index) => {
-			const selected = index === currentInstrument;
-			return (
-				<option value={index} selected={selected}>{index}: {name}</option>	
-			);
-		});
+		const instrumentNames = app.instrumentNames.map((name, index) => `${index}: ${name}`);
 
 		return (
 			<div class={style.home}>
-				<button onclick={this.previousInstrument} disabled={currentInstrument <= 0}>&#x25c0;</button>
-				<select onchange={this.instrumentSelected}>{instruments}</select>
-				<button onclick={this.nextInstrument} disabled={currentInstrument >= maxInstrument}>&#x25ba;</button>
+				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrument} options={instrumentNames} />
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
 				Scope:
 				<div class={style.scope}>
-				  	<Scope audioContext={ app.audioContext } source={ app.audioOutput } />
+				  	<Scope audioContext={ app.audioContext } source={ app.audioOutputX } />
 				</div>
 				<div style='overflow-x: scroll; overflow-y: hidden'>
 					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
@@ -85,7 +68,7 @@ export default class Home extends Component {
 				</div>
 				<input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
 				<div class={style.lerp}>
-					<Lerp stages={ app.model.lerpStages } />
+					<Lerp appState={ app } program={ model.instruments[this.currentInstrument].ampMod } />
 				</div>
 				<LerpEditor appState={ app } actions={ actions } />
 			</div>

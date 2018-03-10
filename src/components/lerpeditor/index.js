@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import style from './style';
+import ArraySelector from '../arrayselector';
 
 const toDegrees = 180 / Math.PI;
 const toRadians = Math.PI / 180;
@@ -66,6 +67,15 @@ export default class LerpEditor extends Component {
         this.props.actions.setLerpStage(path, parseInt(target.value));
     };
 
+	get currentInstrument() {
+		const model = this.props.appState.model;
+		return model.channelToInstrument[model.currentChannel];
+	}
+
+    programSelected = index => {
+        this.props.actions.updateInstrument('ampMod', index);
+    };
+
 	render(props, state) {
         const app = this.props.appState;
         if (!app.ready) {
@@ -73,11 +83,13 @@ export default class LerpEditor extends Component {
         }
 
         const model = app.model;
-        const programIndex = 1;
+        const programIndex = model.instruments[this.currentInstrument].ampMod;
+
+        const programNames = model.lerpPrograms.map((lerp, index) => index);
 
         const program = model.lerpPrograms[programIndex];
         const rows = [];
-        
+
         for (let progressionIndex = program.start, stageIndex = model.lerpProgressions[progressionIndex];
             stageIndex != 0;
             stageIndex = model.lerpProgressions[++progressionIndex]) {
@@ -86,14 +98,15 @@ export default class LerpEditor extends Component {
             const angle = this.slopeToSlider(stageIndex, stage.slope);
             rows.push(
                 <div class={style.stage}>
-                    <span>{ stageIndex }: </span>
+                    <span>{ stageIndex }:</span>
                     <input name={ stageIndex } type='range' min='0' max='89' value={ angle } onchange={ this.slopeChanged } />
-                    <input name={ `[${stageIndex}].limit` }   type='number' min='-128' max='127' value={ stage.limit } onchange={ this.lerpChanged } />
+                    <input name={ `[${stageIndex}].limit` } type='number' min='-128' max='127' value={ stage.limit } onchange={ this.lerpChanged } />
                 </div>
             );
         }
 		return (
             <div>
+                <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} />
                 { rows }
             </div>
 		);

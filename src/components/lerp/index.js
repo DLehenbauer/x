@@ -11,10 +11,12 @@ export default class Lerp extends Canvas {
     }
 
 	paint(context2d, width, height) {
+        const props = this.props;
+
         this.firmware.connected.then(() => {
-            this.firmware.setLerpStages(this.props.stages);
+            this.firmware.sync(props.appState.model);
         }).then(() => {
-            return this.firmware.plotLerp(1, width).then(plot => {
+            return this.firmware.plotLerp(props.program, width).then(plot => {
                 const state = this.state;
 
                 context2d.clearRect(0, 0, width, height);

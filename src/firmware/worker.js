@@ -125,7 +125,7 @@ port.onmessage = e => {
         }
         case 'plotLerp': {
             const lerp = new Module["Lerp"];
-            lerp.start(msg.program);
+            lerp.start(msg.program, /* init */ 0);
 
             const u8 = new Uint8Array(msg.length);
             for (let i = 0; i < u8.length; i++) {

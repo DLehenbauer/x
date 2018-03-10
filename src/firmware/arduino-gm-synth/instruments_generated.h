@@ -1,32 +1,39 @@
 static constexpr LerpStage LerpStages[] PROGMEM = {
-	//                       slope   limit
-	/* 0x00:       hold */  {		 0,      0 },
-	/* 0x01:        off */  { 127 * 256,   0x40 },
+	//                         slope      limit
+	/* 0x03:       hold */  {          0,	-64 },
+	/* 0x00:        off */  {  -64 * 256,     0 },
+	/* 0x04:    sustain */  {        -32,     0 },
+	/* 0x06:    release */  {   -4 * 256,     0 },
 
-	/* 0x02:     attack */  { 64 * 256,    127 },
-	/* 0x03:      decay */  { -1 * 256,     64 },
-	/* 0x04:    sustain */  {      -32,     16 },
-	/* 0x05:    release */  { -4 * 256,      8 },
-	/* 0x06:    release */  { -4 * 256,      0 },
+	/* 0x02:     attack */  {   64 * 256,   127 },
+	/* 0x03:      decay */  {   -1 * 256,    64 },
+	/* 0x04:    sustain */  {        -32,     0 },
+	/* 0x06:    release */  {   -4 * 256,     0 },
 
-	/* 0x06:     attack */  { 127 * 256,    127 },
-	/* 0x07:      decay */  { -32 * 256,     32 },
-	/* 0x08:    sustain */  { -8 * 256,       8 },
-	/* 0x09:    release */  { -4 * 256,       0 },
+	/* 0x02:     attack */  {   64 * 256,   127 },
+	/* 0x03:      decay */  {   -1 * 256,    64 },
+	/* 0x04:    sustain */  {        -32,     0 },
+	/* 0x06:    release */  {   -4 * 256,     0 },
+
+	/* 0x02:     attack */  {   64 * 256,   127 },
+	/* 0x03:      decay */  {   -1 * 256,    64 },
+	/* 0x04:    sustain */  {        -32,     0 },
+	/* 0x06:    release */  {   -4 * 256,     0 },
 };
 
 static constexpr uint8_t LerpProgressions[] PROGMEM = {
-	/* 0x00: */ 0x01, 0x00,
-	/* 0x02: */ 0x02, 0x03, 0x04, 0x05, 0x06, 0x00,
-	/* 0x08: */ 0x07, 0x08, 0x09, 0x0A, 0x00,
-	/* 0x0d: */ 
+	/* 0x00: */ 0x00, 0x00, 0x00, 0x00, 0x00,
+	/* 0x05: */ 0x04, 0x05, 0x06, 0x07, 0x00,
+	/* 0x0A: */ 0x08, 0x09, 0x0A, 0x0B, 0x00,
+	/* 0x0F: */ 0x0C, 0x0D, 0x0E, 0x0F, 0x00,
 };
 
 static constexpr LerpProgram LerpPrograms[] PROGMEM = {
 	//			  prog	   loop
-	/* 0x00: */ { 0x00,	   0x00 },
-	/* 0x01: */ { 0x02,	   0x54 },
-	/* 0x02: */ { 0x08,	   0x43 },
+	/* 0x00: */ { 0x00,	   0x10 },
+	/* 0x01: */ { 0x05,	   0x43 },
+	/* 0x02: */ { 0x0A,	   0x43 },
+	/* 0x03: */ { 0x0F,	   0x43 },
 };
 
 static constexpr int8_t Waveforms[] PROGMEM = {
