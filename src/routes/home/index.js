@@ -2,6 +2,7 @@ import Scope from '../../components/scope';
 import WaveEditor from '../../components/waveeditor';
 import Lerp from '../../components/lerp';
 import LerpEditor from '../../components/lerpeditor';
+import InstrumentEditor from '../../components/instrumenteditor';
 import ArraySelector from '../../components/arrayselector';
 import { h, Component } from 'preact';
 import style from './style';
@@ -15,14 +16,11 @@ const loPass = [0.187098, 0.800000, 0.187098];
 // Gaussian Low-Pass for smoothing wave edges for zero-crossing
 const zeroCross = [0.028532, 0.067234, 0.124009, 0.179044, 0.20236, 0.179044, 0.124009, 0.067234, 0.028532];
 
+const channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
 export default class Home extends Component {
 	state = {
 		isEditing: false
-	}
-
-	setWave = (index, value) => {
-		this.state.wavetable[index] = value;
-		this.firmware.setWavetable(0, this.state.wavetable);
 	}
 
 	startClicked = () => {
@@ -47,8 +45,17 @@ export default class Home extends Component {
 		return model.instruments[this.currentInstrumentIndex];
 	}
 
+	get currentChannel() {
+		const model = this.props.appState.model;
+		return model.currentChannel;
+	}
+
 	instrumentSelected = index => {
 		this.props.actions.selectInstrument(index);
+	}
+
+	channelSelected = index => {
+		this.props.actions.selectChannel(index);
 	}
 
 	onMoveWave = (delta) => {
@@ -63,7 +70,7 @@ export default class Home extends Component {
 
 	onFormulaChanged(e) {
 		try {
-			this.waveFormula = eval(`(t, i, s) => { const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
+			this.waveFormula = eval(`(t, i, s) => { const max = Math.max; const min = Math.min; const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
 		} catch (error) {
 			this.waveFormula = (t, i, s) => s(i);
 			this.waveFormulaBox.setCustomValidity(error);
@@ -222,6 +229,31 @@ export default class Home extends Component {
 		});
 	}
 
+	shiftInstruments(offset, delta) {
+		this.props.appState.model.instruments.forEach((instrument, index) => {
+			if (instrument.waveOffset <= offset) {
+				this.props.actions.updateInstrumentAt(index, 'waveOffset', offset + delta);
+			}
+		});
+	}
+
+	onLsh = () => {
+		const wavetable = this.props.appState.model.wavetable;
+		const offset = this.currentInstrument.waveOffset;
+		wavetable.splice(offset, 0, ...new Array(64));
+		this.props.actions.setWavetable(0, wavetable.slice(0, wavetable.length - 64));
+		this.shiftInstruments(offset, 64);
+	}
+
+	onRsh = () => {
+		const wavetable = this.props.appState.model.wavetable;
+		const offset = this.currentInstrument.waveOffset;
+		const moved = wavetable.splice(offset - 64, 64);
+		wavetable.splice(wavetable.length, 0, ...moved);
+		this.props.actions.setWavetable(0, wavetable);
+		this.shiftInstruments(offset, -64);
+	}
+
 	render(props, state) {
 		const app = props.appState;
 		if (!app.ready) {
@@ -231,9 +263,11 @@ export default class Home extends Component {
 		const model = app.model;
 		const actions = props.actions;
 		const instrumentNames = app.instrumentNames.map((name, index) => `${index}: ${name}`);
+		const waveOffset = this.currentInstrument.waveOffset;
 
 		return (
 			<div class={style.home}>
+				<ArraySelector onselect={this.channelSelected} selectedIndex={this.currentChannel} options={channels} />
 				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrumentIndex} options={instrumentNames} />
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
@@ -247,7 +281,7 @@ export default class Home extends Component {
 							isEditing={ state.isEditing }
 							instrument={ this.currentInstrument }
 							wave={ model.wavetable }
-							setWave={ actions.setWavetable }
+							setWave={ actions.setWave }
 							updateInstrument={ actions.updateInstrument } />
 					</div>
 				</div>
@@ -269,17 +303,21 @@ export default class Home extends Component {
 						<option value="sin(2 * pi * t)"></option>
 						<option value="t < 0.25 ? 4*t : t < 0.75 ? 2-4*t : 4*t - 4"></option>
 						<option value="(t < 0.5 ? (2*t): (2*t) - 2)"></option>
+						<option value="min(max(s(i), -0.85), 0.85)"></option>
 					</datalist>
 					<button onclick={this.onSetWave.bind(this)}>Apply</button>
 					<button onclick={this.onLowPass.bind(this)}>Low Pass</button>
 					<button onclick={this.onHighPass.bind(this)}>High Pass</button>
 					<button onclick={this.onZeroCross.bind(this)}>Zero Cross</button>
 					<button onclick={this.onNormalizeWave.bind(this)}>Normalize</button>
+					<button onclick={this.onRsh} disabled={waveOffset < 64}>Rsh</button>
+					<button onclick={this.onLsh}>Lsh</button>
 				</div>
 				<div class={style.lerp}>
 					<Lerp appState={ app } program={ this.currentInstrument.ampMod } />
 				</div>
 				<LerpEditor appState={ app } actions={ actions } />
+				<InstrumentEditor appState={ app } actions={ actions } />
 			</div>
 		);
 	}

@@ -20,7 +20,6 @@ export default class Home extends Component {
 				<div class={style.scope}>
 				  	<Scope audioContext={ app.audioContext } source={ app.audioOutputY } />
 				</div>
-                <MidiMessages messages={app.midiMessages}></MidiMessages>
 			</div>
 		);
 	}

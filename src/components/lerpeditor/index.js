@@ -58,7 +58,8 @@ export default class LerpEditor extends Component {
         const stageIndex = parseInt(target.name);
         const path = `[${target.name}].slope`;
         const value = parseInt(target.value);
-        this.props.actions.setLerpStage(path, this.sliderToSlope(stageIndex, value));
+        const slope = Math.min(Math.max(this.sliderToSlope(stageIndex, value), -32768), 32767);
+        this.props.actions.setLerpStage(path, slope);
     };
 
     lerpChanged = e => {

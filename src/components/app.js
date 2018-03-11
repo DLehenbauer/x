@@ -22,7 +22,7 @@ export default class App extends Component {
 		midiMessages: [],
 		model: {
 			currentChannel: 0,
-			channelToInstrument: [0],
+			channelToInstrument: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			wavetable: [],
 			instruments: [{
 				name: "Acoustic Grand Piano",
@@ -287,12 +287,7 @@ export default class App extends Component {
 					midi.inputs.forEach(device => {
 						device.open().then(() => {
 							device.onmidimessage = ev => {
-								let midiMessages = this.state.midiMessages;
-								midiMessages.push({ timeStamp: ev.timestamp, data: ev.data });
-								if (midiMessages.length > 25) {
-									midiMessages.shift();
-								}
-								this.set(['midiMessages'], midiMessages);
+								this.processMidi(ev.data);
 								this.firmware.midi(ev.data);
 							}
 						});
@@ -333,8 +328,12 @@ export default class App extends Component {
 	});
 
 	actions = {
-		setWavetable: (index, value) => {
+		setWave: (index, value) => {
 			this.set(['model', 'wavetable', index], value);
+			this.syncWavetable();
+		},
+		setWavetable: (index, value) => {
+			this.set(['model', 'wavetable'], value);
 			this.syncWavetable();
 		},
 		updateWavetable: (start, end, fn) => {
@@ -357,6 +356,9 @@ export default class App extends Component {
 			this.set(['model', 'channelToInstrument', channel], value);
 			this.firmware.programChange(channel, value);
 		},
+		selectChannel: (value) => {
+			this.set(['model', 'currentChannel'], value);
+		},
 		updateInstrument: (path, value) => {
 			const state = this.state;
 			const model = state.model;
@@ -367,8 +369,16 @@ export default class App extends Component {
 				this.syncInstrument();
 			});
 		},
+		updateInstrumentAt: (index, path, value) => {
+			const state = this.state;
+			const model = state.model;
+			this.set(['model', 'instruments', index].concat(path), value);
+			this.firmware.setInstruments(this.state.model.instruments).then(() => {
+				this.syncInstrument();
+			});
+		},
 		setLerpStage: (path, value) => {
-			this.set(`model.lerpStages${path}`, value | 0);
+			this.set(`model.lerpStages${path}`,value);
 			this.firmware.setLerpStages(this.state.model.lerpStages);
 			this.syncInstrument();
 		},
@@ -376,6 +386,23 @@ export default class App extends Component {
 			this.reset();
 		}
 	};
+
+	processMidi = (data) => {
+		if (data[0] & 0x80) {
+			const status = data[0] & 0xF0;
+			const channel = data[0] & 0x0F;
+			switch (status) {
+				case 0xC0:
+					this.set(['model', 'channelToInstrument', channel], data[1]);
+					break;
+				case 0x90:
+					if (channel === 0x09) {
+						this.set(['model', 'channelToInstrument', channel], data[1] - 35 + 0x80);
+					}
+					break;
+			}
+		}
+	}
 
 	render(props, state) {
 		return (
