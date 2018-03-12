@@ -31,6 +31,7 @@ struct Instrument {
     const int8_t* wave;
     uint8_t ampMod;
 	uint8_t freqMod;
+	uint8_t waveMod;
     uint8_t xorBits;
     InstrumentFlags flags;
 };

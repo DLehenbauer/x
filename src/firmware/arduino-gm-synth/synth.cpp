@@ -9,14 +9,14 @@
 
 // Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval at ~20 kHz
 constexpr static uint16_t _midiToPitch[] PROGMEM = {
-0x001B, 0x001D, 0x001E, 0x0020, 0x0022, 0x0024, 0x0026, 0x0029, 0x002B, 0x002E, 0x0030, 0x0033, 0x0036, 0x0039, 0x003D, 0x0040,
-0x0044, 0x0048, 0x004D, 0x0051, 0x0056, 0x005B, 0x0060, 0x0066, 0x006C, 0x0073, 0x0079, 0x0081, 0x0088, 0x0090, 0x0099, 0x00A2,
-0x00AC, 0x00B6, 0x00C1, 0x00CC, 0x00D8, 0x00E5, 0x00F3, 0x0101, 0x0111, 0x0121, 0x0132, 0x0144, 0x0158, 0x016C, 0x0182, 0x0199,
-0x01B1, 0x01CB, 0x01E6, 0x0203, 0x0221, 0x0242, 0x0264, 0x0289, 0x02AF, 0x02D8, 0x0303, 0x0331, 0x0362, 0x0395, 0x03CC, 0x0406,
-0x0443, 0x0484, 0x04C9, 0x0511, 0x055E, 0x05B0, 0x0607, 0x0663, 0x06C4, 0x072B, 0x0798, 0x080B, 0x0886, 0x0908, 0x0991, 0x0A23,
-0x0ABD, 0x0B60, 0x0C0E, 0x0CC5, 0x0D87, 0x0E55, 0x0F30, 0x1017, 0x110C, 0x120F, 0x1322, 0x1445, 0x157A, 0x16C1, 0x181B, 0x198A,
-0x1B0F, 0x1CAB, 0x1E5F, 0x202D, 0x2217, 0x241E, 0x2644, 0x288B, 0x2AF4, 0x2D82, 0x3036, 0x3314, 0x361E, 0x3955, 0x3CBE, 0x405B,
-0x442F, 0x483C, 0x4C88, 0x5115, 0x55E7, 0x5B03, 0x606C, 0x6628, 0x6C3B, 0x72AB, 0x797C, 0x80B6, 0x885D, 0x9079, 0x9910, 0xA22A,
+	0x001B, 0x001D, 0x001E, 0x0020, 0x0022, 0x0024, 0x0026, 0x0029, 0x002B, 0x002E, 0x0030, 0x0033, 0x0036, 0x0039, 0x003D, 0x0040,
+	0x0044, 0x0048, 0x004D, 0x0051, 0x0056, 0x005B, 0x0060, 0x0066, 0x006C, 0x0073, 0x0079, 0x0081, 0x0088, 0x0090, 0x0099, 0x00A2,
+	0x00AC, 0x00B6, 0x00C1, 0x00CC, 0x00D8, 0x00E5, 0x00F3, 0x0101, 0x0111, 0x0121, 0x0132, 0x0144, 0x0158, 0x016C, 0x0182, 0x0199,
+	0x01B1, 0x01CB, 0x01E6, 0x0203, 0x0221, 0x0242, 0x0264, 0x0289, 0x02AF, 0x02D8, 0x0303, 0x0331, 0x0362, 0x0395, 0x03CC, 0x0406,
+	0x0443, 0x0484, 0x04C9, 0x0511, 0x055E, 0x05B0, 0x0607, 0x0663, 0x06C4, 0x072B, 0x0798, 0x080B, 0x0886, 0x0908, 0x0991, 0x0A23,
+	0x0ABD, 0x0B60, 0x0C0E, 0x0CC5, 0x0D87, 0x0E55, 0x0F30, 0x1017, 0x110C, 0x120F, 0x1322, 0x1445, 0x157A, 0x16C1, 0x181B, 0x198A,
+	0x1B0F, 0x1CAB, 0x1E5F, 0x202D, 0x2217, 0x241E, 0x2644, 0x288B, 0x2AF4, 0x2D82, 0x3036, 0x3314, 0x361E, 0x3955, 0x3CBE, 0x405B,
+	0x442F, 0x483C, 0x4C88, 0x5115, 0x55E7, 0x5B03, 0x606C, 0x6628, 0x6C3B, 0x72AB, 0x797C, 0x80B6, 0x885D, 0x9079, 0x9910, 0xA22A,
 };
 
 volatile const int8_t*  v_wave[Synth::numVoices]    = { 0 };        // Starting address of 256b wave table.
@@ -27,11 +27,14 @@ volatile uint8_t        v_amp[Synth::numVoices]     = { 0 };        // 6-bit amp
 volatile bool           v_isNoise[Synth::numVoices] = { 0 };        // If true, '_xor' is periodically overwritten with random values.
 
 volatile Lerp           v_ampMod[Synth::numVoices]  = {};           // Amplitude modulation
-volatile Lerp           v_freqMod[Synth::numVoices] = {};			// Custom modulation
+volatile Lerp           v_freqMod[Synth::numVoices] = {};			// Frequency modulation
+volatile Lerp           v_waveMod[Synth::numVoices] = {};			// Wave offset modulation
+	
 volatile uint8_t        v_vol[Synth::numVoices]     = { 0 };        // 7-bit volume scalar applied to ADSR output.
 
-volatile uint16_t _basePitch[Synth::numVoices]      = { 0 };                            // Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
-volatile uint8_t       _note[Synth::numVoices]      = { 0 };                            // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
+volatile uint16_t		v_basePitch[Synth::numVoices]	= { 0 };	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
+volatile const int8_t*  v_baseWave[Synth::numVoices]		= { 0 };    // Original starting address in wavetable.
+volatile uint8_t		_note[Synth::numVoices]			= { 0 };    // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
 volatile InstrumentFlags _voiceFlags[Synth::numVoices] = { InstrumentFlags_None };      // InstrumentFlags are misc. behavior modifiers.
 
 #ifdef WAVE_EDIT
@@ -64,15 +67,20 @@ SIGNAL(TIMER2_COMPA_vect) {
 
         const uint8_t fn = divider & 0xF0;                  // Top 4 bits of 'divider' selects which additional work to perform.
         switch (fn) {
-			case 0x20: {
+			case 0x00: {
 				int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
-				v_pitch[voice] = _basePitch[voice] + freqMod;
+				v_pitch[voice] = v_basePitch[voice] + freqMod;
+				break;
+			}
+			
+			case 0x80: {
+				int8_t waveMod = (v_waveMod[voice].sample());
+				v_wave[voice] = v_baseWave[voice] + waveMod;
 				break;
 			}
 
-            case 0x00:
-            case 0x50:
-			case 0xA0: {                                    // Advance the ADSR and update '_amp' for the current voice.
+            case 0x40:
+			case 0xC0: {                                    // Advance the ADSR and update '_amp' for the current voice.
                 uint16_t amp = v_ampMod[voice].sample();
                 v_amp[voice] = (amp * v_vol[voice]) >> 8;
                 break;
@@ -206,20 +214,19 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
 #if DEBUG
 	pitch <<= 1;						// Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
 #endif                                  // avoid starving MIDI dispatch.
-    _basePitch[voice] = pitch;
-
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
 
-    v_wave[voice] = instrument.wave;
+    v_wave[voice] = v_baseWave[voice] = instrument.wave;
     v_phase[voice] = 0;
-    v_pitch[voice] = pitch;
+    v_pitch[voice] = v_basePitch[voice] = pitch;
     v_xor[voice] = instrument.xorBits;
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
     v_vol[voice] = midiVelocity;
-    v_ampMod[voice].start(instrument.ampMod, /* init */ 0x00);
+    v_ampMod[voice].start(instrument.ampMod,   /* init */ 0x00);
 	v_freqMod[voice].start(instrument.freqMod, /* init */ 0x40);
+	v_waveMod[voice].start(instrument.waveMod, /* init */ 0x00);
     
     resume();
 }
@@ -232,7 +239,7 @@ void Synth::noteOff(uint8_t voice) {
 }
 
 void Synth::pitchBend(uint8_t voice, int16_t value) {
-    uint16_t pitch = _basePitch[voice];
+    uint16_t pitch = v_basePitch[voice];
     uint16_t hi, lo;
 
     if (value > 0) {

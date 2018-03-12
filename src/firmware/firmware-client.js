@@ -79,9 +79,11 @@ export default class Firmware {
                     const waveOffset = dv.getUint32(i, /* littleEndian: */ true) - waveStart; i += 4;
                     const ampMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
                     const freqMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+                    const waveMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
                     const xor = dv.getUint8(i, /* littleEndian: */ true); i += 1;
                     const flags = dv.getUint8(i, /* littleEndian: */ true); i += 1;
-                    instruments.push({ waveOffset, ampMod, freqMod, xor, flags });
+                    i += 3;
+                    instruments.push({ waveOffset, ampMod, freqMod, waveMod, xor, flags });
                 }
 
                 return instruments;
@@ -91,15 +93,17 @@ export default class Firmware {
 
     setInstruments = (instruments) => {
         return this.getWavetableAddress().then(waveStart => {
-            const buffer = new ArrayBuffer(instruments.length * 8);
+            const buffer = new ArrayBuffer(instruments.length * 12);
             const dv = new DataView(buffer);
             let i = 0;
             for (const instrument of instruments) {
-                const waveOffset = dv.setUint32(i, instrument.waveOffset + waveStart, /* littleEndian: */ true); i += 4;
-                const ampMod = dv.setUint8(i, instrument.ampMod); i += 1;
-                const freqMod = dv.setUint8(i, instrument.freqMod); i += 1;
-                const xor = dv.setUint8(i, instrument.xor); i += 1;
-                const flags = dv.setUint8(i, instrument.flags); i += 1;
+                dv.setUint32(i, instrument.waveOffset + waveStart, /* littleEndian: */ true); i += 4;
+                dv.setUint8(i, instrument.ampMod); i += 1;
+                dv.setUint8(i, instrument.freqMod); i += 1;
+                dv.setUint8(i, instrument.waveMod); i += 1;
+                dv.setUint8(i, instrument.xor); i += 1;
+                dv.setUint8(i, instrument.flags); i += 1;
+                i += 3;
             }
             this.port.postMessage({type: 'setInstruments', buffer}, [buffer]);
         });

@@ -66,8 +66,15 @@ export default class Settings extends Component {
 
     lerpProgressions(cs, progressions) {
         this.array(cs, 'uint8_t', 'LerpProgressions', () => {
+            cs.out(`/* 00: */ `);
             progressions.forEach((value, index) => {
-                cs.outLn(`/* ${this.hex8(index)}: */ 0x${this.hex8(value)}, `);
+                cs.out(`0x${this.hex8(value)}, `);
+                if (value === 0x0) {
+                    cs.outLn();
+                    if (index !== progressions.length - 1) {
+                        cs.out(`/* ${this.hex8(index + 1)}: */ `);
+                    }
+                }
             });
         });
     }
@@ -111,6 +118,7 @@ export default class Settings extends Component {
                     cs.outLn(`/* waveOffset: */ &Waveforms[${instrument.waveOffset}],`);
                     cs.outLn(`/* ampMod:     */ ${instrument.ampMod},`);
                     cs.outLn(`/* freqMod:    */ ${instrument.freqMod},`);
+                    cs.outLn(`/* waveMod:    */ ${instrument.waveMod},`);
                     cs.outLn(`/* xor:        */ ${instrument.xor},`);
                     cs.outLn(`/* flags:      */ static_cast<InstrumentFlags>(${instrument.flags})`);
                 });

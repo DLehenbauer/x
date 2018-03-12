@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import style from './style';
 import ArraySelector from '../arrayselector';
+import Lerp from '../lerp';
 
 const toDegrees = 180 / Math.PI;
 const toRadians = Math.PI / 180;
@@ -9,8 +10,10 @@ export default class LerpEditor extends Component {
     getStartValue(stageIndex) {
         const app = this.props.appState;
         const model = app.model;
+
+        const program = model.lerpPrograms[this.props.programIndex];
         
-        return stageIndex > 2
+        return stageIndex !== model.lerpProgressions[program.start]
             ? model.lerpStages[stageIndex - 1].limit
             : 0;
     }
@@ -58,7 +61,7 @@ export default class LerpEditor extends Component {
         const stageIndex = parseInt(target.name);
         const path = `[${target.name}].slope`;
         const value = parseInt(target.value);
-        const slope = Math.min(Math.max(this.sliderToSlope(stageIndex, value), -32768), 32767);
+        const slope = Math.min(Math.max(Math.round(this.sliderToSlope(stageIndex, value)), -32768), 32767);
         this.props.actions.setLerpStage(path, slope);
     };
 
@@ -84,8 +87,7 @@ export default class LerpEditor extends Component {
         }
 
         const model = app.model;
-        const programIndex = model.instruments[this.currentInstrument].ampMod;
-
+        const programIndex = props.programIndex;
         const programNames = model.lerpPrograms.map((lerp, index) => index);
 
         const program = model.lerpPrograms[programIndex];
@@ -107,6 +109,9 @@ export default class LerpEditor extends Component {
         }
 		return (
             <div>
+				<div class={style.lerp}>
+					<Lerp appState={ app } program={ props.programIndex } />
+				</div>
                 <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} />
                 { rows }
             </div>

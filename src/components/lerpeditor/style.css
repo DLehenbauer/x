@@ -13,3 +13,17 @@
 .value {
     grid-area: value;
 }
+
+.lerp {
+    --borderWidth: 1px;
+    --height: calc(127px + var(--borderWidth) * 2);
+
+	width: 100%;
+	height: var(--height);
+	color: green;
+	stroke-width: 1px;
+	position: relative;
+	border-style: solid;
+	border-color: black;
+	border-width: var(--borderWidth);
+}

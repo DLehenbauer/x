@@ -3,10 +3,10 @@
 #include "instruments_generated.h"
 
 constexpr static PercussiveInstrument drums[] PROGMEM = {
-    /* 35:        Bass Drum 2 */ { /* note: */ 0x00 },
-    /* 36:        Bass Drum 1 */ { /* note: */ 0x13 },
-    /* 37: Side Stick/Rimshot */ { /* note: */ 0x13 },
-    /* 38:       Snare Drum 1 */ { /* note: */ 0x1F },
+    /* 35:        Bass Drum 2 */ { /* note: */ 0x13 },
+    /* 36:        Bass Drum 1 */ { /* note: */ 0x16 },
+    /* 37: Side Stick/Rimshot */ { /* note: */ 0x58 },
+    /* 38:       Snare Drum 1 */ { /* note: */ 0x60 },
     /* 39:          Hand Clap */ { /* note: */ 0x13 },
     /* 40:       Snare Drum 2 */ { /* note: */ 0x1F },
     /* 41:          Low Tom 2 */ { /* note: */ 0x0C },

@@ -1,6 +1,5 @@
 import Scope from '../../components/scope';
 import WaveEditor from '../../components/waveeditor';
-import Lerp from '../../components/lerp';
 import LerpEditor from '../../components/lerpeditor';
 import InstrumentEditor from '../../components/instrumenteditor';
 import ArraySelector from '../../components/arrayselector';
@@ -70,9 +69,9 @@ export default class Home extends Component {
 
 	onFormulaChanged(e) {
 		try {
-			this.waveFormula = eval(`(t, i, s) => { const max = Math.max; const min = Math.min; const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
+			this.waveFormula = eval(`(t, i, s, a0, a1) => { const max = Math.max; const min = Math.min; const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
 		} catch (error) {
-			this.waveFormula = (t, i, s) => s(i);
+			this.waveFormula = (t, i, s, a0, a1) => s(i);
 			this.waveFormulaBox.setCustomValidity(error);
 		}
 	}
@@ -100,7 +99,9 @@ export default class Home extends Component {
 				const step = 1 / 255;
 				let t = 0;
 				for (let i = 0; i < 256; i++) {
-					const sample = Math.max(Math.min(Math.round(fn(t, i, i => s(i) / 127)), 127), -127) | 0;
+					const a1 = i/256;
+					const a0 = 1 - a1;
+					const sample = Math.max(Math.min(Math.round(fn(t, i, i => s(i) / 127, a0, a1)), 127), -127) | 0;
 					wave[i] = sample;
 					t += step;
 				}
@@ -313,10 +314,9 @@ export default class Home extends Component {
 					<button onclick={this.onRsh} disabled={waveOffset < 64}>Rsh</button>
 					<button onclick={this.onLsh}>Lsh</button>
 				</div>
-				<div class={style.lerp}>
-					<Lerp appState={ app } program={ this.currentInstrument.ampMod } />
-				</div>
-				<LerpEditor appState={ app } actions={ actions } />
+				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.ampMod } />
+				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.freqMod } />
+				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.waveMod } />
 				<InstrumentEditor appState={ app } actions={ actions } />
 			</div>
 		);
