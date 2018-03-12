@@ -77,7 +77,7 @@ export default class LerpEditor extends Component {
 	}
 
     programSelected = index => {
-        this.props.actions.updateInstrument('ampMod', index);
+        this.props.actions.updateInstrument(this.props.modType, index);
     };
 
 	render(props, state) {
@@ -112,7 +112,7 @@ export default class LerpEditor extends Component {
 				<div class={style.lerp}>
 					<Lerp appState={ app } program={ props.programIndex } />
 				</div>
-                <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} />
+                <span>{ props.modType }: <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} /></span>
                 { rows }
             </div>
 		);

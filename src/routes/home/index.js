@@ -314,9 +314,9 @@ export default class Home extends Component {
 					<button onclick={this.onRsh} disabled={waveOffset < 64}>Rsh</button>
 					<button onclick={this.onLsh}>Lsh</button>
 				</div>
-				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.ampMod } />
-				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.freqMod } />
-				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.waveMod } />
+				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.ampMod } modType='ampMod' />
+				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.freqMod } modType='freqMod' />
+				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.waveMod } modType='waveMod' />
 				<InstrumentEditor appState={ app } actions={ actions } />
 			</div>
 		);

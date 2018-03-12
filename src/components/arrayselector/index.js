@@ -31,11 +31,11 @@ export default class ArraySelector extends Component {
 		});
 
 		return (
-			<div>
+			<span>
 				<button onclick={this.previousClicked} disabled={selectedIndex <= 0}>&#x25c0;</button>
 				<select onchange={this.selectionChanged}>{options}</select>
 				<button onclick={this.nextClicked} disabled={selectedIndex >= maxSelection}>&#x25ba;</button>
-			</div>
+			</span>
 		);
 	}
 }
