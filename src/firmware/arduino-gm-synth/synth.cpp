@@ -33,7 +33,8 @@ volatile Lerp           v_waveMod[Synth::numVoices] = {};			// Wave offset modul
 volatile uint8_t        v_vol[Synth::numVoices]     = { 0 };        // 7-bit volume scalar applied to ADSR output.
 
 volatile uint16_t		v_basePitch[Synth::numVoices]	= { 0 };	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
-volatile const int8_t*  v_baseWave[Synth::numVoices]		= { 0 };    // Original starting address in wavetable.
+volatile uint16_t		v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post pitch bend, but prior to freqMod.
+volatile const int8_t*  v_baseWave[Synth::numVoices]	= { 0 };    // Original starting address in wavetable.
 volatile uint8_t		_note[Synth::numVoices]			= { 0 };    // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
 volatile InstrumentFlags _voiceFlags[Synth::numVoices] = { InstrumentFlags_None };      // InstrumentFlags are misc. behavior modifiers.
 
@@ -69,7 +70,7 @@ SIGNAL(TIMER2_COMPA_vect) {
         switch (fn) {
 			case 0x00: {
 				int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
-				v_pitch[voice] = v_basePitch[voice] + freqMod;
+				v_pitch[voice] = v_bentPitch[voice] + freqMod;
 				break;
 			}
 			
@@ -219,7 +220,7 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
 
     v_wave[voice] = v_baseWave[voice] = instrument.wave;
     v_phase[voice] = 0;
-    v_pitch[voice] = v_basePitch[voice] = pitch;
+    v_pitch[voice] = v_bentPitch[voice] = v_basePitch[voice] = pitch;
     v_xor[voice] = instrument.xorBits;
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
@@ -255,7 +256,7 @@ void Synth::pitchBend(uint8_t voice, int16_t value) {
 
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
-    v_pitch[voice] = pitch;
+    v_bentPitch[voice] = pitch;
     resume();
 }
 

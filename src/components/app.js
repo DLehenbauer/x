@@ -19,7 +19,7 @@ if (module.hot) {
 export default class App extends Component {
 	state = {
 		ready: false,
-		midiMessages: [],
+		lastMidiMessage: [],
 		model: {
 			currentChannel: 0,
 			channelToInstrument: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -388,6 +388,7 @@ export default class App extends Component {
 	};
 
 	processMidi = (data) => {
+		this.set('lastMidiMessage', data);
 		if (data[0] & 0x80) {
 			const status = data[0] & 0xF0;
 			const channel = data[0] & 0x0F;

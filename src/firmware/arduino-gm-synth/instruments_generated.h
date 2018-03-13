@@ -11,10 +11,10 @@ static constexpr LerpStage LerpStages[] PROGMEM = {
 	/* 09: */ {    -59,  126 },
 	/* 0a: */ {  -1822,   48 },
 	/* 0b: */ {   -380,    0 },
-	/* 0c: */ {   4885,   70 },
-	/* 0d: */ {   -955,   58 },
-	/* 0e: */ {    603,   66 },
-	/* 0f: */ {    -78,   64 },
+	/* 0c: */ {   3661,   75 },
+	/* 0d: */ {  -1616,   53 },
+	/* 0e: */ {    837,   68 },
+	/* 0f: */ {   -443,   64 },
 	/* 10: */ {  14666,   64 },
 	/* 11: */ {      0,   64 },
 	/* 12: */ {      0,   64 },
@@ -23,14 +23,30 @@ static constexpr LerpStage LerpStages[] PROGMEM = {
 	/* 15: */ {  -1204,   40 },
 	/* 16: */ {   -294,    8 },
 	/* 17: */ {    -69,    0 },
-	/* 18: */ {  32767,  127 },
-	/* 19: */ {    -64,  126 },
-	/* 1a: */ {  -1451,   48 },
-	/* 1b: */ {   -207,    0 },
+	/* 18: */ {  32767,   96 },
+	/* 19: */ {  -2085,   64 },
+	/* 1a: */ {   -788,   24 },
+	/* 1b: */ {   -193,    0 },
 	/* 1c: */ {  32767,   96 },
 	/* 1d: */ {  -3661,   16 },
 	/* 1e: */ {   -575,    8 },
 	/* 1f: */ {   -148,    0 },
+	/* 20: */ {  32767,   96 },
+	/* 21: */ {  -2436,   48 },
+	/* 22: */ {  -1109,   16 },
+	/* 23: */ {   -179,    0 },
+	/* 24: */ {  32767,   96 },
+	/* 25: */ {  -1204,   40 },
+	/* 26: */ {   -294,    8 },
+	/* 27: */ {    -69,    0 },
+	/* 28: */ {  32767,  127 },
+	/* 29: */ {    -64,  126 },
+	/* 2a: */ {  -1451,   48 },
+	/* 2b: */ {   -207,    0 },
+	/* 2c: */ {  32767,   96 },
+	/* 2d: */ {  -3661,   16 },
+	/* 2e: */ {   -575,    8 },
+	/* 2f: */ {   -148,    0 },
 };
 
 static constexpr uint8_t LerpProgressions[] PROGMEM = {
@@ -46,17 +62,25 @@ static constexpr uint8_t LerpProgressions[] PROGMEM = {
 	/* 19: */ 0x14, 0x15, 0x16, 0x17, 0x00,
 	/* 1e: */ 0x18, 0x19, 0x1a, 0x1b, 0x00,
 	/* 23: */ 0x1c, 0x1d, 0x1e, 0x1f, 0x00,
+	/* 28: */ 0x20, 0x21, 0x22, 0x23, 0x00,
+	/* 2d: */ 0x24, 0x25, 0x26, 0x27, 0x00,
+	/* 32: */ 0x28, 0x29, 0x2a, 0x2b, 0x00,
+	/* 37: */ 0x2c, 0x2d, 0x2e, 0x2f, 0x00,
 };
 
 static constexpr LerpProgram LerpPrograms[] PROGMEM = {
 	/* 00: */ { 0x00, 0x10 },
 	/* 01: */ { 0x05, 0x43 },
-	/* 02: */ { 0x0a, 0x43 },
-	/* 03: */ { 0x0f, 0x43 },
-	/* 04: */ { 0x14, 0x43 },
-	/* 05: */ { 0x19, 0x54 },
-	/* 06: */ { 0x1e, 0x43 },
-	/* 07: */ { 0x23, 0x43 },
+	/* 02: */ { 0x0a, 0x10 },
+	/* 03: */ { 0x0f, 0x10 },
+	/* 04: */ { 0x14, 0x10 },
+	/* 05: */ { 0x19, 0x10 },
+	/* 06: */ { 0x1e, 0x10 },
+	/* 07: */ { 0x23, 0x10 },
+	/* 08: */ { 0x28, 0x10 },
+	/* 09: */ { 0x2d, 0x10 },
+	/* 0a: */ { 0x28, 0x10 },
+	/* 0b: */ { 0x2c, 0x10 },
 };
 
 static constexpr int8_t Waveforms[] PROGMEM = {
@@ -1231,7 +1255,7 @@ static constexpr Instrument instruments[] PROGMEM = {
 		/* ampMod:     */ 2,
 		/* freqMod:    */ 3,
 		/* waveMod:    */ 4,
-		/* xor:        */ 9,
+		/* xor:        */ 3,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 129:                  Bass Drum 1 */ {
@@ -1260,14 +1284,14 @@ static constexpr Instrument instruments[] PROGMEM = {
 	},
 	/* 132:                    Hand Clap */ {
 		/* waveOffset: */ &Waveforms[2112],
-		/* ampMod:     */ 5,
+		/* ampMod:     */ 8,
 		/* freqMod:    */ 0,
 		/* waveMod:    */ 0,
 		/* xor:        */ 32,
-		/* flags:      */ static_cast<InstrumentFlags>(0)
+		/* flags:      */ static_cast<InstrumentFlags>(1)
 	},
 	/* 133:                 Snare Drum 2 */ {
-		/* waveOffset: */ &Waveforms[2048],
+		/* waveOffset: */ &Waveforms[2112],
 		/* ampMod:     */ 2,
 		/* freqMod:    */ 0,
 		/* waveMod:    */ 0,
@@ -1275,11 +1299,11 @@ static constexpr Instrument instruments[] PROGMEM = {
 		/* flags:      */ static_cast<InstrumentFlags>(1)
 	},
 	/* 134:                    Low Tom 2 */ {
-		/* waveOffset: */ &Waveforms[320],
-		/* ampMod:     */ 2,
-		/* freqMod:    */ 0,
-		/* waveMod:    */ 0,
-		/* xor:        */ 32,
+		/* waveOffset: */ &Waveforms[256],
+		/* ampMod:     */ 6,
+		/* freqMod:    */ 7,
+		/* waveMod:    */ 4,
+		/* xor:        */ 0,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 135:                Closed Hi-hat */ {
@@ -1291,11 +1315,11 @@ static constexpr Instrument instruments[] PROGMEM = {
 		/* flags:      */ static_cast<InstrumentFlags>(3)
 	},
 	/* 136:                    Low Tom 1 */ {
-		/* waveOffset: */ &Waveforms[320],
-		/* ampMod:     */ 2,
-		/* freqMod:    */ 0,
-		/* waveMod:    */ 0,
-		/* xor:        */ 32,
+		/* waveOffset: */ &Waveforms[256],
+		/* ampMod:     */ 6,
+		/* freqMod:    */ 7,
+		/* waveMod:    */ 4,
+		/* xor:        */ 0,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 137:                 Pedal Hi-hat */ {
@@ -1307,35 +1331,35 @@ static constexpr Instrument instruments[] PROGMEM = {
 		/* flags:      */ static_cast<InstrumentFlags>(1)
 	},
 	/* 138:                    Mid Tom 2 */ {
-		/* waveOffset: */ &Waveforms[320],
-		/* ampMod:     */ 2,
-		/* freqMod:    */ 0,
-		/* waveMod:    */ 0,
-		/* xor:        */ 32,
+		/* waveOffset: */ &Waveforms[256],
+		/* ampMod:     */ 6,
+		/* freqMod:    */ 7,
+		/* waveMod:    */ 4,
+		/* xor:        */ 0,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 139:                  Open Hi-hat */ {
 		/* waveOffset: */ &Waveforms[2112],
-		/* ampMod:     */ 7,
+		/* ampMod:     */ 8,
 		/* freqMod:    */ 0,
 		/* waveMod:    */ 0,
 		/* xor:        */ 32,
-		/* flags:      */ static_cast<InstrumentFlags>(1)
+		/* flags:      */ static_cast<InstrumentFlags>(3)
 	},
 	/* 140:                    Mid Tom 1 */ {
-		/* waveOffset: */ &Waveforms[320],
-		/* ampMod:     */ 2,
-		/* freqMod:    */ 0,
-		/* waveMod:    */ 0,
-		/* xor:        */ 32,
+		/* waveOffset: */ &Waveforms[256],
+		/* ampMod:     */ 6,
+		/* freqMod:    */ 7,
+		/* waveMod:    */ 4,
+		/* xor:        */ 0,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 141:                   High Tom 2 */ {
-		/* waveOffset: */ &Waveforms[320],
-		/* ampMod:     */ 2,
-		/* freqMod:    */ 0,
-		/* waveMod:    */ 0,
-		/* xor:        */ 32,
+		/* waveOffset: */ &Waveforms[256],
+		/* ampMod:     */ 6,
+		/* freqMod:    */ 7,
+		/* waveMod:    */ 4,
+		/* xor:        */ 0,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 142:               Crash Cymbal 1 */ {
@@ -1347,11 +1371,11 @@ static constexpr Instrument instruments[] PROGMEM = {
 		/* flags:      */ static_cast<InstrumentFlags>(1)
 	},
 	/* 143:                   High Tom 1 */ {
-		/* waveOffset: */ &Waveforms[320],
-		/* ampMod:     */ 2,
-		/* freqMod:    */ 0,
-		/* waveMod:    */ 0,
-		/* xor:        */ 32,
+		/* waveOffset: */ &Waveforms[256],
+		/* ampMod:     */ 6,
+		/* freqMod:    */ 7,
+		/* waveMod:    */ 4,
+		/* xor:        */ 0,
 		/* flags:      */ static_cast<InstrumentFlags>(0)
 	},
 	/* 144:                Ride Cymbal 1 */ {
