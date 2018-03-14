@@ -255,6 +255,10 @@ export default class Home extends Component {
 		this.shiftInstruments(offset, -64);
 	}
 
+	trackMidiChanged = e => {
+		this.props.appState.trackMidi = e.target.checked;
+	}
+
 	render(props, state) {
 		const app = props.appState;
 		if (!app.ready) {
@@ -270,11 +274,14 @@ export default class Home extends Component {
 			<div class={style.home}>
 				<ArraySelector onselect={this.channelSelected} selectedIndex={this.currentChannel} options={channels} />
 				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrumentIndex} options={instrumentNames} />
+				<input type='checkbox' checked={ this.state.trackMidi } onchange={ this.trackMidiChanged } />Track Midi
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
+				<div>
 				Scope:
-				<div class={style.scope}>
-				  	<Scope audioContext={ app.audioContext } source={ app.audioOutputX } />
+					<div class={style.scope}>
+						<Scope audioContext={ app.audioContext } source={ app.audioOutputX } />
+					</div>
 				</div>
 				<div style='overflow-x: scroll; overflow-y: hidden'>
 					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>

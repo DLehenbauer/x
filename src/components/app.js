@@ -20,6 +20,7 @@ export default class App extends Component {
 	state = {
 		ready: false,
 		lastMidiMessage: [],
+		trackMidi: false,
 		model: {
 			currentChannel: 0,
 			channelToInstrument: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -388,19 +389,21 @@ export default class App extends Component {
 	};
 
 	processMidi = (data) => {
-		this.set('lastMidiMessage', data);
-		if (data[0] & 0x80) {
-			const status = data[0] & 0xF0;
-			const channel = data[0] & 0x0F;
-			switch (status) {
-				case 0xC0:
-					this.set(['model', 'channelToInstrument', channel], data[1]);
-					break;
-				case 0x90:
-					if (channel === 0x09) {
-						this.set(['model', 'channelToInstrument', channel], data[1] - 35 + 0x80);
-					}
-					break;
+		if (this.state.trackMidi) {
+			this.set('lastMidiMessage', data);
+			if (data[0] & 0x80) {
+				const status = data[0] & 0xF0;
+				const channel = data[0] & 0x0F;
+				switch (status) {
+					case 0xC0:
+						this.set(['model', 'channelToInstrument', channel], data[1]);
+						break;
+					case 0x90:
+						if (channel === 0x09) {
+							this.set(['model', 'channelToInstrument', channel], data[1] - 35 + 0x80);
+						}
+						break;
+				}
 			}
 		}
 	}
