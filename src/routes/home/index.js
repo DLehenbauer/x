@@ -232,8 +232,8 @@ export default class Home extends Component {
 
 	shiftInstruments(offset, delta) {
 		this.props.appState.model.instruments.forEach((instrument, index) => {
-			if (instrument.waveOffset <= offset) {
-				this.props.actions.updateInstrumentAt(index, 'waveOffset', offset + delta);
+			if (instrument.waveOffset >= offset) {
+				this.props.actions.updateInstrumentAt(index, 'waveOffset', instrument.waveOffset + delta);
 			}
 		});
 	}
