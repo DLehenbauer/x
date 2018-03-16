@@ -5,7 +5,6 @@ export default class WaveEditor extends WaveView {
 	constructor() {
 		super();
 		this.setState({
-			waveOffset: 0,
 			isDragging: false,
 			lastDragLocation: {x: -1, y: -1}
 		});
@@ -34,7 +33,7 @@ export default class WaveEditor extends WaveView {
 	onPointerDown(e) {
 		super.onPointerDown(e);
 		const p = this.pointerToWave(e);
-		const dx = p.x - this.props.instrument.waveOffset;
+		const dx = p.x - this.props.waveOffset;
 
 		this.canvas.setPointerCapture(e.pointerId);
 		this.setState({
@@ -90,7 +89,7 @@ export default class WaveEditor extends WaveView {
 		const newValue = p.x - this.state.dx;
 
 		if (this.props.isEditing) {
-			const offset = this.props.instrument.waveOffset;
+			const offset = this.props.waveOffset;
 			this.line(
 				this.state.lastDragLocation.x,
 				this.state.lastDragLocation.y,
@@ -99,7 +98,7 @@ export default class WaveEditor extends WaveView {
 				offset,
 				offset + 256);
 		} else {
-			this.props.updateInstrument(['waveOffset'], Math.min(Math.max(newValue, 0), this.props.wave.length - 256));
+			this.props.setOffset(Math.min(Math.max(newValue, 0), this.props.wave.length - 256));
 		}
 
 		this.setState({
@@ -109,7 +108,6 @@ export default class WaveEditor extends WaveView {
 
 	paint(context2d, width, height) {
 		const state = this.state;
-		const instrument = this.props.instrument;
 
 		context2d.clearRect(0, 0, width, height);
 		this.drawGrid(context2d, 10, 10);
@@ -117,13 +115,13 @@ export default class WaveEditor extends WaveView {
 		context2d.fillStyle = this.props.isEditing
 			? "rgba(255, 128, 64, 0.4)"
 			: "rgba(64, 128, 255, 0.4)";			
-		context2d.fillRect(instrument.waveOffset, 0, 256, height);
+		context2d.fillRect(this.props.waveOffset, 0, 256, height);
 
         this.drawWave(context2d, width, height);
     }
 
 	sample(index) {
-		const xor = this.props.instrument.xor;
+		const xor = this.props.xor;
 		const s = this.props.wave[index];
         return this.toInt8((s & 0xFF) ^ xor);
     }

@@ -6,6 +6,7 @@ import Home from '../routes/home';
 import Code from '../routes/code';
 import Settings from '../routes/settings';
 import Play from '../routes/play';
+import Import from '../routes/import';
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
@@ -419,6 +420,9 @@ export default class App extends Component {
 						appState={ state }
 						actions={ this.actions } />
 					<Code path="/code/" appState={ state } />
+					<Import path="/import/"
+						appState={ state }
+						actions={ this.actions } />
 					<Settings path="/settings/" actions={ this.actions } />
 				</Router>
 			</div>

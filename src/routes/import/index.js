@@ -17,9 +17,12 @@ const zeroCross = [0.028532, 0.067234, 0.124009, 0.179044, 0.20236, 0.179044, 0.
 
 const channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
-export default class Home extends Component {
+export default class Import extends Component {
 	state = {
-		isEditing: false
+        isEditing: false,
+        sample: new Int8Array(),
+        srcOffset: 0,
+        destOffset: 0,
 	}
 
 	startClicked = () => {
@@ -259,11 +262,33 @@ export default class Home extends Component {
 		this.props.appState.trackMidi = e.target.checked;
 	}
 
-	setWaveOffset = value => {
-		this.props.actions.updateInstrument(['waveOffset'], value);
-	}
+    readSingleFile = e => {
+        const file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = e => {
+            const contents = e.target.result;
+            this.props.appState.audioContext.decodeAudioData(contents).then(decoded => {
+                const f32 = decoded.getChannelData(0);
+                const i8 = f32.map(value => value * 127);
+                this.setState({ sample: i8 })
+            });
+        };
+        reader.readAsArrayBuffer(file);
+      }
+      
+    displayContents(contents) {
+        var element = document.getElementById('file-content');
+        element.textContent = contents;
+    }
+      
+	setSrcOffset = value => this.setState({ srcOffset: value })
 
-	render(props, state) {
+    setDestOffset = value => this.props.actions.updateInstrument(['waveOffset'], value);
+
+    render(props, state) {
 		const app = props.appState;
 		if (!app.ready) {
 			return;
@@ -276,27 +301,31 @@ export default class Home extends Component {
 
 		return (
 			<div class={style.home}>
-				<ArraySelector onselect={this.channelSelected} selectedIndex={this.currentChannel} options={channels} />
-				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrumentIndex} options={instrumentNames} />
-				<input type='checkbox' checked={ this.state.trackMidi } onchange={ this.trackMidiChanged } />Track Midi
-				<button onclick={this.startClicked}>Start</button>
-				<button onclick={this.stopClicked}>Stop</button>
-				<div>
-				Scope:
-					<div class={style.scope}>
-						<Scope audioContext={ app.audioContext } source={ app.audioOutputX } />
+            <input type="file" id="file-input" onchange={this.readSingleFile} />
+                <h3>Contents of the file:</h3>
+                <pre id="file-content">{ this.state.sample }</pre>
+				<div style='overflow-x: scroll; overflow-y: hidden'>
+					<div class={style.waveEditor} style={`width: ${state.sample.length}px`}>
+						<WaveEditor 
+							isEditing={ false }
+							wave={ state.sample }
+                            waveOffset={ this.state.srcOffset }
+                            xor={ 0 }
+                            setWave={ actions.setWave }
+                            setOffset={ this.setSrcOffset }
+                            updateInstrument={ actions.updateInstrument } />
 					</div>
 				</div>
 				<div style='overflow-x: scroll; overflow-y: hidden'>
 					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
-						<WaveEditor 
-							isEditing={ state.isEditing }
-							wave={ model.wavetable }
-							waveOffset={ waveOffset }
-							xor={ this.currentInstrument.xor }
-							setWave={ actions.setWave }
-							setOffset={ this.setWaveOffset }
-							updateInstrument={ actions.updateInstrument } />
+                        <WaveEditor 
+                            isEditing={ state.isEditing }
+                            wave={ model.wavetable }
+                            waveOffset={ waveOffset }
+                            xor={ this.currentInstrument.xor }
+                            setWave={ actions.setWave }
+                            setOffset={ this.setDestOffset }
+                            updateInstrument={ actions.updateInstrument } />
 					</div>
 				</div>
 				<div>
