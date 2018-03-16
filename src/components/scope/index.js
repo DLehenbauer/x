@@ -1,8 +1,8 @@
 import { h, Component } from 'preact';
 import style from './style';
-import Wave from '../wave';
+import WaveCanvas from '../wavecanvas';
 
-export default class Scope extends Wave {
+export default class Scope extends WaveCanvas {
     sample(index) {
         return this.waveData[index] - 128;
     }

@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import Canvas from '../canvas';
 
-export default class WaveView extends Canvas {
+export default class WaveCanvas extends Canvas {
 	toInt8 = (value) => {
 		value &= 0xFF;
 		return value > 127

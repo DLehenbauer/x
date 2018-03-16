@@ -18,20 +18,12 @@ const zeroCross = [0.028532, 0.067234, 0.124009, 0.179044, 0.20236, 0.179044, 0.
 const channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export default class Home extends Component {
-	state = {
-		isEditing: false
-	}
-
 	startClicked = () => {
 		this.props.actions.noteOn();
 	}
 
 	stopClicked = () => {
 		this.props.actions.noteOff();
-	}
-
-	editModeChanged = e => {
-		this.setState({ isEditing: e.target.checked })
 	}
 
 	get currentInstrumentIndex() {
@@ -55,16 +47,6 @@ export default class Home extends Component {
 
 	channelSelected = index => {
 		this.props.actions.selectChannel(index);
-	}
-
-	onMoveWave = (delta) => {
-		const model = this.props.appState.model;
-		const original = this.currentInstrument.waveOffset;
-		const limit = model.wavetable.length - 256;
-		let updated = Math.round(original / Math.abs(delta)) * Math.abs(delta);
-		updated = Math.min(Math.max(0, updated + delta), limit)
-	
-		this.props.actions.updateInstrument(['waveOffset'], updated);
 	}
 
 	onFormulaChanged(e) {
@@ -282,31 +264,20 @@ export default class Home extends Component {
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
 				<div>
-				Scope:
+					Scope:
 					<div class={style.scope}>
 						<Scope audioContext={ app.audioContext } source={ app.audioOutputX } />
 					</div>
 				</div>
-				<div style='overflow-x: scroll; overflow-y: hidden'>
-					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
-						<WaveEditor 
-							isEditing={ state.isEditing }
-							wave={ model.wavetable }
-							waveOffset={ waveOffset }
-							xor={ this.currentInstrument.xor }
-							setWave={ actions.setWave }
-							setOffset={ this.setWaveOffset }
-							updateInstrument={ actions.updateInstrument } />
-					</div>
-				</div>
 				<div>
-					<input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
-					<button onclick={() => this.onMoveWave(-(1 << 30))}>|&lt;</button>
-					<button onclick={() => this.onMoveWave(-256)}>&lt;&lt;</button>
-					<button onclick={() => this.onMoveWave(-64)}>&lt;</button>
-					<button onclick={() => this.onMoveWave(+64)}>&gt;</button>
-					<button onclick={() => this.onMoveWave(+256)}>&gt;&gt;</button>
-					<button onclick={() => this.onMoveWave(+(1 << 30))}>&gt;|</button>
+					Wavetable:
+					<WaveEditor 
+						waveStyle={ style.waveEditor }
+						wave={ model.wavetable }
+						waveOffset={ waveOffset }
+						xor={ this.currentInstrument.xor }
+						setWave={ actions.setWave }
+						setOffset={ this.setWaveOffset } />
 				</div>
 				<div>
 					<input ref={element => { this.waveFormulaBox = element; }} list="waveFormulaList" onchange={this.onFormulaChanged.bind(this)} class={style.waveFormula} />

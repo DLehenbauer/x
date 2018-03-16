@@ -277,7 +277,7 @@ export default class Import extends Component {
             });
         };
         reader.readAsArrayBuffer(file);
-      }
+    }
       
     displayContents(contents) {
         var element = document.getElementById('file-content');
