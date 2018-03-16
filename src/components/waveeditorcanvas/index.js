@@ -22,7 +22,7 @@ export default class WaveEditorCanvas extends WaveCanvas {
 		const y = Math.min(Math.max(ev.offsetY, 0), this.state.canvasHeight);
 
 		const p = {
-			x: x,
+			x: x + this.props.scrollX,
 			y: this.yToWave(y)
 		};
 
@@ -108,16 +108,17 @@ export default class WaveEditorCanvas extends WaveCanvas {
 
 	paint(context2d, width, height) {
 		const state = this.state;
+		const scrollX = this.props.scrollX;
 
 		context2d.clearRect(0, 0, width, height);
 		this.drawGrid(context2d, 10, 10);
 		
 		context2d.fillStyle = this.props.isEditing
 			? "rgba(255, 128, 64, 0.4)"
-			: "rgba(64, 128, 255, 0.4)";			
-		context2d.fillRect(this.props.waveOffset, 0, 256, height);
+			: "rgba(64, 128, 255, 0.4)";
+		context2d.fillRect(this.props.waveOffset - scrollX, 0, 256, height);
 
-        this.drawWave(context2d, width, height);
+        this.drawWave(context2d, width, height, scrollX);
     }
 
 	sample(index) {

@@ -2,7 +2,7 @@ import { h, Component } from 'preact';
 import Canvas from '../canvas';
 
 export default class WaveCanvas extends Canvas {
-	toInt8 = (value) => {
+    toInt8 = (value) => {
 		value &= 0xFF;
 		return value > 127
 			? value - 256
@@ -42,7 +42,7 @@ export default class WaveCanvas extends Canvas {
 		return (255 - (s + 128)) / 255;
 	}
 
-    drawWave(context2d, width, height) {
+    drawWave(context2d, width, height, startX) {
         const state = this.state;
 		context2d.strokeStyle = state.strokeStyle;
         context2d.lineWidth = this.state.lineWidth;
@@ -50,11 +50,11 @@ export default class WaveCanvas extends Canvas {
         context2d.beginPath();
 
         const sx = Math.floor(height - this.state.lineWidth);
-        const s = this.waveToHomogenous(this.sample(0)) * sx
+        const s = this.waveToHomogenous(this.sample(0 + startX)) * sx
         context2d.moveTo(0, s + hw);
 
         for (let index = 0; index < width; index++) {
-			const s = this.waveToHomogenous(this.sample(index)) * sx;
+			const s = this.waveToHomogenous(this.sample(index + startX)) * sx;
            	context2d.lineTo(index, s + hw);
         }
 
@@ -66,7 +66,7 @@ export default class WaveCanvas extends Canvas {
 
 		context2d.clearRect(0, 0, width, height);
         this.drawGrid(context2d, 10, 10);
-        this.drawWave(context2d, width, height);
+        this.drawWave(context2d, width, height, /* startX: */ 0);
 
         // Draw outline to test CSS layout
         // draw.beginPath();
