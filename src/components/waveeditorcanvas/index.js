@@ -6,8 +6,13 @@ export default class WaveEditorCanvas extends WaveCanvas {
 		super();
 		this.setState({
 			isDragging: false,
+			isPrimary: true,
 			lastDragLocation: {x: -1, y: -1}
 		});
+	}
+
+	get selectionSize() {
+		return this.props.selectionEnd - this.props.selectionStart;
 	}
 
 	yToWave(y) {
@@ -32,13 +37,21 @@ export default class WaveEditorCanvas extends WaveCanvas {
 
 	onPointerDown(e) {
 		super.onPointerDown(e);
-		const p = this.pointerToWave(e);
-		const dx = p.x - this.props.selectionStart;
-
 		this.canvas.setPointerCapture(e.pointerId);
+
+		const p = this.pointerToWave(e);
+		const editStart = !e.shiftKey;
+
+		const start = this.props.selectionStart;
+		const end = this.props.selectionEnd;
+		const dx = p.x - (editStart ? start : end);
+		const value = p.x - dx;
+		const isInside = end <= value && value <= start;
+
 		this.setState({
 			isDragging: true,
-			dx: dx,
+			isPrimary: editStart,
+			dx: isInside || !editStart ? dx : this.selectionSize / 2,
 			lastDragLocation: p
 		});
 	}
@@ -86,7 +99,6 @@ export default class WaveEditorCanvas extends WaveCanvas {
 		}
 
 		const p = this.pointerToWave(ev);
-		const newValue = p.x - this.state.dx;
 
 		if (this.props.isEditing) {
 			const offset = this.props.selectionStart;
@@ -98,7 +110,14 @@ export default class WaveEditorCanvas extends WaveCanvas {
 				offset,
 				offset + 256);
 		} else {
-			this.props.setOffset(Math.min(Math.max(newValue, 0), this.props.wave.length - 256));
+			const value = p.x - this.state.dx;
+			const clamped = Math.min(Math.max(value, 0), this.props.wave.length - 256);
+			if (this.state.isPrimary) {
+				this.props.setOffset(clamped);
+				this.props.setEnd(clamped + this.selectionSize);
+			} else {
+				this.props.setEnd(Math.max(clamped, this.props.selectionStart));
+			}
 		}
 
 		this.setState({

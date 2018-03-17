@@ -224,7 +224,7 @@ export default class Home extends Component {
 		const wavetable = this.props.appState.model.wavetable;
 		const offset = this.currentInstrument.waveOffset;
 		wavetable.splice(offset, 0, ...new Array(64));
-		this.props.actions.setWavetable(0, wavetable.slice(0, wavetable.length - 64));
+		this.props.actions.setWavetable(wavetable.slice(0, wavetable.length - 64));
 		this.shiftInstruments(offset, 64);
 	}
 
@@ -233,7 +233,7 @@ export default class Home extends Component {
 		const offset = this.currentInstrument.waveOffset;
 		const moved = wavetable.splice(offset - 64, 64);
 		wavetable.splice(wavetable.length, 0, ...moved);
-		this.props.actions.setWavetable(0, wavetable);
+		this.props.actions.setWavetable(wavetable);
 		this.shiftInstruments(offset, -64);
 	}
 

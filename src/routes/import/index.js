@@ -22,8 +22,33 @@ export default class Import extends Component {
         isEditing: false,
         sample: new Int8Array(),
         srcOffset: 0,
-        destOffset: 0,
+        srcEnd: 256,
+        destEnd: 256
 	}
+
+    onCopy = () => {
+        const state = this.state;
+        const src = state.sample;
+        const srcStart = state.srcOffset;
+        const srcEnd = state.srcEnd;
+        const srcSize = srcEnd - srcStart;
+
+        const destStart = this.currentInstrument.waveOffset;
+        const destEnd = state.destEnd;
+        const destSize = destEnd - destStart;
+
+        const ratio = 1 / destSize;
+
+        let j = 0;
+        for (let i = destStart; i < destEnd; i++) {
+            const srcIndex = Math.round((1 - j) * srcStart + j * srcEnd);
+            const sample = Math.round(src[srcIndex]);
+            
+            this.props.actions.setWave(i, sample);
+
+            j += ratio;
+        }
+    }
 
 	startClicked = () => {
 		this.props.actions.noteOn();
@@ -245,7 +270,7 @@ export default class Import extends Component {
 		const wavetable = this.props.appState.model.wavetable;
 		const offset = this.currentInstrument.waveOffset;
 		wavetable.splice(offset, 0, ...new Array(64));
-		this.props.actions.setWavetable(0, wavetable.slice(0, wavetable.length - 64));
+		this.props.actions.setWavetable(wavetable.slice(0, wavetable.length - 64));
 		this.shiftInstruments(offset, 64);
 	}
 
@@ -254,7 +279,7 @@ export default class Import extends Component {
 		const offset = this.currentInstrument.waveOffset;
 		const moved = wavetable.splice(offset - 64, 64);
 		wavetable.splice(wavetable.length, 0, ...moved);
-		this.props.actions.setWavetable(0, wavetable);
+		this.props.actions.setWavetable(wavetable);
 		this.shiftInstruments(offset, -64);
 	}
 
@@ -285,8 +310,10 @@ export default class Import extends Component {
     }
       
 	setSrcOffset = value => this.setState({ srcOffset: value })
+	setSrcEnd = value => this.setState({ srcEnd: value })
 
     setDestOffset = value => this.props.actions.updateInstrument(['waveOffset'], value);
+	setDestEnd = value => this.setState({ destEnd: value })
 
     render(props, state) {
 		const app = props.appState;
@@ -307,20 +334,22 @@ export default class Import extends Component {
 				<WaveEditor 
 					waveStyle={ style.waveEditor }
 					wave={ state.sample }
-					selectionStart={ this.state.srcOffset }
-					selectionEnd={ this.state.srcOffset + 256 }
+					selectionStart={ state.srcOffset }
+					selectionEnd={ state.srcEnd }
 					xor={ 0 }
 					setWave={ actions.setWave }
-					setOffset={ this.setSrcOffset } />
+					setOffset={ this.setSrcOffset }
+                    setEnd={ this.setSrcEnd } />
 				<button onclick={ this.onCopy }>Copy</button>
 				<WaveEditor 
 					waveStyle={ style.waveEditor }
 					wave={ model.wavetable }
 					selectionStart={ waveOffset }
-					selectionEnd={ waveOffset + 256 }
+					selectionEnd={ state.destEnd }
 					xor={ this.currentInstrument.xor }
 					setWave={ actions.setWave }
-					setOffset={ this.setDestOffset } />
+                    setOffset={ this.setDestOffset }
+                    setEnd={ this.setDestEnd } />
 				<div>
 					<input ref={element => { this.waveFormulaBox = element; }} list="waveFormulaList" onchange={this.onFormulaChanged.bind(this)} class={style.waveFormula} />
 					<datalist id="waveFormulaList">

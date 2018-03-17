@@ -334,7 +334,7 @@ export default class App extends Component {
 			this.set(['model', 'wavetable', index], value);
 			this.syncWavetable();
 		},
-		setWavetable: (index, value) => {
+		setWavetable: (value) => {
 			this.set(['model', 'wavetable'], value);
 			this.syncWavetable();
 		},
