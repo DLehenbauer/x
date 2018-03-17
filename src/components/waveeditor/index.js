@@ -4,7 +4,8 @@ import style from './style';
 
 export default class Home extends Component {
 	state = {
-        waveOffset: 0,
+        selectionStart: 0,
+        selectionSize: 256,
         scrollX: 0,
         isEditing: false,
     }
@@ -32,7 +33,7 @@ export default class Home extends Component {
 	}
 
 	onMoveWave = (delta) => {
-		const original = this.props.waveOffset;
+		const original = this.props.selectionStart;
 		const limit = this.props.wave.length - 256;
 		let updated = Math.round(original / Math.abs(delta)) * Math.abs(delta);
 		updated = Math.min(Math.max(0, updated + delta), limit)
@@ -42,6 +43,10 @@ export default class Home extends Component {
 
     setScrollbar = element => this.scrollBar = element;
 
+    selectionSizeChanged = e => {
+        this.setState({ selectionSize: parseInt(e.target.value) })
+    }
+
 	render(props, state) {
 		return (
             <div>
@@ -49,7 +54,8 @@ export default class Home extends Component {
                     <WaveEditorCanvas
                         isEditing={ state.isEditing }
                         wave={ props.wave }
-                        waveOffset={ props.waveOffset }
+                        selectionStart={ props.selectionStart }
+                        selectionEnd={ props.selectionStart + state.selectionSize }
                         xor={ props.xor }
                         setWave={ props.setWave }
                         setOffset={ props.setOffset }
@@ -65,6 +71,7 @@ export default class Home extends Component {
                 <button onclick={() => this.onMoveWave(+64)}>&gt;</button>
                 <button onclick={() => this.onMoveWave(+256)}>&gt;&gt;</button>
                 <button onclick={() => this.onMoveWave(+(1 << 30))}>&gt;|</button>
+                <input type='number' value={ state.selectionSize } min='0' max='999' onchange={ this.selectionSizeChanged } />
             </div>
 		);
 	}

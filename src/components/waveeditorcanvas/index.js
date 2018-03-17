@@ -33,7 +33,7 @@ export default class WaveEditorCanvas extends WaveCanvas {
 	onPointerDown(e) {
 		super.onPointerDown(e);
 		const p = this.pointerToWave(e);
-		const dx = p.x - this.props.waveOffset;
+		const dx = p.x - this.props.selectionStart;
 
 		this.canvas.setPointerCapture(e.pointerId);
 		this.setState({
@@ -89,7 +89,7 @@ export default class WaveEditorCanvas extends WaveCanvas {
 		const newValue = p.x - this.state.dx;
 
 		if (this.props.isEditing) {
-			const offset = this.props.waveOffset;
+			const offset = this.props.selectionStart;
 			this.line(
 				this.state.lastDragLocation.x,
 				this.state.lastDragLocation.y,
@@ -116,7 +116,8 @@ export default class WaveEditorCanvas extends WaveCanvas {
 		context2d.fillStyle = this.props.isEditing
 			? "rgba(255, 128, 64, 0.4)"
 			: "rgba(64, 128, 255, 0.4)";
-		context2d.fillRect(this.props.waveOffset - scrollX, 0, 256, height);
+		const selectionWidth = this.props.selectionEnd - this.props.selectionStart;
+		context2d.fillRect(this.props.selectionStart - scrollX, 0, selectionWidth, height);
 
         this.drawWave(context2d, width, height, scrollX);
     }

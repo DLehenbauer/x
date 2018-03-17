@@ -304,39 +304,23 @@ export default class Import extends Component {
             <input type="file" id="file-input" onchange={this.readSingleFile} />
                 <h3>Contents of the file:</h3>
                 <pre id="file-content">{ this.state.sample }</pre>
-				<div style='overflow-x: scroll; overflow-y: hidden'>
-					<div class={style.waveEditor} style={`width: ${state.sample.length}px`}>
-						<WaveEditor 
-							isEditing={ false }
-							wave={ state.sample }
-                            waveOffset={ this.state.srcOffset }
-                            xor={ 0 }
-                            setWave={ actions.setWave }
-                            setOffset={ this.setSrcOffset }
-                            updateInstrument={ actions.updateInstrument } />
-					</div>
-				</div>
-				<div style='overflow-x: scroll; overflow-y: hidden'>
-					<div class={style.waveEditor} style={`width: ${model.wavetable.length}px`}>
-                        <WaveEditor 
-                            isEditing={ state.isEditing }
-                            wave={ model.wavetable }
-                            waveOffset={ waveOffset }
-                            xor={ this.currentInstrument.xor }
-                            setWave={ actions.setWave }
-                            setOffset={ this.setDestOffset }
-                            updateInstrument={ actions.updateInstrument } />
-					</div>
-				</div>
-				<div>
-					<input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
-					<button onclick={() => this.onMoveWave(-(1 << 30))}>|&lt;</button>
-					<button onclick={() => this.onMoveWave(-256)}>&lt;&lt;</button>
-					<button onclick={() => this.onMoveWave(-64)}>&lt;</button>
-					<button onclick={() => this.onMoveWave(+64)}>&gt;</button>
-					<button onclick={() => this.onMoveWave(+256)}>&gt;&gt;</button>
-					<button onclick={() => this.onMoveWave(+(1 << 30))}>&gt;|</button>
-				</div>
+				<WaveEditor 
+					waveStyle={ style.waveEditor }
+					wave={ state.sample }
+					selectionStart={ this.state.srcOffset }
+					selectionEnd={ this.state.srcOffset + 256 }
+					xor={ 0 }
+					setWave={ actions.setWave }
+					setOffset={ this.setSrcOffset } />
+				<button onclick={ this.onCopy }>Copy</button>
+				<WaveEditor 
+					waveStyle={ style.waveEditor }
+					wave={ model.wavetable }
+					selectionStart={ waveOffset }
+					selectionEnd={ waveOffset + 256 }
+					xor={ this.currentInstrument.xor }
+					setWave={ actions.setWave }
+					setOffset={ this.setDestOffset } />
 				<div>
 					<input ref={element => { this.waveFormulaBox = element; }} list="waveFormulaList" onchange={this.onFormulaChanged.bind(this)} class={style.waveFormula} />
 					<datalist id="waveFormulaList">

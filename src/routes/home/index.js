@@ -274,7 +274,8 @@ export default class Home extends Component {
 					<WaveEditor 
 						waveStyle={ style.waveEditor }
 						wave={ model.wavetable }
-						waveOffset={ waveOffset }
+						selectionStart={ waveOffset }
+						selectionEnd={ waveOffset + 256 }
 						xor={ this.currentInstrument.xor }
 						setWave={ actions.setWave }
 						setOffset={ this.setWaveOffset } />
