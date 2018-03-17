@@ -11,7 +11,8 @@ static double getSampleRate() {
 	return static_cast<double>(F_CPU) / 8L / static_cast<double>(Synth::sampleDivider);
 }
 
-EMSCRIPTEN_BINDINGS(firmware) {	function("midi_decode_byte", &midi_decode_byte);	function("getWavetable", &Instruments::getWavetable);
+EMSCRIPTEN_BINDINGS(firmware) {	function("midi_decode_byte", &midi_decode_byte);	function("getPercussionNotes", &Instruments::getPercussionNotes);
+	function("getWavetable", &Instruments::getWavetable);
 	function("getLerpStages", &Instruments::getLerpStages);
 	function("getLerpPrograms", &Instruments::getLerpPrograms);
 	function("getLerpProgressions", &Instruments::getLerpProgressions);

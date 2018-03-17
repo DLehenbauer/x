@@ -55,8 +55,18 @@ export default class Firmware {
         });
     }
 
+    setPercussionNotes = (offset, bytes) => {
+        this.port.postMessage({type: 'setPercussionNotes', offset, bytes});
+    }
+
+    getPercussionNotes = () => {
+        return this.send({type: 'getPercussionNotes'}).then(response => {
+            return Array.prototype.slice.apply(new Uint8Array(response.buffer));
+        });
+    }
+
     setWavetable = (offset, bytes) => {
-        this.port.postMessage({type: 'setWavetable', offset, bytes});        
+        this.port.postMessage({type: 'setWavetable', offset, bytes});
     }
 
     getWavetable = () => {
@@ -191,6 +201,7 @@ export default class Firmware {
     }
 
     syncInfo = [
+        { path: "percussionNotes", get: this.getPercussionNotes, set: this.setPercussionNotes },
         { path: "instruments", get: this.getInstruments, set: this.setInstruments },
         { path: "wavetable", get: this.getWavetable, set: (table) => this.setWavetable(0, table) },
         { path: "lerpPrograms", get: this.getLerpPrograms, set: this.setLerpPrograms },

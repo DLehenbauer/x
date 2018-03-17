@@ -64,6 +64,20 @@ export default class Settings extends Component {
         });
     }
 
+    // constexpr static uint8_t percussionNotes[] PROGMEM = {
+    //     /* 35:        Bass Drum 2 */ 0x1F,
+    //     /* 36:        Bass Drum 1 */ 0x1F,
+
+    percussionNotes(cs, notes, instruments) {
+        this.array(cs, 'uint8_t', 'percussionNotes', () => {
+            notes.forEach((value, index) => {
+                const name = this.pad("                  ", instruments[index + 0x80].name);
+                cs.out(`/* ${index + 35}: ${name} */ 0x${this.hex8(value)}, `);
+                cs.outLn();
+            });
+        });
+    }
+
     lerpProgressions(cs, progressions) {
         this.array(cs, 'uint8_t', 'LerpProgressions', () => {
             cs.out(`/* 00: */ `);
@@ -128,6 +142,7 @@ export default class Settings extends Component {
     }
 
     cpp(cs, model) {
+        this.percussionNotes(cs, model.percussionNotes, model.instruments); cs.outLn();
         this.lerpStages(cs, model.lerpStages); cs.outLn();
         this.lerpProgressions(cs, model.lerpProgressions); cs.outLn();
         this.lerpPrograms(cs, model.lerpPrograms); cs.outLn();

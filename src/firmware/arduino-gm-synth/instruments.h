@@ -43,11 +43,12 @@ struct PercussiveInstrument {
 class Instruments {
     public:
         static void getInstrument(uint8_t index, Instrument& instrument);
-        static void getDrum(uint8_t index, PercussiveInstrument& drum);
+        static uint8_t getPercussionNote(uint8_t index);
 		static void getLerpProgram(uint8_t programIndex, LerpProgram& program);
 		static void getLerpStage(uint8_t progStart, uint8_t stageIndex, LerpStage& stage);
 
 #ifdef __EMSCRIPTEN__
+		static const HeapRegion<uint8_t> getPercussionNotes();
         static const HeapRegion<int8_t> getWavetable();
 		static const HeapRegion<LerpProgram> getLerpPrograms();
 		static const HeapRegion<uint8_t> getLerpProgressions();

@@ -46,6 +46,14 @@ port.onmessage = e => {
             synth.midiProgramChange(msg.channel, msg.program);
             break;
         }
+        case 'getPercussionNotes': {
+            load(Module.getPercussionNotes(), 'percussionNotes');
+            break;
+        }
+        case 'setPercussionNotes': {
+            store(Module.setPercussionNotes(), msg.bytes);
+            break;
+        }
         case 'getWavetable': {
             load(Module.getWavetable(), 'wavetable');
             break;

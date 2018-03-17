@@ -11,7 +11,7 @@ class MidiSynth final : public Synth {
     public:		MidiSynth() : Synth() {			for (int8_t channel = numMidiChannels; channel >= 0; channel--) {				Instruments::getInstrument(0, channelToInstrument[channel]);			}
 			for (int8_t channel = Synth::maxVoice; channel >= 0; channel--) {				voiceToNote[channel] = 0xFF;				voiceToChannel[channel] = 0xFF;			}		}
 		void midiNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {			if (channel == percussionChannel) {				uint8_t index = note - 35;				if (index >= 46) { index = 45; }
-				PercussiveInstrument drum;				Instruments::getDrum(index, drum);				note = drum.note;
+				note = Instruments::getPercussionNote(index);
 				Instruments::getInstrument(0x80 + index, channelToInstrument[percussionChannel]);			}
 			uint8_t voice = getNextVoice();			const Instrument& ch = channelToInstrument[channel];
 			noteOn(voice, note, velocity, ch);
