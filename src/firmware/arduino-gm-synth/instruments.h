@@ -51,7 +51,6 @@ class Instruments {
 		static const HeapRegion<uint8_t> getPercussionNotes();
         static const HeapRegion<int8_t> getWavetable();
 		static const HeapRegion<LerpProgram> getLerpPrograms();
-		static const HeapRegion<uint8_t> getLerpProgressions();
 		static const HeapRegion<LerpStage> getLerpStages();
 		static const HeapRegion<Instrument> getInstruments();
 #endif // __EMSCRIPTEN__

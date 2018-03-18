@@ -19,8 +19,7 @@ void Instruments::getLerpProgram(uint8_t programIndex, LerpProgram& program) {
 }
 
 void Instruments::getLerpStage(uint8_t progressionStart, uint8_t stageIndex, LerpStage& stage) {
-	const uint8_t index = pgm_read_byte(&LerpProgressions[progressionStart + stageIndex]);
-	PROGMEM_readAnything(&LerpStages[index], stage);
+	PROGMEM_readAnything(&LerpStages[progressionStart + stageIndex], stage);
 }
 
 #ifdef __EMSCRIPTEN__
@@ -35,10 +34,6 @@ const HeapRegion<int8_t> Instruments::getWavetable() {
 
 const HeapRegion<LerpProgram> Instruments::getLerpPrograms() {
 	return HeapRegion<LerpProgram>(&LerpPrograms[0], sizeof(LerpPrograms));
-}
-
-const HeapRegion<uint8_t> Instruments::getLerpProgressions() {
-	return HeapRegion<uint8_t>(&LerpProgressions[0], sizeof(LerpProgressions));
 }
 
 const HeapRegion<LerpStage> Instruments::getLerpStages() {
