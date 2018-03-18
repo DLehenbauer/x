@@ -36,10 +36,6 @@ struct Instrument {
     InstrumentFlags flags;
 };
 
-struct PercussiveInstrument {
-	uint8_t note;
-};
-
 class Instruments {
     public:
         static void getInstrument(uint8_t index, Instrument& instrument);
