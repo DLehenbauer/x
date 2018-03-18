@@ -379,9 +379,28 @@ export default class App extends Component {
 				this.syncInstrument();
 			});
 		},
+		setPercussionNote: (index, value) => {
+			const state = this.state;
+			const model = state.model;
+			this.set(['model', 'percussionNotes', index - 0x80], value);
+			this.firmware.setPercussionNotes(this.state.model.percussionNotes);
+			this.syncInstrument();
+		},
 		setLerpStage: (path, value) => {
 			this.set(`model.lerpStages${path}`,value);
 			this.firmware.setLerpStages(this.state.model.lerpStages);
+			this.syncInstrument();
+		},
+		setLerps: (stages, progressions, programs) => {
+			this.set(['model', 'lerpStages'], stages);
+			this.firmware.setLerpStages(this.state.model.lerpStages);
+
+			this.set(['model', 'lerpProgressions'], progressions);
+			this.firmware.setLerpProgressions(this.state.model.lerpProgressions);
+
+			this.set(['model', 'lerpPrograms'], programs);
+			this.firmware.setLerpPrograms(this.state.model.lerpPrograms);
+
 			this.syncInstrument();
 		},
 		reset: () => {

@@ -2,9 +2,8 @@ import WaveEditorCanvas from '../../components/waveeditorcanvas';
 import { h, Component } from 'preact';
 import style from './style';
 
-export default class Home extends Component {
+export default class WaveEditor extends Component {
 	state = {
-        selectionStart: 0,
         scrollX: 0,
         isEditing: false,
     }
@@ -36,19 +35,15 @@ export default class Home extends Component {
 		const limit = this.props.wave.length - 256;
 		let updated = Math.round(original / Math.abs(delta)) * Math.abs(delta);
 		updated = Math.min(Math.max(0, updated + delta), limit)
-    
         this.scrollBar.scrollLeft += delta;
-
-        const size = this.props.selectionEnd- this.props.selectionStart;
 		this.props.setOffset(updated);
-        this.props.setEnd(updated + size);
 	}
 
     setScrollbar = element => this.scrollBar = element;
 
     selectionSizeChanged = e => {
         const size = parseInt(e.target.value);
-        this.props.setEnd(this.props.selectionStart + size);
+        this.props.setSelectionSize(this.props.selectionSize);
     }
 
 	render(props, state) {
@@ -59,11 +54,11 @@ export default class Home extends Component {
                         isEditing={ state.isEditing }
                         wave={ props.wave }
                         selectionStart={ props.selectionStart }
-                        selectionEnd={ props.selectionEnd }
+                        selectionEnd={ props.selectionStart + props.selectionSize }
                         xor={ props.xor }
                         setWave={ props.setWave }
                         setOffset={ props.setOffset }
-                        setEnd={ props.setEnd }
+                        setSelectionSize={ props.setSelectionSize }
                         scrollX={ state.scrollX } />
                 </div>
                 <div ref={ this.setScrollbar } style='overflow-x: scroll; overflow-y: hidden'>
@@ -76,7 +71,7 @@ export default class Home extends Component {
                 <button onclick={() => this.onMoveWave(+64)}>&gt;</button>
                 <button onclick={() => this.onMoveWave(+256)}>&gt;&gt;</button>
                 <button onclick={() => this.onMoveWave(+(1 << 30))}>&gt;|</button>
-                <input type='number' value={ props.selectionEnd - props.selectionStart } min='0' max='999' onchange={ this.selectionSizeChanged } />
+                <input type='number' value={ props.selectionSize } min='0' max='2048' oninput={ this.selectionSizeChanged } />
             </div>
 		);
 	}

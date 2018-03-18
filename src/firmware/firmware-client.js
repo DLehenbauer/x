@@ -55,8 +55,8 @@ export default class Firmware {
         });
     }
 
-    setPercussionNotes = (offset, bytes) => {
-        this.port.postMessage({type: 'setPercussionNotes', offset, bytes});
+    setPercussionNotes = (bytes) => {
+        this.port.postMessage({type: 'setPercussionNotes', bytes});
     }
 
     getPercussionNotes = () => {

@@ -114,9 +114,9 @@ export default class WaveEditorCanvas extends WaveCanvas {
 			const clamped = Math.min(Math.max(value, 0), this.props.wave.length - 256);
 			if (this.state.isPrimary) {
 				this.props.setOffset(clamped);
-				this.props.setEnd(clamped + this.selectionSize);
 			} else {
-				this.props.setEnd(Math.max(clamped, this.props.selectionStart));
+				const size = Math.max(clamped - this.props.selectionStart, 1);
+				this.props.setSelectionSize(size);
 			}
 		}
 

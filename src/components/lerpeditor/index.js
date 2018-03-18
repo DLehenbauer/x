@@ -80,6 +80,81 @@ export default class LerpEditor extends Component {
         this.props.actions.updateInstrument(this.props.modType, index);
     };
 
+    findAvailableProgramIndex() {
+        const model = this.props.appState.model;
+        const programs = model.lerpPrograms;
+
+        for (let i = 0; i < programs.length; i++) {
+            const program = programs[i];
+            if (program.start === 0x00 && program.loopStart === 0 && program.loopEnd === 0) {
+                return i;
+            }
+        }
+    }
+
+    findAvailableStage(stages, startIndex) {
+        for (let i = Math.max(startIndex, 1); i < stages.length; i++) {
+            const stage = stages[i];
+            if (stage.slope === 0 && stage.limit === 0) {
+                return i;
+            }
+        }
+    }
+
+    get lastProgressionIndex() {
+        const model = this.props.appState.model;
+        const programs = model.lerpPrograms;
+        const progressions = model.lerpProgressions;
+
+        let max = 0;
+        for (let programIndex = 1; programIndex < this.findAvailableProgramIndex; programIndex++) {
+            const program = programs[programIndex];
+            for (let progressionIndex = program.start, stageIndex = progressions[progressionIndex]; ; stageIndex = progressions[++progressionIndex]) {
+                max = Math.max(max, progressionIndex);
+                if (stageIndex === 0) {
+                    break;
+                }
+            }
+        }
+
+        return max;
+    }
+
+    addStage = e => {
+        const progressionIndex = parseInt(e.target.name) + 1;
+        const model = this.props.appState.model;
+
+        const stages = model.lerpStages.slice(0);
+        let stageIndex = this.findAvailableStage(stages, 1);
+        stages[stageIndex] = { slope: -1024, limit: 0 };
+
+        const programs = model.lerpPrograms.slice(0);
+        for (let i = 0; i < programs.length; i++) {
+            const program = programs[i];
+            if (program.start >= progressionIndex) {
+                program.start++;
+            }
+        }
+
+        const progressions = model.lerpProgressions.slice(0, -1);
+        progressions.splice(progressionIndex, 0, stageIndex);
+
+        this.props.actions.setLerps(stages, progressions, programs);
+
+        return progressionIndex;
+    }
+
+    addProgram = () => {
+        let model = this.props.appState.model;
+        const programIndex = Math.min(this.props.programIndex, model.lerpPrograms.length - 1);
+        const program = model.lerpPrograms[programIndex];
+        program.start = this.addStage({ target: { name: program.start - 1 } });
+
+        model = this.props.appState.model;
+        model.lerpPrograms[programIndex].start = program.start;
+        this.props.actions.setLerps(model.lerpStages, model.lerpProgressions, model.lerpPrograms);
+    };
+
 	render(props, state) {
         const app = this.props.appState;
         if (!app.ready) {
@@ -87,7 +162,7 @@ export default class LerpEditor extends Component {
         }
 
         const model = app.model;
-        const programIndex = props.programIndex;
+        const programIndex = Math.min(props.programIndex, model.lerpPrograms.length - 1);
         const programNames = model.lerpPrograms.map((lerp, index) => index);
 
         const program = model.lerpPrograms[programIndex];
@@ -104,6 +179,7 @@ export default class LerpEditor extends Component {
                     <span>{ stageIndex }:</span>
                     <input name={ stageIndex } type='range' min='0' max='89' value={ angle } onchange={ this.slopeChanged } />
                     <input name={ `[${stageIndex}].limit` } type='number' min='-128' max='127' value={ stage.limit } onchange={ this.lerpChanged } />
+                    <button name={ progressionIndex } onclick={ this.addStage }>+</button>
                 </div>
             );
         }
@@ -112,7 +188,10 @@ export default class LerpEditor extends Component {
 				<div class={style.lerp}>
 					<Lerp appState={ app } program={ props.programIndex } />
 				</div>
-                <span>{ props.modType }: <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} /></span>
+                <span>
+                    { props.modType }: <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} />
+                    <button onclick={ this.addProgram }>+</button>
+                </span>
                 { rows }
             </div>
 		);

@@ -2,11 +2,23 @@ import { h, Component } from 'preact';
 import style from './style';
 import ArraySelector from '../arrayselector';
 
+const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
 export default class InstrumentEditor extends Component {
     flags = [
         { name: 'noise', mask: (1 << 0) },
         { name: 'halfAmp', mask: (1 << 1) },
     ];
+
+	get currentInstrumentIndex() {
+		const model = this.props.appState.model;
+		return model.channelToInstrument[model.currentChannel];
+	}
+
+	get currentInstrument() {
+		const model = this.props.appState.model;
+		return model.instruments[this.currentInstrumentIndex];
+	}
 
     instrumentChanged = e => {
         const target = e.target;
@@ -24,15 +36,9 @@ export default class InstrumentEditor extends Component {
         this.props.actions.updateInstrument('flags', flags);
     };
 
-	get currentInstrumentIndex() {
-		const model = this.props.appState.model;
-		return model.channelToInstrument[model.currentChannel];
-	}
-
-	get currentInstrument() {
-		const model = this.props.appState.model;
-		return model.instruments[this.currentInstrumentIndex];
-	}
+    noteChanged = e => {
+        this.props.actions.setPercussionNote(this.currentInstrumentIndex, parseInt(e.target.value));
+    }
 
 	render(props, state) {
         const app = this.props.appState;
@@ -44,6 +50,20 @@ export default class InstrumentEditor extends Component {
         const instrument = this.currentInstrument;
 
         const rows = [];
+
+        const instrumentIndex = this.currentInstrumentIndex;
+        if (instrumentIndex >= 0x80) {
+            const note = model.percussionNotes[this.currentInstrumentIndex - 0x80];
+            const noteName = `${noteNames[note % 12]}${Math.floor(note / 12)}`;
+            rows.push(
+                <div class={style.stage}>
+                    <span>Percussion Note:</span>
+                    <input type='number' value={ note } min='0' max='127' oninput={ this.noteChanged } />
+                    <span>{ noteName }</span>
+                </div>
+            )
+        }
+
         this.flags.forEach((flag) => {
             rows.push(
                 <div class={style.stage}>

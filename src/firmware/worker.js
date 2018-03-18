@@ -15,6 +15,9 @@ const load = (memory, msgType) => {
 }
 
 const store = (memory, bytes) => {
+    if (memory.start + bytes.length > memory.end) {
+        throw new Error('Write outside of memory range.');
+    }
     Module.HEAP8.set(bytes, memory.start);
 }
 
@@ -51,7 +54,7 @@ port.onmessage = e => {
             break;
         }
         case 'setPercussionNotes': {
-            store(Module.setPercussionNotes(), msg.bytes);
+            store(Module.getPercussionNotes(), msg.bytes);
             break;
         }
         case 'getWavetable': {

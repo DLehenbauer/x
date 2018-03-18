@@ -18,6 +18,10 @@ const zeroCross = [0.028532, 0.067234, 0.124009, 0.179044, 0.20236, 0.179044, 0.
 const channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export default class Home extends Component {
+	state = {
+		selectionSize: 256
+	}
+
 	startClicked = () => {
 		this.props.actions.noteOn();
 	}
@@ -245,6 +249,10 @@ export default class Home extends Component {
 		this.props.actions.updateInstrument(['waveOffset'], value);
 	}
 
+	setSelectionSize = value => {
+		this.setState({ selectionSize: value })
+	}
+
 	render(props, state) {
 		const app = props.appState;
 		if (!app.ready) {
@@ -260,7 +268,7 @@ export default class Home extends Component {
 			<div class={style.home}>
 				<ArraySelector onselect={this.channelSelected} selectedIndex={this.currentChannel} options={channels} />
 				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrumentIndex} options={instrumentNames} />
-				<input type='checkbox' checked={ this.state.trackMidi } onchange={ this.trackMidiChanged } />Track Midi
+				<input type='checkbox' checked={ state.trackMidi } onchange={ this.trackMidiChanged } />Track Midi
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>
 				<div>
@@ -275,10 +283,11 @@ export default class Home extends Component {
 						waveStyle={ style.waveEditor }
 						wave={ model.wavetable }
 						selectionStart={ waveOffset }
-						selectionEnd={ waveOffset + 256 }
+						selectionSize={ state.selectionSize }
 						xor={ this.currentInstrument.xor }
 						setWave={ actions.setWave }
-						setOffset={ this.setWaveOffset } />
+						setOffset={ this.setWaveOffset }
+						setSelectionSize={ this.setSelectionSize } />
 				</div>
 				<div>
 					<input ref={element => { this.waveFormulaBox = element; }} list="waveFormulaList" onchange={this.onFormulaChanged.bind(this)} class={style.waveFormula} />

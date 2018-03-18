@@ -41,9 +41,10 @@ class Lerp {
 			if (nextStage) {
 				out = limit;
 				amp = limit << 8;
-				stageIndex = stageIndex == loopEnd
-					 ? loopStart
-					 : stageIndex + 1;
+				stageIndex++;
+				if (stageIndex == loopEnd) {
+					stageIndex = loopStart;
+				}
 				loadStage();
 			}
 		

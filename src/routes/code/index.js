@@ -48,8 +48,8 @@ export default class Settings extends Component {
         return this.pad("0000", hex);
     }
 
-    array(cs, type, name, block) {
-        cs.outLn(`static constexpr ${type} ${name}[] PROGMEM = {`);
+    array(cs, type, name, size, block) {
+        cs.outLn(`static constexpr ${type} ${name}[${size}] PROGMEM = {`);
         cs.indent(() => {
             block();
         })
@@ -57,29 +57,15 @@ export default class Settings extends Component {
     }
 
     lerpStages(cs, stages) {
-        this.array(cs, 'LerpStage', 'LerpStages', () => {
+        this.array(cs, 'LerpStage', 'LerpStages', 'LERP_ARRAY_SIZE', () => {
             stages.forEach((stage, index) => {
                 cs.outLn(`/* ${this.hex8(index)}: */ { ${this.pad("      ", stage.slope)}, ${this.pad("    ", stage.limit)} },`);
             });
         });
     }
 
-    // constexpr static uint8_t percussionNotes[] PROGMEM = {
-    //     /* 35:        Bass Drum 2 */ 0x1F,
-    //     /* 36:        Bass Drum 1 */ 0x1F,
-
-    percussionNotes(cs, notes, instruments) {
-        this.array(cs, 'uint8_t', 'percussionNotes', () => {
-            notes.forEach((value, index) => {
-                const name = this.pad("                  ", instruments[index + 0x80].name);
-                cs.out(`/* ${index + 35}: ${name} */ 0x${this.hex8(value)}, `);
-                cs.outLn();
-            });
-        });
-    }
-
     lerpProgressions(cs, progressions) {
-        this.array(cs, 'uint8_t', 'LerpProgressions', () => {
+        this.array(cs, 'uint8_t', 'LerpProgressions', 'LERP_ARRAY_SIZE', () => {
             cs.out(`/* 00: */ `);
             progressions.forEach((value, index) => {
                 cs.out(`0x${this.hex8(value)}, `);
@@ -94,7 +80,7 @@ export default class Settings extends Component {
     }
 
     lerpPrograms(cs, programs) {
-        this.array(cs, 'LerpProgram', 'LerpPrograms', () => {
+        this.array(cs, 'LerpProgram', 'LerpPrograms', 'LERP_ARRAY_SIZE', () => {
             programs.forEach((program, index) => {
                 cs.outLn(`/* ${this.hex8(index)}: */ { 0x${this.hex8(program.start)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
             });
@@ -102,7 +88,7 @@ export default class Settings extends Component {
     }
 
     wavetable(cs, wavetable) {
-        this.array(cs, 'int8_t', 'Waveforms', () => {
+        this.array(cs, 'int8_t', 'Waveforms', 'WAVETABLE_SIZE', () => {
             let bytes = wavetable.map(byte => {
                 let asString = byte.toString();
                 return this.pad("    ", asString) + ",";
@@ -123,7 +109,7 @@ export default class Settings extends Component {
     }
 
     instruments(cs, instruments) {
-        this.array(cs, 'Instrument', 'instruments', () => {
+        this.array(cs, 'Instrument', 'instruments', '', () => {
             instruments.forEach((instrument, index) => {
                 const indexAsString = this.pad("   ", index);
                 const name = this.pad("                            ", instrument.name);
@@ -141,13 +127,31 @@ export default class Settings extends Component {
         });
     }
 
+    percussionNotes(cs, notes, instruments) {
+        this.array(cs, 'uint8_t', 'percussionNotes', '', () => {
+            notes.forEach((value, index) => {
+                const name = this.pad("                  ", instruments[index + 0x80].name);
+                cs.out(`/* ${index + 35}: ${name} */ 0x${this.hex8(value)}, `);
+                cs.outLn();
+            });
+        });
+    }
+
     cpp(cs, model) {
-        this.percussionNotes(cs, model.percussionNotes, model.instruments); cs.outLn();
-        this.lerpStages(cs, model.lerpStages); cs.outLn();
+        cs.outLn('#ifdef __EMSCRIPTEN__');
+        cs.outLn('#define LERP_ARRAY_SIZE 256');
+        cs.outLn('#define WAVETABLE_SIZE 96*256');
+        cs.outLn('#else');
+        cs.outLn('#define LERP_ARRAY_SIZE');
+        cs.outLn('#define WAVETABLE_SIZE');
+        cs.outLn('#endif');
+        cs.outLn();
         this.lerpProgressions(cs, model.lerpProgressions); cs.outLn();
+        this.lerpStages(cs, model.lerpStages); cs.outLn();
         this.lerpPrograms(cs, model.lerpPrograms); cs.outLn();
         this.wavetable(cs, model.wavetable); cs.outLn();
         this.instruments(cs, model.instruments); cs.outLn();
+        this.percussionNotes(cs, model.percussionNotes, model.instruments); cs.outLn();
     }
 
 	copyToClipboard = () => {
