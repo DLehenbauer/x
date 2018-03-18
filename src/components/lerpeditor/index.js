@@ -178,6 +178,7 @@ export default class LerpEditor extends Component {
                 <div class={style.stage}>
                     <span>{ stageIndex }:</span>
                     <input name={ stageIndex } type='range' min='0' max='89' value={ angle } onchange={ this.slopeChanged } />
+                    <span>{stage.slope}</span>
                     <input name={ `[${stageIndex}].limit` } type='number' min='-128' max='127' value={ stage.limit } onchange={ this.lerpChanged } />
                     <button name={ progressionIndex } onclick={ this.addStage }>+</button>
                 </div>

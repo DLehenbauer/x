@@ -347,7 +347,17 @@ export default class App extends Component {
 			this.syncWavetable();
 		},
 		noteOn: () => {
-			this.firmware.noteOn(0, 48, 127, 0);
+			const state = this.state;
+			const model = state.model;
+			const channel = model.currentChannel;
+			const program = model.channelToInstrument[channel];
+
+			let note = 48;
+			if (program >= 0x80) {
+				note = model.percussionNotes[program - 0x80];
+			}
+			
+			this.firmware.noteOn(0, note, 127, 0);
 		},
 		noteOff: () => {
 			this.firmware.noteOff(0, 48);
