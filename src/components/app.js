@@ -256,7 +256,7 @@ export default class App extends Component {
 		stream.connect(audioContext.destination);
 
 		const audioOutputY = audioContext.createGain();
-		audioOutputY.gain.value = 2;
+		audioOutputY.gain.value = 4;
 		stream.connect(audioOutputY);
 
 		const audioOutputX = audioContext.createGain();
