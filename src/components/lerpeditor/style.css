@@ -3,7 +3,7 @@
     grid-template-areas:
       "selector selector" 
       "controls graph";
-    grid-template-columns: 400px auto;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto;
 }
 
@@ -21,6 +21,26 @@
 .graph {
     grid-area: graph;
 }
+
+.stage {
+    display: grid;
+    grid-template-areas:
+      "index slider slope limit add remove";
+    grid-template-columns: 20px auto 50px auto 28px 28px;
+    grid-template-rows: auto;
+}
+
+.stageIndex, .stageSlider, .stageSlope, .stageLimit, .stageAdd, .stageRemove { 
+    margin: 2px 2px 2px 2px;
+    justify-self: center;
+}
+
+.stageIndex { grid-area: index }
+.stageSlider { grid-area: slider; justify-self: stretch }
+.stageSlope { grid-area: slope; justify-self: right }
+.stageLimit { grid-area: limit }
+.stageAdd { grid-area: add; justify-self: stretch }
+.stageRemove { grid-area: remove; justify-self: stretch }
 
 .graph {
     --borderWidth: 1px;

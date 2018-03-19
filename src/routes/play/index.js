@@ -23,7 +23,9 @@ export default class Home extends Component {
 			<div class={style.home}>
 				Scope:
 				<div class={style.scope}>
-				  	<Scope audioContext={ app.audioContext } source={ app.audioOutputY } />
+				  	<Scope grid={ true }
+						audioContext={ app.audioContext }
+						source={ app.audioOutputY } />
 				</div>
                 <div>{hex}</div>
 			</div>

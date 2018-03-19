@@ -3,8 +3,7 @@ import Canvas from '../canvas';
 
 import Firmware from '../../firmware/firmware-client';
 
-export default class Lerp extends Canvas {
-
+export default class LerpCanvas extends Canvas {
     constructor() {
         super();
         this.firmware = new Firmware();
@@ -36,10 +35,10 @@ export default class Lerp extends Canvas {
                 context2d.stroke();
 
                 // Draw outline to test CSS layout
-                context2d.beginPath();
-                context2d.strokeStyle = 'red';
-                context2d.rect(0, 0, width, height);
-                context2d.stroke();
+                // context2d.beginPath();
+                // context2d.strokeStyle = 'red';
+                // context2d.rect(0, 0, width, height);
+                // context2d.stroke();
             });
         });
     }

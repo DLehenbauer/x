@@ -52,6 +52,7 @@ export default class WaveEditor extends Component {
                 <div class={props.waveStyle}>
                     <WaveEditorCanvas
                         isEditing={ state.isEditing }
+                        grid={ true }
                         wave={ props.wave }
                         selectionStart={ props.selectionStart }
                         selectionEnd={ props.selectionStart + props.selectionSize }

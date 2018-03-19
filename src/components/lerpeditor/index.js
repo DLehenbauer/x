@@ -1,7 +1,8 @@
 import { h, Component } from 'preact';
 import style from './style';
 import ArraySelector from '../arrayselector';
-import Lerp from '../lerp';
+import LerpCanvas from '../lerpcanvas';
+import Util from '../../common/util';
 
 const toDegrees = 180 / Math.PI;
 const toRadians = Math.PI / 180;
@@ -154,12 +155,24 @@ export default class LerpEditor extends Component {
             const angle = this.slopeToSlider(stageIndex, stage.slope);
             rows.push(
                 <div class={style.stage}>
-                    <span>{ stageIndex }:</span>
-                    <input name={ stageIndex } type='range' min='0' max='89' value={ angle } onchange={ this.slopeChanged } />
-                    <span>{ Math.round((stage.slope / 256) * 100) / 100 }</span>
-                    <input name={ `[${stageIndex}].limit` } type='number' min='-128' max='127' value={ stage.limit } onchange={ this.lerpChanged } />
-                    <button name={ stageIndex + 1 } onclick={ this.addStage }>+</button>
-                    <button name={ stageIndex } onclick={ this.removeStage }>-</button>
+                    <span class={style.stageIndex}>
+                        { Util.hex8(stageIndex) }:
+                    </span>
+                    <input class={style.stageSlider } 
+                        name={ stageIndex } 
+                        type='range' min='0' max='89'
+                        value={ angle }
+                        onchange={ this.slopeChanged } />
+                    <span class={style.stageSlope }>
+                        { Math.round((stage.slope / 256) * 100) / 100 }
+                    </span>
+                    <input class={style.stageLimit }
+                        name={ `[${stageIndex}].limit` }
+                        type='number' min='-128' max='127'
+                        value={ stage.limit }
+                        onchange={ this.lerpChanged } />
+                    <button class={style.stageAdd } name={ stageIndex + 1 } onclick={ this.addStage }>+</button>
+                    <button class={style.stageRemove } name={ stageIndex } onclick={ this.removeStage }>-</button>
                 </div>
             );
         }
@@ -172,7 +185,7 @@ export default class LerpEditor extends Component {
                     <button name={ program.start } onclick={ this.addStage } disabled={ program.start === 0 }>+</button>
                 </div>
 				<div class={style.graph}>
-					<Lerp appState={ app } program={ props.programIndex } />
+					<LerpCanvas appState={ app } program={ props.programIndex } />
 				</div>
                 <div class={style.controls}>
                     { rows }

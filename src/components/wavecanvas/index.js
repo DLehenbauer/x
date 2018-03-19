@@ -12,6 +12,10 @@ export default class WaveCanvas extends Canvas {
 	sample(index) {	}
 
     drawGrid(draw, xDiv, yDiv) {
+        if (!this.props.grid) {
+            return;
+        }
+
 		const width = this.state.canvasWidth;
 		const height = this.state.canvasHeight;
 

@@ -17,3 +17,7 @@
 	border-color: black;
 	border-width: var(--borderWidth);
 }
+
+.scope {
+	--height: calc(128px + var(--borderWidth) * 2);
+}

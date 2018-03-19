@@ -1,7 +1,3 @@
-import Scope from '../../components/scope';
-import WaveEditor from '../../components/waveeditor';
-import Lerp from '../../components/lerp';
-import LerpEditor from '../../components/lerpeditor';
 import { h, Component } from 'preact';
 import style from './style';
 
