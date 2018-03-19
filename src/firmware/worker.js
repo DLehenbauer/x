@@ -88,14 +88,6 @@ port.onmessage = e => {
             store(Module.getLerpPrograms(), new Int8Array(msg.buffer));
             break;
         }
-        case 'getLerpProgressions': {
-            load(Module.getLerpProgressions(), 'lerpProgressions');
-            break;
-        }
-        case 'setLerpProgressions': {
-            store(Module.getLerpProgressions(), new Int8Array(msg.buffer));
-            break;
-        }
         case 'getLerpStages': {
             load(Module.getLerpStages(), 'lerpStages');
             break;

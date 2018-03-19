@@ -18,8 +18,8 @@ void Instruments::getLerpProgram(uint8_t programIndex, LerpProgram& program) {
 	PROGMEM_readAnything(&LerpPrograms[programIndex], program);
 }
 
-void Instruments::getLerpStage(uint8_t progressionStart, uint8_t stageIndex, LerpStage& stage) {
-	PROGMEM_readAnything(&LerpStages[progressionStart + stageIndex], stage);
+void Instruments::getLerpStage(uint8_t start, uint8_t stageIndex, LerpStage& stage) {
+	PROGMEM_readAnything(&LerpStages[start + stageIndex], stage);
 }
 
 #ifdef __EMSCRIPTEN__

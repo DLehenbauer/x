@@ -15,7 +15,6 @@ EMSCRIPTEN_BINDINGS(firmware) {	function("midi_decode_byte", &midi_decode_byte)
 	function("getWavetable", &Instruments::getWavetable);
 	function("getLerpStages", &Instruments::getLerpStages);
 	function("getLerpPrograms", &Instruments::getLerpPrograms);
-	function("getLerpProgressions", &Instruments::getLerpProgressions);
 	function("getInstruments", &Instruments::getInstruments);
 	
 	value_object<HeapRegion<int8_t>>("I8s")

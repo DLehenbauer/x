@@ -177,17 +177,6 @@ export default class Firmware {
         this.port.postMessage({ type: 'setLerpPrograms', buffer }, [buffer]);
     };
 
-    getLerpProgressions = () => {
-        return this.send({type: 'getLerpProgressions'}).then(response => {
-            return Array.prototype.slice.call(new Uint8Array(response.buffer));
-        });
-    }
-
-    setLerpProgressions = progressions => {
-        const buffer = Uint8Array.from(progressions).buffer;
-        this.port.postMessage({ type: 'setLerpProgressions', buffer }, [buffer]);
-    };
-
     sample(length, rate) {
         return this.send({ type: 'sample', length, rate }).then(response => {
             return new Float32Array(response.buffer);
@@ -205,7 +194,6 @@ export default class Firmware {
         { path: "instruments", get: this.getInstruments, set: this.setInstruments },
         { path: "wavetable", get: this.getWavetable, set: (table) => this.setWavetable(0, table) },
         { path: "lerpPrograms", get: this.getLerpPrograms, set: this.setLerpPrograms },
-        { path: "lerpProgressions", get: this.getLerpProgressions, set: this.setLerpProgressions },
         { path: "lerpStages", get: this.getLerpStages, set: this.setLerpStages },
     ];
 

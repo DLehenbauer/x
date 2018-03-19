@@ -57,30 +57,15 @@ export default class Settings extends Component {
     }
 
     lerpStages(cs, stages) {
-        this.array(cs, 'LerpStage', 'LerpStages', 'LERP_ARRAY_SIZE', () => {
+        this.array(cs, 'LerpStage', 'LerpStages', '256', () => {
             stages.forEach((stage, index) => {
                 cs.outLn(`/* ${this.hex8(index)}: */ { ${this.pad("      ", stage.slope)}, ${this.pad("    ", stage.limit)} },`);
             });
         });
     }
 
-    lerpProgressions(cs, progressions) {
-        this.array(cs, 'uint8_t', 'LerpProgressions', 'LERP_ARRAY_SIZE', () => {
-            cs.out(`/* 00: */ `);
-            progressions.forEach((value, index) => {
-                cs.out(`0x${this.hex8(value)}, `);
-                if (value === 0x0) {
-                    cs.outLn();
-                    if (index !== progressions.length - 1) {
-                        cs.out(`/* ${this.hex8(index + 1)}: */ `);
-                    }
-                }
-            });
-        });
-    }
-
     lerpPrograms(cs, programs) {
-        this.array(cs, 'LerpProgram', 'LerpPrograms', 'LERP_ARRAY_SIZE', () => {
+        this.array(cs, 'LerpProgram', 'LerpPrograms', '64', () => {
             programs.forEach((program, index) => {
                 cs.outLn(`/* ${this.hex8(index)}: */ { 0x${this.hex8(program.start)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
             });
@@ -88,7 +73,7 @@ export default class Settings extends Component {
     }
 
     wavetable(cs, wavetable) {
-        this.array(cs, 'int8_t', 'Waveforms', 'WAVETABLE_SIZE', () => {
+        this.array(cs, 'int8_t', 'Waveforms', '256 * 16', () => {
             let bytes = wavetable.map(byte => {
                 let asString = byte.toString();
                 return this.pad("    ", asString) + ",";
@@ -138,15 +123,6 @@ export default class Settings extends Component {
     }
 
     cpp(cs, model) {
-        cs.outLn('#ifdef __EMSCRIPTEN__');
-        cs.outLn('#define LERP_ARRAY_SIZE 256');
-        cs.outLn('#define WAVETABLE_SIZE 96*256');
-        cs.outLn('#else');
-        cs.outLn('#define LERP_ARRAY_SIZE');
-        cs.outLn('#define WAVETABLE_SIZE');
-        cs.outLn('#endif');
-        cs.outLn();
-        this.lerpProgressions(cs, model.lerpProgressions); cs.outLn();
         this.lerpStages(cs, model.lerpStages); cs.outLn();
         this.lerpPrograms(cs, model.lerpPrograms); cs.outLn();
         this.wavetable(cs, model.wavetable); cs.outLn();

@@ -401,12 +401,9 @@ export default class App extends Component {
 			this.firmware.setLerpStages(this.state.model.lerpStages);
 			this.syncInstrument();
 		},
-		setLerps: (stages, progressions, programs) => {
+		setLerps: (stages, programs) => {
 			this.set(['model', 'lerpStages'], stages);
 			this.firmware.setLerpStages(this.state.model.lerpStages);
-
-			this.set(['model', 'lerpProgressions'], progressions);
-			this.firmware.setLerpProgressions(this.state.model.lerpProgressions);
 
 			this.set(['model', 'lerpPrograms'], programs);
 			this.firmware.setLerpPrograms(this.state.model.lerpPrograms);

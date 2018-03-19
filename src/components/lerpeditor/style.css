@@ -1,20 +1,28 @@
-.row {
+.lerp {
     display: grid;
-    grid-template-areas: 
-      "label value";
-    grid-template-columns: auto auto;
+    grid-template-areas:
+      "selector selector" 
+      "controls graph";
+    grid-template-columns: 400px auto;
     grid-template-rows: auto;
 }
 
-.label {
-    grid-area: label;
+.selector {
+    margin: 4px 0px 0px 0px;
+    padding: 4px 4px 4px 4px;
+    background: lightgray;
+    grid-area: selector;
 }
 
-.value {
-    grid-area: value;
+.controls {
+    grid-area: controls;
 }
 
-.lerp {
+.graph {
+    grid-area: graph;
+}
+
+.graph {
     --borderWidth: 1px;
     --height: calc(127px + var(--borderWidth) * 2);
 
