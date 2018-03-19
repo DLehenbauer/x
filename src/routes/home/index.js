@@ -5,6 +5,7 @@ import InstrumentEditor from '../../components/instrumenteditor';
 import ArraySelector from '../../components/arrayselector';
 import { h, Component } from 'preact';
 import style from './style';
+import Midi from '../../common/midi';
 
 // High pass FIR at ~7760hz
 const hiPass = [-0.075579, 0.800000, -0.075579];
@@ -261,7 +262,7 @@ export default class Home extends Component {
 
 		const model = app.model;
 		const actions = props.actions;
-		const instrumentNames = app.instrumentNames.map((name, index) => `${index}: ${name}`);
+		const instrumentNames = Midi.instrumentNames.map((name, index) => `${index}: ${name}`);
 		const waveOffset = this.currentInstrument.waveOffset;
 
 		return (

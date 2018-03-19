@@ -6,12 +6,6 @@ export default class MidiMessages extends Component {
 		super();
 	}
 
-    /** Return the given number as an 8-bit/2-digit hexadecimal string. */
-    hex8(value) {
-        const hex = (value & 0xFF).toString(16);
-        return "00".substr(hex.length) + hex;
-    }
-
 	render(props, state) {
 		const rows = this.props.messages.map(message => {
 			const hex = Array.prototype.map.call(message.data, value => this.hex8(value));

@@ -105,7 +105,6 @@ export default class Import extends Component {
 
 		const model = app.model;
 		const actions = props.actions;
-		const instrumentNames = app.instrumentNames.map((name, index) => `${index}: ${name}`);
 		const waveOffset = this.currentInstrument.waveOffset;
 
 		return (
