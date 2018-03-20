@@ -197,15 +197,17 @@ export default class Firmware {
         { path: "lerpStages", get: this.getLerpStages, set: this.setLerpStages },
     ];
 
-	sync(model) {
-		return Promise.all(this.syncInfo.map(info => info.set(model[info.path])));
+    /** Stores the given settings to the Firmware. */
+	store(settings) {
+		return Promise.all(this.syncInfo.map(info => info.set(settings[info.path])));
 	}
 
-	reset(set) {
+    /** Loads the current Firmware settings, updating the JavaScript model via the given setter. */
+	load(set) {
         return Promise.all(this.syncInfo.map(info => info.get())).then(values => {
             values.forEach((value, index) => {
                 set([this.syncInfo[index].path], value);
             });
-        })
+        });
 	}
 }

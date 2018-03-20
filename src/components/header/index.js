@@ -4,8 +4,7 @@ import style from './style';
 
 export default class Header extends Component {
 	resetClicked = () => {
-		localStorage.removeItem('model');
-		location.reload();
+		this.props.reset();
 	}
 
 	render() {

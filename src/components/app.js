@@ -26,15 +26,6 @@ export default class App extends Component {
 		model: {
 			currentChannel: 0,
 			channelToInstrument: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			wavetable: [],
-			instruments: [{
-				name: "Acoustic Grand Piano",
-				waveOffset: 0,
-				ampMod: 0,
-				freqMod: 0,
-				xor: 0,
-				instrumentFlags: 0
-			}]
 		},
 	};
 
@@ -58,13 +49,14 @@ export default class App extends Component {
 
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
-			const modelAsJSON = localStorage.getItem('model');
-			if (modelAsJSON) {
-				this.setState({ model: JSON.parse(modelAsJSON) });
-				return this.sync();
-			} else {
-				return this.reset();
-			}
+			return this.loadFirmware().then(() => {
+				this.set(['firmwareDefaults'], this.state.model);
+				const modelAsJSON = localStorage.getItem('model');
+				if (modelAsJSON) {
+					this.set(['model'], JSON.parse(modelAsJSON));
+				}
+				return this.storeFirmware();
+			});
 		}).then(() => {
 			stream.onaudioprocess = e => {
 				const outputBuffer = e.outputBuffer;
@@ -96,7 +88,7 @@ export default class App extends Component {
 		localStorage.setItem('model', JSON.stringify(this.state.model));
 	}
 
-	sync = () => this.firmware.sync(this.state.model);
+	storeFirmware = () => this.firmware.store(this.state.model);
 
 	syncInstrument = () => {
 		const state = this.state;
@@ -110,7 +102,7 @@ export default class App extends Component {
 		this.firmware.setWavetable(0, new Int8Array(this.state.model.wavetable));
 	}
 
-	reset = () => this.firmware.reset((path, value) => {
+	loadFirmware = () => this.firmware.load((path, value) => {
 		this.set(['model'].concat(path), value);
 	}).then(() => {
 		const state = this.state;
@@ -202,7 +194,8 @@ export default class App extends Component {
 			this.syncInstrument();
 		},
 		reset: () => {
-			this.reset();
+			this.set(['model'], this.state.firmwareDefaults);
+			return this.storeFirmware();
 		}
 	};
 
@@ -229,7 +222,7 @@ export default class App extends Component {
 	render(props, state) {
 		return (
 			<div id="app">
-				<Header />
+				<Header reset={ this.actions.reset } />
 				<Router onChange={this.handleRoute}>
 					<Play path="/"
 						appState={ state } />
