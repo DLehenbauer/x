@@ -8,7 +8,7 @@ void Lerp::start(uint8_t programIndex, uint8_t init) volatile {
 	LerpProgram program;
 	Instruments::getLerpProgram(programIndex, program);
 	
-	progressionStart = program.progressionStart;
+	startIndex = program.start;
 	loopStart = program.loopStartAndEnd >> 4;
 	loopEnd = program.loopStartAndEnd & 0x0F;
 	
@@ -17,7 +17,7 @@ void Lerp::start(uint8_t programIndex, uint8_t init) volatile {
 
 void Lerp::loadStage() volatile {
 	 LerpStage stage;
-	 Instruments::getLerpStage(progressionStart, stageIndex, stage);
+	 Instruments::getLerpStage(startIndex, stageIndex, stage);
 	 slope = stage.slope;
 	 limit = stage.limit;
 }
