@@ -8,6 +8,14 @@ export default class Firmware {
             let worker;
             let workerListener = e => {
                 this.port = e.ports[0];
+                this.sampleRate = e.data.sampleRate;
+
+                // Merge the returned information about the memory layout of the firmware into
+                // our 'syncInfo' table.
+                Object.getOwnPropertyNames(e.data.layout).forEach(name => {
+                    this.marshallingInfo[name].memory = e.data.layout[name];
+                });
+
                 this.port.onmessage = e => this.dispatch(e);
                 accept();
                 worker.removeEventListener('message', workerListener);
@@ -33,6 +41,130 @@ export default class Firmware {
         response.accept(e.data);
     }
 
+    load(marshal) {
+        return this.send({ type: 'load', memory: marshal.memory }).then(
+            response => marshal.unpack(response.buffer));
+    }
+
+    store(marshal, value) {
+        const buffer = marshal.pack(value);
+        this.port.postMessage({ type: 'store', memory: marshal.memory, buffer }, [buffer]);
+    }
+
+    unpackPercussionNotes = buffer => Array.prototype.slice.apply(new Uint8Array(buffer))
+    packPercussionNotes = notes => new Uint8Array(notes).buffer;
+
+    setPercussionNotes = notes => this.store(this.marshallingInfo.percussionNotes, notes);
+    getPercussionNotes = () => this.load(this.marshallingInfo.percussionNotes);
+
+    unpackWavetable = buffer => Array.prototype.slice.apply(new Int8Array(buffer));
+    packWavetable = table => new Int8Array(table).buffer;
+
+    setWavetable = table => this.store(this.marshallingInfo.wavetable, table);
+    getWavetable = () => this.load(this.marshallingInfo.wavetable);
+
+    unpackInstruments = buffer => {
+        const waveStart = this.marshallingInfo.wavetable.memory.start;
+        const dv = new DataView(buffer);
+
+        const instruments = [];
+        for (let i = 0; i < buffer.byteLength;) {
+            const waveOffset = dv.getUint32(i, /* littleEndian: */ true) - waveStart; i += 4;
+            const ampMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+            const freqMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+            const waveMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+            const xor = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+            const flags = dv.getUint8(i, /* littleEndian: */ true); i += 1;
+            i += 3;
+            instruments.push({ waveOffset, ampMod, freqMod, waveMod, xor, flags });
+        }
+
+        return instruments;
+    }
+
+    packInstruments = instruments => {
+        const waveStart = this.marshallingInfo.wavetable.memory.start;
+        const buffer = new ArrayBuffer(instruments.length * 12);
+        const dv = new DataView(buffer);
+        
+        let i = 0;
+        for (const instrument of instruments) {
+            dv.setUint32(i, instrument.waveOffset + waveStart, /* littleEndian: */ true); i += 4;
+            dv.setUint8(i, instrument.ampMod); i += 1;
+            dv.setUint8(i, instrument.freqMod); i += 1;
+            dv.setUint8(i, instrument.waveMod); i += 1;
+            dv.setUint8(i, instrument.xor); i += 1;
+            dv.setUint8(i, instrument.flags); i += 1;
+            i += 3;
+        }
+        return buffer;
+    }
+
+    setInstruments = instruments => this.store(this.marshallingInfo.instruments, instruments);
+    getInstruments = () => this.load(this.marshallingInfo.instruments);
+
+    unpackLerpStages = buffer => {
+        const dv = new DataView(buffer);
+
+        const stages = [];
+        for (let i = 0; i < buffer.byteLength;) {
+            const slope = dv.getInt16(i, /* littleEndian: */ true); i += 2;
+            const limit = dv.getInt8(i, /* littleEndian: */ true); i += 2;
+            stages.push({ slope, limit });
+        }
+
+        return stages;
+    }
+
+    packLerpStages = stages => {
+        const buffer = new ArrayBuffer(stages.length * 4);
+        const dv = new DataView(buffer);
+
+        let i = 0;
+        stages.forEach(stage => {
+            dv.setInt16(i, stage.slope, /* littleEndian: */ true); i += 2;
+            dv.setInt8(i, stage.limit, /* littleEndian: */ true); i += 2;
+        });
+
+        return buffer;
+    }
+
+    setLerpStages = stages => this.store(this.marshallingInfo.lerpStages, stages);
+    getLerpStages = () => this.load(this.marshallingInfo.lerpStages);
+
+    unpackLerpPrograms = buffer => {
+        const dv = new DataView(buffer);
+
+        const programs = [];
+        for (let i = 0; i < buffer.byteLength;) {
+            const start = dv.getUint8(i++);
+            const loopStartAndEnd = dv.getUint8(i++);
+            programs.push({
+                start,
+                loopStart: loopStartAndEnd >> 4,
+                loopEnd: loopStartAndEnd & 0x0F
+            });
+        }
+
+        return programs;
+    }
+
+    packLerpPrograms = programs => {
+        const buffer = new ArrayBuffer(programs.length * 2);
+        const dv = new DataView(buffer);
+
+        let i = 0;
+        programs.forEach(program => {
+            dv.setUint8(i, program.start, /* littleEndian: */ true); i++;
+            dv.setUint8(i, program.loopStart << 4 | program.loopEnd, /* littleEndian: */ true); i++;
+        });
+
+        return buffer;
+    };
+
+    setLerpPrograms = programs => this.store(this.marshallingInfo.lerpPrograms, programs);
+    getLerpPrograms = () => this.load(this.marshallingInfo.lerpPrograms);
+
     noteOn(channel, note, velocity) {
         this.port.postMessage({type: 'noteOn', channel, note, velocity});
     }
@@ -49,134 +181,6 @@ export default class Firmware {
         this.port.postMessage({type: 'midi', data});
     }
 
-    getSampleRate = () => {
-        return this.send({type: 'getSampleRate'}).then(response => {
-            return response.rate;
-        });
-    }
-
-    setPercussionNotes = (bytes) => {
-        this.port.postMessage({type: 'setPercussionNotes', bytes});
-    }
-
-    getPercussionNotes = () => {
-        return this.send({type: 'getPercussionNotes'}).then(response => {
-            return Array.prototype.slice.apply(new Uint8Array(response.buffer));
-        });
-    }
-
-    setWavetable = (offset, bytes) => {
-        this.port.postMessage({type: 'setWavetable', offset, bytes});
-    }
-
-    getWavetable = () => {
-        return this.send({type: 'getWavetable'}).then(response => {
-            return Array.prototype.slice.apply(new Int8Array(response.buffer));
-        });
-    }
-
-    getWavetableAddress = () => {
-        return this.send({type:'getWavetableAddress'}).then(response => response.start);
-    }
-
-    getInstruments = () => {
-        return this.getWavetableAddress().then(waveStart => {
-            return this.send({type: 'getInstruments'}).then(response => {
-                const dv = new DataView(response.buffer);
-    
-                const instruments = [];
-                for (let i = 0; i < response.buffer.byteLength;) {
-                    const waveOffset = dv.getUint32(i, /* littleEndian: */ true) - waveStart; i += 4;
-                    const ampMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
-                    const freqMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
-                    const waveMod = dv.getUint8(i, /* littleEndian: */ true); i += 1;
-                    const xor = dv.getUint8(i, /* littleEndian: */ true); i += 1;
-                    const flags = dv.getUint8(i, /* littleEndian: */ true); i += 1;
-                    i += 3;
-                    instruments.push({ waveOffset, ampMod, freqMod, waveMod, xor, flags });
-                }
-
-                return instruments;
-            });
-        });
-    }
-
-    setInstruments = (instruments) => {
-        return this.getWavetableAddress().then(waveStart => {
-            const buffer = new ArrayBuffer(instruments.length * 12);
-            const dv = new DataView(buffer);
-            let i = 0;
-            for (const instrument of instruments) {
-                dv.setUint32(i, instrument.waveOffset + waveStart, /* littleEndian: */ true); i += 4;
-                dv.setUint8(i, instrument.ampMod); i += 1;
-                dv.setUint8(i, instrument.freqMod); i += 1;
-                dv.setUint8(i, instrument.waveMod); i += 1;
-                dv.setUint8(i, instrument.xor); i += 1;
-                dv.setUint8(i, instrument.flags); i += 1;
-                i += 3;
-            }
-            this.port.postMessage({type: 'setInstruments', buffer}, [buffer]);
-        });
-    }
-
-    getLerpStages = () => {
-        return this.send({type: 'getLerpStages'}).then(response => {
-            const dv = new DataView(response.buffer);
-
-            const stages = [];
-            for (let i = 0; i < response.buffer.byteLength;) {
-                const slope = dv.getInt16(i, /* littleEndian: */ true); i += 2;
-                const limit = dv.getInt8(i, /* littleEndian: */ true); i += 2;
-                stages.push({ slope, limit });
-            }
-
-            return stages;
-        });
-    }
-
-    setLerpStages = (stages) => {
-        const buffer = new ArrayBuffer(stages.length * 4);
-        const dv = new DataView(buffer);
-        let i = 0;
-        stages.forEach(stage => {
-            dv.setInt16(i, stage.slope, /* littleEndian: */ true); i += 2;
-            dv.setInt8(i, stage.limit, /* littleEndian: */ true); i += 2;
-        });
-
-        this.port.postMessage({ type: 'setLerpStages', buffer }, [buffer]);
-    }
-
-    getLerpPrograms = () => {
-        return this.send({type: 'getLerpPrograms'}).then(response => {
-            const dv = new DataView(response.buffer);
-
-            const programs = [];
-            for (let i = 0; i < response.buffer.byteLength;) {
-                const start = dv.getUint8(i++);
-                const loopStartAndEnd = dv.getUint8(i++);
-                programs.push({
-                    start,
-                    loopStart: loopStartAndEnd >> 4,
-                    loopEnd: loopStartAndEnd & 0x0F
-                })
-            }
-
-            return programs;
-        });
-    }
-
-    setLerpPrograms = programs => {
-        const buffer = new ArrayBuffer(programs.length * 2);
-        const dv = new DataView(buffer);
-        let i = 0;
-        programs.forEach(program => {
-            dv.setUint8(i, program.start, /* littleEndian: */ true); i++;
-            dv.setUint8(i, program.loopStart << 4 | program.loopEnd, /* littleEndian: */ true); i++;
-        });
-
-        this.port.postMessage({ type: 'setLerpPrograms', buffer }, [buffer]);
-    };
-
     sample(length, rate) {
         return this.send({ type: 'sample', length, rate }).then(response => {
             return new Float32Array(response.buffer);
@@ -189,25 +193,29 @@ export default class Firmware {
         });
     }
 
-    syncInfo = [
-        { path: "percussionNotes", get: this.getPercussionNotes, set: this.setPercussionNotes },
-        { path: "instruments", get: this.getInstruments, set: this.setInstruments },
-        { path: "wavetable", get: this.getWavetable, set: (table) => this.setWavetable(0, table) },
-        { path: "lerpPrograms", get: this.getLerpPrograms, set: this.setLerpPrograms },
-        { path: "lerpStages", get: this.getLerpStages, set: this.setLerpStages },
-    ];
+    marshallingInfo = {
+        percussionNotes: { unpack: this.unpackPercussionNotes, pack: this.packPercussionNotes },
+        instruments: { unpack: this.unpackInstruments, pack: this.packInstruments },
+        wavetable: { unpack: this.unpackWavetable, pack: this.packWavetable },
+        lerpPrograms: { unpack: this.unpackLerpPrograms, pack: this.packLerpPrograms },
+        lerpStages: { unpack: this.unpackLerpStages, pack: this.packLerpStages },
+    };
 
     /** Stores the given settings to the Firmware. */
-	store(settings) {
-		return Promise.all(this.syncInfo.map(info => info.set(settings[info.path])));
+	storeAll(settings) {
+        Object.getOwnPropertyNames(this.marshallingInfo)
+            .forEach(path => this.store(this.marshallingInfo[path], settings[path]));
 	}
 
     /** Loads the current Firmware settings, updating the JavaScript model via the given setter. */
-	load(set) {
-        return Promise.all(this.syncInfo.map(info => info.get())).then(values => {
-            values.forEach((value, index) => {
-                set([this.syncInfo[index].path], value);
+	loadAll(set) {
+        const paths = Object.getOwnPropertyNames(this.marshallingInfo);
+        const loads = paths.map(path => {
+            return this.load(this.marshallingInfo[path]).then(value => {
+                set(path, value);
             });
         });
+
+        return Promise.all(loads);
 	}
 }

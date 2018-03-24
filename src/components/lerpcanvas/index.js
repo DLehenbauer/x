@@ -13,7 +13,7 @@ export default class LerpCanvas extends Canvas {
         const props = this.props;
 
         this.firmware.connected.then(() => {
-            this.firmware.store(props.appState.model);
+            this.firmware.storeAll(props.appState.model);
         }).then(() => {
             return this.firmware.plotLerp(props.program, width).then(plot => {
                 const state = this.state;

@@ -2,33 +2,36 @@ importScripts('./firmware.js');
 
 const synth = Module.getSynth();
 const originalSampleRate = Module.getSampleRate();
+const layout = {
+    percussionNotes: Module.getPercussionNotes(),
+    wavetable: Module.getWavetable(),
+    lerpStages: Module.getLerpStages(),
+    lerpPrograms: Module.getLerpPrograms(),
+    instruments: Module.getInstruments(),
+}
 
 const channel = new MessageChannel();
 const port = channel.port1;
 
-const load = (memory, msgType) => {
-    const buffer = Module.HEAP8.slice(memory.start, memory.end).buffer;
-    port.postMessage({
-        type: msgType,
-        buffer: buffer
-    }, [buffer]);
-}
-
-const store = (memory, bytes) => {
-    if (memory.start + bytes.length > memory.end) {
-        throw new Error('Write outside of memory range.');
-    }
-    Module.HEAP8.set(bytes, memory.start);
-}
-
 port.onmessage = e => {
     const msg = e.data;
     switch (msg.type) {
-        case 'getSampleRate': {
+        case 'load': {
+            const memory = msg.memory;
+            const buffer = Module.HEAP8.slice(memory.start, memory.end).buffer;
             port.postMessage({
-                type: 'sampleRate',
-                rate: originalSampleRate
-            });
+                type: 'load',
+                buffer: buffer
+            }, [buffer]);
+            break;
+        }
+        case 'store': {
+            const memory = msg.memory;
+            const buffer = msg.buffer;
+            if (memory.start + buffer.length > memory.end) {
+                throw new Error('Write outside of memory range.');
+            }
+            Module.HEAP8.set(new Int8Array(buffer), memory.start);
             break;
         }
         case 'midi': {
@@ -47,53 +50,6 @@ port.onmessage = e => {
         }
         case 'programChange': {
             synth.midiProgramChange(msg.channel, msg.program);
-            break;
-        }
-        case 'getPercussionNotes': {
-            load(Module.getPercussionNotes(), 'percussionNotes');
-            break;
-        }
-        case 'setPercussionNotes': {
-            store(Module.getPercussionNotes(), msg.bytes);
-            break;
-        }
-        case 'getWavetable': {
-            load(Module.getWavetable(), 'wavetable');
-            break;
-        }
-        case 'setWavetable': {
-            store(Module.getWavetable(), msg.bytes);
-            break;
-        }
-        case 'getWavetableAddress': {
-            port.postMessage({
-                type: 'waveTableAddress',
-                start: Module.getWavetable().start
-            });
-            break;
-        }
-        case 'getInstruments': {
-            load(Module.getInstruments(), 'instruments');
-            break;
-        }
-        case 'setInstruments': {
-            store(Module.getInstruments(), new Int8Array(msg.buffer));
-            break;
-        }
-        case 'getLerpPrograms': {
-            load(Module.getLerpPrograms(), 'lerpPrograms');
-            break;
-        }
-        case 'setLerpPrograms': {
-            store(Module.getLerpPrograms(), new Int8Array(msg.buffer));
-            break;
-        }
-        case 'getLerpStages': {
-            load(Module.getLerpStages(), 'lerpStages');
-            break;
-        }
-        case 'setLerpStages': {
-            store(Module.getLerpStages(), new Int8Array(msg.buffer));
             break;
         }
         case 'sample': {
@@ -146,4 +102,4 @@ port.onmessage = e => {
     }
 }
 
-postMessage({ type: 'ready' }, [channel.port2]);
+postMessage({ type: 'ready', sampleRate: originalSampleRate, layout }, [channel.port2]);

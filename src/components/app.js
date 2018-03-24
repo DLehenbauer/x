@@ -88,7 +88,7 @@ export default class App extends Component {
 		localStorage.setItem('model', JSON.stringify(this.state.model));
 	}
 
-	storeFirmware = () => this.firmware.store(this.state.model);
+	storeFirmware = () => this.firmware.storeAll(this.state.model);
 
 	syncInstrument = () => {
 		const state = this.state;
@@ -99,10 +99,10 @@ export default class App extends Component {
 	}
 
 	syncWavetable = () => {
-		this.firmware.setWavetable(0, new Int8Array(this.state.model.wavetable));
+		this.firmware.setWavetable(new Int8Array(this.state.model.wavetable));
 	}
 
-	loadFirmware = () => this.firmware.load((path, value) => {
+	loadFirmware = () => this.firmware.loadAll((path, value) => {
 		this.set(['model'].concat(path), value);
 	}).then(() => {
 		const state = this.state;
@@ -160,17 +160,15 @@ export default class App extends Component {
 			const channel = model.currentChannel;
 			const program = model.channelToInstrument[channel];
 			this.set(['model', 'instruments', program].concat(path), value);
-			this.firmware.setInstruments(this.state.model.instruments).then(() => {
-				this.syncInstrument();
-			});
+			this.firmware.setInstruments(this.state.model.instruments);
+			this.syncInstrument();
 		},
 		updateInstrumentAt: (index, path, value) => {
 			const state = this.state;
 			const model = state.model;
 			this.set(['model', 'instruments', index].concat(path), value);
-			this.firmware.setInstruments(this.state.model.instruments).then(() => {
-				this.syncInstrument();
-			});
+			this.firmware.setInstruments(this.state.model.instruments);
+			this.syncInstrument();
 		},
 		setPercussionNote: (index, value) => {
 			const state = this.state;
