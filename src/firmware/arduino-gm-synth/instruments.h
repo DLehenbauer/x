@@ -11,12 +11,14 @@ template<typename T>
 struct HeapRegion {
 	size_t start;
 	size_t end;
+	size_t itemSize;
 
 	HeapRegion() {}
 	
 	HeapRegion(const T* pStart, const size_t length) {
 		start = reinterpret_cast<size_t>(pStart);
 		end = start + length;
+		itemSize = sizeof(T);
 	}
 };
 #endif

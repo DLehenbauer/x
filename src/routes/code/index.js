@@ -57,23 +57,23 @@ export default class Settings extends Component {
     }
 
     lerpStages(cs, stages) {
-        this.array(cs, 'LerpStage', 'LerpStages', '256', () => {
+        this.array(cs, 'LerpStage', 'LerpStages', '', () => {
             stages.forEach((stage, index) => {
-                cs.outLn(`/* ${this.hex8(index)}: */ { ${this.pad("      ", stage.slope)}, ${this.pad("    ", stage.limit)} },`);
+                cs.outLn(`/* ${this.hex16(index)}: */ { ${this.pad("      ", stage.slope)}, ${this.pad("    ", stage.limit)} },`);
             });
         });
     }
 
     lerpPrograms(cs, programs) {
-        this.array(cs, 'LerpProgram', 'LerpPrograms', '64', () => {
+        this.array(cs, 'LerpProgram', 'LerpPrograms', '', () => {
             programs.forEach((program, index) => {
-                cs.outLn(`/* ${this.hex8(index)}: */ { 0x${this.hex8(program.start)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
+                cs.outLn(`/* ${this.hex8(index)}: */ { &LerpStages[0x${this.hex8(program.start)}], 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
             });
         });
     }
 
     wavetable(cs, wavetable) {
-        this.array(cs, 'int8_t', 'Waveforms', '256 * 16', () => {
+        this.array(cs, 'int8_t', 'Waveforms', '', () => {
             let bytes = wavetable.map(byte => {
                 let asString = byte.toString();
                 return this.pad("    ", asString) + ",";

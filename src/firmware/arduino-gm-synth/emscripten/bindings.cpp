@@ -19,23 +19,28 @@ EMSCRIPTEN_BINDINGS(firmware) {	function("midi_decode_byte", &midi_decode_byte)
 	
 	value_object<HeapRegion<int8_t>>("I8s")
 		.field("start", &HeapRegion<int8_t>::start)
-		.field("end", &HeapRegion<int8_t>::end);
+		.field("end", &HeapRegion<int8_t>::end)
+		.field("itemSize", &HeapRegion<int8_t>::itemSize);
 
 	value_object<HeapRegion<uint8_t>>("U8s")
 		.field("start", &HeapRegion<uint8_t>::start)
-		.field("end", &HeapRegion<uint8_t>::end);
+		.field("end", &HeapRegion<uint8_t>::end)
+		.field("itemSize", &HeapRegion<uint8_t>::itemSize);
 
 	value_object<HeapRegion<LerpStage>>("LerpStages")
 		.field("start", &HeapRegion<LerpStage>::start)
-		.field("end", &HeapRegion<LerpStage>::end);
+		.field("end", &HeapRegion<LerpStage>::end)
+		.field("itemSize", &HeapRegion<LerpStage>::itemSize);
 
 	value_object<HeapRegion<LerpProgram>>("LerpPrograms")
 		.field("start", &HeapRegion<LerpProgram>::start)
-		.field("end", &HeapRegion<LerpProgram>::end);
+		.field("end", &HeapRegion<LerpProgram>::end)
+		.field("itemSize", &HeapRegion<LerpProgram>::itemSize);
 
 	value_object<HeapRegion<Instrument>>("Instruments")
 		.field("start", &HeapRegion<Instrument>::start)
-		.field("end", &HeapRegion<Instrument>::end);
+		.field("end", &HeapRegion<Instrument>::end)
+		.field("itemSize", &HeapRegion<Instrument>::itemSize);
 	
 	function("getSampleRate", &getSampleRate);
 	function("getSynth", &getSynth, allow_raw_pointer<ret_val>());
