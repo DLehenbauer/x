@@ -28,6 +28,7 @@ enum InstrumentFlags : uint8_t {
     InstrumentFlags_Noise				= (1 << 0),
     InstrumentFlags_HalfAmplitude		= (1 << 1),
     InstrumentFlags_SelectAmplitude		= (1 << 2),
+    InstrumentFlags_SelectWave			= (1 << 3),
 };
 
 struct Instrument {

@@ -209,10 +209,25 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     bool isNoise = flags & InstrumentFlags_Noise;
 	
 	uint8_t ampMod = instrument.ampMod;
+	if (flags & InstrumentFlags_SelectWave) {
+		if (note > 60) {
+			ampMod += 2;
+			if (ampMod > 84) {
+				ampMod++;
+			}
+		}
+		else if (note > 36) { ampMod++; }
+	}
+
+	const int8_t* wave = instrument.wave;
 	if (flags & InstrumentFlags_SelectAmplitude) {
-		if (note > 36) { ampMod++; }
-		if (note > 60) { ampMod++; }
-		if (note > 84) { ampMod++; }
+		if (note > 60) {
+			wave += 128;
+			if (ampMod > 84) {
+				wave += 64;
+			}
+		}
+		else if (note > 36) { wave += 64; }
 	}
 
     _note[voice] = note;
@@ -224,7 +239,7 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
 
-    v_wave[voice] = v_baseWave[voice] = instrument.wave;
+    v_wave[voice] = v_baseWave[voice] = wave;
     v_phase[voice] = 0;
     v_pitch[voice] = v_bentPitch[voice] = v_basePitch[voice] = pitch;
     v_xor[voice] = instrument.xorBits;

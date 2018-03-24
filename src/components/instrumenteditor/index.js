@@ -9,6 +9,7 @@ export default class InstrumentEditor extends Component {
         { name: 'noise', mask: (1 << 0) },
         { name: 'halfAmp', mask: (1 << 1) },
         { name: 'selAmp', mask: (1 << 2) },
+        { name: 'selWave', mask: (1 << 3) },
     ];
 
 	get currentInstrumentIndex() {

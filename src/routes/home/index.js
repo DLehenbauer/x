@@ -228,7 +228,7 @@ export default class Home extends Component {
 	onLsh = () => {
 		const wavetable = this.props.appState.model.wavetable;
 		const offset = this.currentInstrument.waveOffset;
-		wavetable.splice(offset, 0, ...new Array(64));
+		wavetable.splice(offset, 0, ...new Array(64).fill(0));
 		this.props.actions.setWavetable(wavetable.slice(0, wavetable.length - 64));
 		this.shiftInstruments(offset, 64);
 	}

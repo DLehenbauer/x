@@ -16,11 +16,9 @@ struct LerpProgram {
 	uint8_t loopStartAndEnd;
 };
 
-const LerpStage defaultStage = { 0, -64 };
-
 class Lerp {
 	private:
-		const LerpStage* pStart = &defaultStage;
+		const LerpStage* pStart = nullptr;
 		uint8_t loopStart = 0xFF;
 		uint8_t loopEnd = 0xFF;
 		uint8_t stageIndex = 0xFF;
