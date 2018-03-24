@@ -18,7 +18,17 @@ class MidiSynth final : public Synth {
 			voiceToNote[voice] = note;			voiceToChannel[voice] = channel;		}
 		void midiNoteOff(uint8_t channel, uint8_t note)  {			for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {				if (voiceToNote[voice] == note && voiceToChannel[voice] == channel) {					noteOff(voice);					voiceToChannel[voice] = 0xFF;					voiceToNote[voice] = 0xFF;				}			}		}
 		void midiProgramChange(uint8_t channel, uint8_t program) {			Instruments::getInstrument(program, channelToInstrument[channel]);		}
-		void midiPitchBend(uint8_t midiChannel, int16_t value) {			for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {				if (voiceToChannel[voice] == midiChannel) {					pitchBend(voice, value);				}			}		}
+		void midiPitchBend(uint8_t channel, int16_t value) {			for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {				if (voiceToChannel[voice] == channel) {					pitchBend(voice, value);				}			}		}				void midiControlChange(uint8_t channel, uint8_t controller, uint8_t value) {			switch (controller) {
+				case 0x7B: {
+					switch (value) {
+						case 0: {
+							// All notes off
+							for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {								if (voiceToChannel[voice] == channel) {									noteOff(voice);									voiceToChannel[voice] = 0xFF;									voiceToNote[voice] = 0xFF;								}							}							break;
+						}
+					}
+				}
+			}
+		}
 }; //MidiSynth
 
 #endif //__MIDISYNTH_H__

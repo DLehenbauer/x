@@ -104,63 +104,8 @@ void setWaveform(int8_t delta) {
 }
 #endif
 
-void controlChange(uint8_t channel, uint8_t knob, uint8_t value) {
-#if false
-    if (!isEditing && knob != RECORD_BUTTON) {
-        return;
-    }
-    
-    switch(knob) {
-        case RECORD_BUTTON:
-        if (value == 0x7F) {
-            isEditing = !isEditing;
-        }
-        break;
-        case BACK_BUTTON: {
-            if (value == 0x7F) {
-                setWaveform(-1);
-            }
-            break;
-        }
-        case FORWARD_BUTTON: {
-            if (value == 0x7F) {
-                setWaveform(1);
-            }
-            break;
-        }
-        case ATTACK_KNOB: {
-            channels[0].adsr.setLimit(ADSRStage_Attack, 0x7F);
-            channels[0].adsr.setDuration(ADSRStage_Attack, value);
-            break;
-        }
-        case DECAY_KNOB: {
-            channels[0].adsr.setLimit(ADSRStage_Attack, 0x7F);
-            channels[0].adsr.setDuration(ADSRStage_Decay, value);
-            break;
-        }
-        case SUSTAIN_KNOB: {
-            channels[0].adsr.setLimit(ADSRStage_Decay, value);
-            channels[0].adsr.setLimit(ADSRStage_Sustain, value);
-            channels[0].adsr.stages[ADSRStage_Sustain].divider = 0x00;
-            channels[0].adsr.setDuration(ADSRStage_Sustain, 0);
-            break;
-        }
-        case RELEASE_KNOB: {
-            channels[0].adsr.setLimit(ADSRStage_Release, 0);
-            channels[0].adsr.setDuration(ADSRStage_Release, value);
-            break;
-        }
-        case XOR_KNOB: {
-            channels[0].xorBits = value;
-            break;
-        }
-        /*
-        case WAVE_OFFSET_KNOB: {
-            channels[0].waveOffset = value << 1;
-        }
-        */
-    }
-#endif	
+void controlChange(uint8_t channel, uint8_t control, uint8_t value) {
+	synth.midiControlChange(channel, control, value);
 }
 
 void programChange(uint8_t channel, uint8_t value) {
