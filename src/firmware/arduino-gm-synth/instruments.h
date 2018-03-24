@@ -41,7 +41,7 @@ class Instruments {
         static void getInstrument(uint8_t index, Instrument& instrument);
         static uint8_t getPercussionNote(uint8_t index);
 		static void getLerpProgram(uint8_t programIndex, LerpProgram& program);
-		static void getLerpStage(uint8_t progStart, uint8_t stageIndex, LerpStage& stage);
+		static void getLerpStage(const LerpStage* pStart, uint8_t stageIndex, LerpStage& stage);
 
 #ifdef __EMSCRIPTEN__
 		static const HeapRegion<uint8_t> getPercussionNotes();
