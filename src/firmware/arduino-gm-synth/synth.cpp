@@ -200,6 +200,8 @@ uint8_t Synth::getNextVoice() {
     return current;
 }
 
+constexpr uint8_t offsetTable[] = { 0, 0, 1, 1, 2, 3, 3, 3 };
+
 void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Instrument& instrument) {
 	const uint8_t flags = instrument.flags;
     if (flags & InstrumentFlags_HalfAmplitude) {
@@ -208,28 +210,15 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     
     bool isNoise = flags & InstrumentFlags_Noise;
 	
-	uint8_t ampMod = instrument.ampMod;
-	if (flags & InstrumentFlags_SelectWave) {
-		if (note > 60) {
-			ampMod += 2;
-			if (ampMod > 84) {
-				ampMod++;
-			}
-		}
-		else if (note > 36) { ampMod++; }
-	}
-
-	const int8_t* wave = instrument.wave;
-	if (flags & InstrumentFlags_SelectAmplitude) {
-		if (note > 60) {
-			wave += 128;
-			if (ampMod > 84) {
-				wave += 64;
-			}
-		}
-		else if (note > 36) { wave += 64; }
-	}
-
+	uint8_t noteOffset = offsetTable[note >> 4];
+	uint8_t ampOffset = flags & InstrumentFlags_SelectAmplitude
+		? noteOffset
+		: 0;
+		
+	uint8_t waveOffset = flags & InstrumentFlags_SelectWave
+		? noteOffset << 6
+		: 0;
+		
     _note[voice] = note;
 
     uint16_t pitch = pgm_read_word(&_midiToPitch[note]);
@@ -239,16 +228,16 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
 
-    v_wave[voice] = v_baseWave[voice] = wave;
+    v_wave[voice] = v_baseWave[voice] = instrument.wave + waveOffset;
     v_phase[voice] = 0;
     v_pitch[voice] = v_bentPitch[voice] = v_basePitch[voice] = pitch;
     v_xor[voice] = instrument.xorBits;
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
     v_vol[voice] = midiVelocity;
-    v_ampMod[voice].start(ampMod,			   /* init */ 0x00);
-	v_freqMod[voice].start(instrument.freqMod, /* init */ 0x40);
-	v_waveMod[voice].start(instrument.waveMod, /* init */ 0x00);
+    v_ampMod[voice].start(instrument.ampMod + ampOffset,	/* init */ 0x00);
+	v_freqMod[voice].start(instrument.freqMod,				/* init */ 0x40);
+	v_waveMod[voice].start(instrument.waveMod,				/* init */ 0x00);
     
     resume();
 }

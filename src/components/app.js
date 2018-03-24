@@ -50,8 +50,8 @@ export default class App extends Component {
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
 			return this.loadFirmware().then(() => {
-				this.set(['firmwareDefaults'], this.state.model);
 				const modelAsJSON = localStorage.getItem('model');
+				this.set(['firmwareDefaults'], this.state.model);
 				if (modelAsJSON) {
 					this.set(['model'], JSON.parse(modelAsJSON));
 				}
