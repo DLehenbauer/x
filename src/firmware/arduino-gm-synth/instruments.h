@@ -24,9 +24,10 @@ struct HeapRegion {
 #endif
 
 enum InstrumentFlags : uint8_t {
-    InstrumentFlags_None = 0,
-    InstrumentFlags_Noise         = (1 << 0),
-    InstrumentFlags_HalfAmplitude = (1 << 1),
+    InstrumentFlags_None				= 0,
+    InstrumentFlags_Noise				= (1 << 0),
+    InstrumentFlags_HalfAmplitude		= (1 << 1),
+    InstrumentFlags_SelectAmplitude		= (1 << 2),
 };
 
 struct Instrument {

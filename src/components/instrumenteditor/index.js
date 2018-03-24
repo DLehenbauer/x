@@ -8,6 +8,7 @@ export default class InstrumentEditor extends Component {
     flags = [
         { name: 'noise', mask: (1 << 0) },
         { name: 'halfAmp', mask: (1 << 1) },
+        { name: 'selAmp', mask: (1 << 2) },
     ];
 
 	get currentInstrumentIndex() {

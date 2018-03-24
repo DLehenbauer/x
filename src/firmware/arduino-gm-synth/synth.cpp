@@ -36,7 +36,6 @@ volatile uint16_t		v_basePitch[Synth::numVoices]	= { 0 };	// Original Q8.8 sampl
 volatile uint16_t		v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post pitch bend, but prior to freqMod.
 volatile const int8_t*  v_baseWave[Synth::numVoices]	= { 0 };    // Original starting address in wavetable.
 volatile uint8_t		_note[Synth::numVoices]			= { 0 };    // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
-volatile InstrumentFlags _voiceFlags[Synth::numVoices] = { InstrumentFlags_None };      // InstrumentFlags are misc. behavior modifiers.
 
 #ifdef WAVE_EDIT
 uint8_t        v_waveform[256]                      = { 0 };
@@ -202,12 +201,19 @@ uint8_t Synth::getNextVoice() {
 }
 
 void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Instrument& instrument) {
-    if (instrument.flags & InstrumentFlags_HalfAmplitude) {
+	const uint8_t flags = instrument.flags;
+    if (flags & InstrumentFlags_HalfAmplitude) {
         midiVelocity >>= 1;
     }
-    _voiceFlags[voice] = instrument.flags;
     
-    bool isNoise = instrument.flags & InstrumentFlags_Noise;
+    bool isNoise = flags & InstrumentFlags_Noise;
+	
+	uint8_t ampMod = instrument.ampMod;
+	if (flags & InstrumentFlags_SelectAmplitude) {
+		if (note > 36) { ampMod++; }
+		if (note > 60) { ampMod++; }
+		if (note > 84) { ampMod++; }
+	}
 
     _note[voice] = note;
 
@@ -225,7 +231,7 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
     v_vol[voice] = midiVelocity;
-    v_ampMod[voice].start(instrument.ampMod,   /* init */ 0x00);
+    v_ampMod[voice].start(ampMod,			   /* init */ 0x00);
 	v_freqMod[voice].start(instrument.freqMod, /* init */ 0x40);
 	v_waveMod[voice].start(instrument.waveMod, /* init */ 0x00);
     

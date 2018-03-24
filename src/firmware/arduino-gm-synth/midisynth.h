@@ -26,6 +26,7 @@ class MidiSynth final : public Synth {
 							for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {								if (voiceToChannel[voice] == channel) {									noteOff(voice);									voiceToChannel[voice] = 0xFF;									voiceToNote[voice] = 0xFF;								}							}							break;
 						}
 					}
+					break;
 				}
 			}
 		}
