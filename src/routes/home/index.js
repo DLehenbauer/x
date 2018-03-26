@@ -46,58 +46,59 @@ export default class Home extends Component {
 		return model.currentChannel;
 	}
 
+	get selectionStart() { return this.currentInstrument.waveOffset; }
+	get selectionEnd() { return this.selectionStart + this.state.selectionSize; }
+
 	instrumentSelected = index => {
 		this.props.actions.selectInstrument(index);
+		this.state.selectionSize = 256;
 	}
 
 	channelSelected = index => {
 		this.props.actions.selectChannel(index);
 	}
 
+	onFormulaError(error) {
+		this.waveFormula = (t, i, s, a0, a1) => s(i);
+		this.waveFormulaBox.setCustomValidity(error);
+	}
+
 	onFormulaChanged(e) {
 		try {
-			this.waveFormula = eval(`(t, i, s, a0, a1) => { const max = Math.max; const min = Math.min; const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
+			this.waveFormula = eval(`(t, i, s, a0, a1) => { 'use strict'; const max = Math.max; const min = Math.min; const pi = Math.PI; const sin = Math.sin; const tan = Math.tan; const rand = () => Math.random() * 2 - 1; return (${e.target.value}) * 127; }`);
 		} catch (error) {
-			this.waveFormula = (t, i, s, a0, a1) => s(i);
-			this.waveFormulaBox.setCustomValidity(error);
+			this.onFormulaError(error);
 		}
 	}
 
 	createSampler() {
-		const wave = this.getWave();
-		return (index) => {
-			return wave[index & 0xFF];
-		};
+		return this.createSamplerFromArray(this.getWave());
 	}
 
 	createSamplerFromArray(wave) {
 		return (index) => {
-			return wave[index & 0xFF];
-		};		
+			return wave[(index >>> 0) % wave.length];
+		};
 	}
 
 	modifyWave(fn) {
 		const offset = this.currentInstrument.waveOffset;
 		const s = this.createSampler();
+		const size = this.state.selectionSize;
+		const last = size - 1;
 
 		this.props.actions.updateWavetable(
-			offset, offset + 256,
+			this.selectionStart, this.selectionEnd,
 			wave => {
-				const step = 1 / 255;
+				const step = 1 / last;
 				let t = 0;
-				for (let i = 0; i < 256; i++) {
-					const a1 = i/256;
+				for (let i = 0; i < size; i++) {
+					const a1 = i / last;
 					const a0 = 1 - a1;
-					const sample = Math.max(Math.min(Math.round(fn(t, i, i => s(i) / 127, a0, a1)), 127), -127) | 0;
-					wave[i] = sample;
-					t += step;
+					const sample = fn(a1, i, i => s(i) / 127, a0, a1);
+					wave[i] = Math.max(Math.min(Math.round(sample), 127), -127) | 0;
 				}
 			});
-	}
-
-	updateWave(fn) {
-		const offset = this.currentInstrument.waveOffset;
-		this.props.actions.updateWavetable(offset, offset + 256, fn);
 	}
 
 	onSetWave() {
@@ -117,9 +118,10 @@ export default class Home extends Component {
 	}
 
 	convolve(s, h) {
-		const y = new Array(256);
+		const size = this.state.selectionSize;
+		const y = new Array(size);
 		const m = Math.floor(h.length / 2);
-		for (let i = 0; i < 256; i++) {
+		for (let i = 0; i < size; i++) {
 			y[i] = 0;
 			for (let j = 0; j < h.length; j++) {
 				y[i] += s(i - j + m) * h[j];
@@ -143,15 +145,14 @@ export default class Home extends Component {
 
 	getWave() {
 		const wavetable = this.props.appState.model.wavetable;
-		const offset = this.currentInstrument.waveOffset;
-		return wavetable.slice(offset, offset + 256);
+		return wavetable.slice(this.selectionStart, this.selectionEnd);
 	}
 
 	onZeroCross() {
 		const w = this.getWave();
+		const last = w.length - 1;
 		w[0] = 0;
-		w[254] = 0;
-		w[255] = 0;
+		w[last] = 0;
 
 		const s = this.createSamplerFromArray(w);
 		const s2 = this.convolve(s, zeroCross);
@@ -161,10 +162,9 @@ export default class Home extends Component {
 			const a = (i / extent);
 			w[i] = (1 - a) * s2[i] + a * w[i];
 
-			const j = 254 - i;
+			const j = last - i;
 			w[j] = (1 - a) * s2[j] + a * w[j];
 		}
-		w[255] = 0
 
 		this.modifyWave((t, i) => {
 			return w[i];
@@ -199,13 +199,13 @@ export default class Home extends Component {
 	}
 
 	onNormalizeWave() {
-		const wavetable = this.getWave();
+		const wave = this.getWave();
 
 		let min = +Infinity;
 		let max = -Infinity;
-		for (let i = 0; i < 256; i++) {
-			min = Math.min(min, wavetable[i]);
-			max = Math.max(max, wavetable[i]);
+		for (let i = 0; i < wave.length; i++) {
+			min = Math.min(min, wave[i]);
+			max = Math.max(max, wave[i]);
 		}
 
 		const scale = 2 / (Math.abs(max) + Math.abs(min));

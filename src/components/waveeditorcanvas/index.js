@@ -101,14 +101,13 @@ export default class WaveEditorCanvas extends WaveCanvas {
 		const p = this.pointerToWave(ev);
 
 		if (this.props.isEditing) {
-			const offset = this.props.selectionStart;
 			this.line(
 				this.state.lastDragLocation.x,
 				this.state.lastDragLocation.y,
 				p.x,
 				p.y,
-				offset,
-				offset + 256);
+				this.props.selectionStart,
+				this.props.selectionEnd);
 		} else {
 			const value = p.x - this.state.dx;
 			const clamped = Math.min(Math.max(value, 0), this.props.wave.length - 256);

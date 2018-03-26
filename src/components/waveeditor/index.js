@@ -43,7 +43,7 @@ export default class WaveEditor extends Component {
 
     selectionSizeChanged = e => {
         const size = parseInt(e.target.value);
-        this.props.setSelectionSize(this.props.selectionSize);
+        this.props.setSelectionSize(size);
     }
 
 	render(props, state) {
