@@ -37,7 +37,27 @@ export default class WaveEditor extends Component {
 		updated = Math.min(Math.max(0, updated + delta), limit)
         this.scrollBar.scrollLeft += delta;
 		this.props.setOffset(updated);
-	}
+    }
+    
+    onZeroCross = (delta) => {
+        const start = delta < 0
+            ? this.props.selectionStart
+            : this.props.selectionStart + this.props.selectionSize;
+
+        const wave = this.props.wave;
+        const initialSign = Math.sign(wave[start]);
+
+        let i = start;
+        for (;
+            0 <= i && i < wave.length && Math.sign(wave[i]) === initialSign;
+            i += delta);
+
+        if (delta < 0) {
+            this.props.setOffset(i);
+        } else {
+            this.props.setSelectionSize(i - this.props.selectionStart);
+        }
+    }
 
     setScrollbar = element => this.scrollBar = element;
 
@@ -68,8 +88,10 @@ export default class WaveEditor extends Component {
                 <input type='checkbox' onchange={this.editModeChanged}></input><label>Edit</label>
                 <button onclick={() => this.onMoveWave(-(1 << 30))}>|&lt;</button>
                 <button onclick={() => this.onMoveWave(-256)}>&lt;&lt;</button>
+                <button onclick={() => this.onZeroCross(-1)}>0&lt;</button>
                 <button onclick={() => this.onMoveWave(-64)}>&lt;</button>
                 <button onclick={() => this.onMoveWave(+64)}>&gt;</button>
+                <button onclick={() => this.onZeroCross(+1)}>&gt;0</button>
                 <button onclick={() => this.onMoveWave(+256)}>&gt;&gt;</button>
                 <button onclick={() => this.onMoveWave(+(1 << 30))}>&gt;|</button>
                 <input type='number' value={ props.selectionSize } min='0' max='2048' oninput={ this.selectionSizeChanged } />
