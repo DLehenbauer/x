@@ -20,7 +20,8 @@ const channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export default class Home extends Component {
 	state = {
-		selectionSize: 256
+		selectionSize: 256,
+		clipboard: []
 	}
 
 	startClicked = () => {
@@ -242,6 +243,26 @@ export default class Home extends Component {
 		this.shiftInstruments(offset, -64);
 	}
 
+	onCopy = () => {
+		const wavetable = this.props.appState.model.wavetable;
+		this.setState({
+			clipboard: this.props.appState.model.wavetable.slice(
+				this.selectionStart, this.selectionEnd
+			)
+		});
+	}
+
+	onPaste = () => {
+		const wave = this.state.clipboard;
+		const offset = this.selectionStart;
+		 
+		const wavetable = this.props.appState.model.wavetable;
+		wavetable.splice(wavetable.length - wave.length, wave.length);
+		wavetable.splice(offset, 0, ...wave);
+		this.props.actions.setWavetable(wavetable);
+		this.shiftInstruments(offset, wave.length);
+	}
+
 	trackMidiChanged = e => {
 		this.props.appState.trackMidi = e.target.checked;
 	}
@@ -308,6 +329,8 @@ export default class Home extends Component {
 					<button onclick={this.onNormalizeWave.bind(this)}>Normalize</button>
 					<button onclick={this.onRsh} disabled={waveOffset < 64}>Rsh</button>
 					<button onclick={this.onLsh}>Lsh</button>
+					<button onclick={this.onCopy}>Copy</button>
+					<button onclick={this.onPaste}>Paste</button>
 				</div>
 				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.ampMod } modType='ampMod' />
 				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.freqMod } modType='freqMod' />
