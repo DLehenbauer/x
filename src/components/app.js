@@ -47,10 +47,11 @@ export default class App extends Component {
 
 		this.setState({ audioContext, audioOutput: stream, audioOutputX, audioOutputY });
 
+		const modelAsJSON = localStorage.getItem('model');
+
 		this.firmware = new Firmware();
 		this.firmware.connected.then(() => {
 			return this.loadFirmware().then(() => {
-				const modelAsJSON = localStorage.getItem('model');
 				this.set(['firmwareDefaults'], this.state.model);
 				if (modelAsJSON) {
 					this.set(['model'], JSON.parse(modelAsJSON));
