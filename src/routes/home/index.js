@@ -149,27 +149,38 @@ export default class Home extends Component {
 		return wavetable.slice(this.selectionStart, this.selectionEnd);
 	}
 
-	onZeroCross() {
-		const w = this.getWave();
-		const last = w.length - 1;
-		w[0] = 0;
-		w[last] = 0;
-
-		const s = this.createSamplerFromArray(w);
+	deglitch(wave, includeLeft) {
+		const last = wave.length - 1;
+		const s = this.createSamplerFromArray(wave);
 		const s2 = this.convolve(s, zeroCross);
 
 		const extent = 5;
 		for (let i = 0; i <= extent; i++) {
 			const a = (i / extent);
-			w[i] = (1 - a) * s2[i] + a * w[i];
+			if (includeLeft) {
+				wave[i] = (1 - a) * s2[i] + a * wave[i];
+			}
 
 			const j = last - i;
-			w[j] = (1 - a) * s2[j] + a * w[j];
+			wave[j] = (1 - a) * s2[j] + a * wave[j];
 		}
 
 		this.modifyWave((t, i) => {
-			return w[i];
+			return wave[i];
 		});
+	}
+
+	onDeglitch = () => {
+		this.deglitch(this.getWave(), false);
+	}
+
+	onZeroCross() {
+		const wave = this.getWave();
+		const last = wave.length - 1;
+		wave[0] = 0;
+		wave[last] = 0;
+
+		this.deglitch(wave, true);
 	}
 
 	onFilter(h) {
@@ -255,7 +266,7 @@ export default class Home extends Component {
 	onPaste = () => {
 		const wave = this.state.clipboard;
 		const offset = this.selectionStart;
-		 
+
 		const wavetable = this.props.appState.model.wavetable;
 		wavetable.splice(wavetable.length - wave.length, wave.length);
 		wavetable.splice(offset, 0, ...wave);
@@ -326,6 +337,7 @@ export default class Home extends Component {
 					<button onclick={this.onLowPass.bind(this)}>Low Pass</button>
 					<button onclick={this.onHighPass.bind(this)}>High Pass</button>
 					<button onclick={this.onZeroCross.bind(this)}>Zero Cross</button>
+					<button onclick={ this.onDeglitch }>Deglitch</button>
 					<button onclick={this.onNormalizeWave.bind(this)}>Normalize</button>
 					<button onclick={this.onRsh} disabled={waveOffset < 64}>Rsh</button>
 					<button onclick={this.onLsh}>Lsh</button>
