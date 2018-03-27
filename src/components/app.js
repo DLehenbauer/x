@@ -33,55 +33,57 @@ export default class App extends Component {
 		super();
 
 		this.buffered = new Float32Array();
-		const audioContext = new AudioContext();
-		const stream = audioContext.createScriptProcessor(/* bufferSize */ 512, /* inputs */ 0, /* outputs */ 1);
-		stream.connect(audioContext.destination);
+		if (typeof window !== "undefined") {
+			const audioContext = new AudioContext();
+			const stream = audioContext.createScriptProcessor(/* bufferSize */ 512, /* inputs */ 0, /* outputs */ 1);
+			stream.connect(audioContext.destination);
 
-		const audioOutputY = audioContext.createGain();
-		audioOutputY.gain.value = 4;
-		stream.connect(audioOutputY);
+			const audioOutputY = audioContext.createGain();
+			audioOutputY.gain.value = 4;
+			stream.connect(audioOutputY);
 
-		const audioOutputX = audioContext.createGain();
-		audioOutputX.gain.value = 15;
-		stream.connect(audioOutputX);
+			const audioOutputX = audioContext.createGain();
+			audioOutputX.gain.value = 15;
+			stream.connect(audioOutputX);
 
-		this.setState({ audioContext, audioOutput: stream, audioOutputX, audioOutputY });
+			this.setState({ audioContext, audioOutput: stream, audioOutputX, audioOutputY });
 
-		const modelAsJSON = localStorage.getItem('model');
+			const modelAsJSON = localStorage.getItem('model');
 
-		this.firmware = new Firmware();
-		this.firmware.connected.then(() => {
-			return this.loadFirmware().then(() => {
-				this.set(['firmwareDefaults'], this.state.model);
-				if (modelAsJSON) {
-					this.set(['model'], JSON.parse(modelAsJSON));
-				}
-				return this.storeFirmware();
-			});
-		}).then(() => {
-			stream.onaudioprocess = e => {
-				const outputBuffer = e.outputBuffer;
-				this.firmware.sample(outputBuffer.length, outputBuffer.sampleRate).then(buffer => {
-					this.buffered = buffer;
+			this.firmware = new Firmware();
+			this.firmware.connected.then(() => {
+				return this.loadFirmware().then(() => {
+					this.set(['firmwareDefaults'], this.state.model);
+					if (modelAsJSON) {
+						this.set(['model'], JSON.parse(modelAsJSON));
+					}
+					return this.storeFirmware();
 				});
+			}).then(() => {
+				stream.onaudioprocess = e => {
+					const outputBuffer = e.outputBuffer;
+					this.firmware.sample(outputBuffer.length, outputBuffer.sampleRate).then(buffer => {
+						this.buffered = buffer;
+					});
 
-				outputBuffer.getChannelData(0).set(this.buffered);
-			};
+					outputBuffer.getChannelData(0).set(this.buffered);
+				};
 
-			navigator.requestMIDIAccess().then(
-				midi => {
-					midi.inputs.forEach(device => {
-						device.open().then(() => {
-							device.onmidimessage = ev => {
-								this.processMidi(ev.data);
-								this.firmware.midi(ev.data);
-							}
+				navigator.requestMIDIAccess().then(
+					midi => {
+						midi.inputs.forEach(device => {
+							device.open().then(() => {
+								device.onmidimessage = ev => {
+									this.processMidi(ev.data);
+									this.firmware.midi(ev.data);
+								}
+							});
 						});
 					});
-				});
 
-			this.setState({ ready: true });
-		});
+				this.setState({ ready: true });
+			});
+		}
 	}
 
 	set = (path, value) => {
