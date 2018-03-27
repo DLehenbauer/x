@@ -36,14 +36,18 @@ export default class App extends Component {
 		if (typeof window !== "undefined") {
 			const audioContext = new AudioContext();
 			const stream = audioContext.createScriptProcessor(/* bufferSize */ 512, /* inputs */ 0, /* outputs */ 1);
-			stream.connect(audioContext.destination);
+
+			const audioOutputZ = audioContext.createGain();
+			audioOutputZ.gain.setValueAtTime(2, audioContext.currentTime);
+			stream.connect(audioOutputZ);
+			audioOutputZ.connect(audioContext.destination);
 
 			const audioOutputY = audioContext.createGain();
-			audioOutputY.gain.value = 4;
+			audioOutputY.gain.setValueAtTime(4, audioContext.currentTime);
 			stream.connect(audioOutputY);
 
 			const audioOutputX = audioContext.createGain();
-			audioOutputX.gain.value = 15;
+			audioOutputX.gain.setValueAtTime(15, audioContext.currentTime);
 			stream.connect(audioOutputX);
 
 			this.setState({ audioContext, audioOutput: stream, audioOutputX, audioOutputY });
