@@ -20,15 +20,26 @@ export default class LerpCanvas extends Canvas {
 
                 context2d.clearRect(0, 0, width, height);
         
+                const sy = 1/127 * height;
+
+                const boundaries = plot.stageBoundaries;
+                let x0 = 0;
+                for (let i = 0; i < boundaries.length; i++) {
+                    const alpha = 0.3 - ((i / boundaries.length) / 4);
+                    context2d.fillStyle = `rgba(0, 64, 255, ${alpha})`;
+                    const x1 = boundaries[i];
+                    context2d.fillRect(x0, 0, x1 - x0, height);
+                    x0 = x1;
+                }
+
                 context2d.beginPath();
                 context2d.strokeStyle = state.strokeStyle;
                 context2d.lineWidth = state.lineWidth;
-        
-                const sy = 1/127 * height;
                 context2d.moveTo(0, height);
         
-                for (let x = 0; x < plot.length; x++) {
-                    const y = plot[x];
+                const values = plot.values;
+                for (let x = 0; x < values.length; x++) {
+                    const y = values[x];
                     context2d.lineTo(x, height - y * sy);
                 }
         

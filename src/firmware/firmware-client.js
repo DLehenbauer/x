@@ -214,7 +214,7 @@ export default class Firmware {
 
     plotLerp(program, length) {
         return this.send({ type: 'plotLerp', program, length }).then(response => {
-            return new Uint8Array(response.buffer);
+            return { values: new Uint8Array(response.buffer), stageBoundaries: response.stageBoundaries }
         });
     }
 

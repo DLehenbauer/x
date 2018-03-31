@@ -44,7 +44,7 @@ EMSCRIPTEN_BINDINGS(firmware) {	function("midi_decode_byte", &midi_decode_byte)
 	
 	function("getSampleRate", &getSampleRate);
 	function("getSynth", &getSynth, allow_raw_pointer<ret_val>());
-	class_<LerpStage>("LerpStage");	class_<LerpProgram>("LerpProgram");	class_<Instrument>("Instrument");	class_<Lerp>("Lerp")		.constructor<>()		.function("sample", &Lerp::sampleEm)		.function("start", &Lerp::startEm)		.function("stop", &Lerp::stopEm);	class_<Synth>("Synth")		.constructor<>()
+	class_<LerpStage>("LerpStage");	class_<LerpProgram>("LerpProgram");	class_<Instrument>("Instrument");	class_<Lerp>("Lerp")		.constructor<>()		.function("sample", &Lerp::sampleEm)		.function("start", &Lerp::startEm)		.function("stop", &Lerp::stopEm)		.function("getStageIndex", &Lerp::getStageIndex);	class_<Synth>("Synth")		.constructor<>()
 		.function("sample", &Synth::sample)
 		.function("noteOn", &Synth::noteOnEm)
 		.function("noteOff", &Synth::noteOff);

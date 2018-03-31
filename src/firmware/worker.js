@@ -86,13 +86,20 @@ port.onmessage = e => {
             const lerp = new Module["Lerp"];
             lerp.start(msg.program, /* init */ 0);
 
+            let previousStage = 0;
+            const stageBoundaries = [];
             const u8 = new Uint8Array(msg.length);
             for (let i = 0; i < u8.length; i++) {
                 u8[i] = lerp.sample();
+                const nextStage = lerp.getStageIndex();
+                if (nextStage !== previousStage) {
+                    stageBoundaries.push(i);
+                    previousStage = nextStage;
+                }
             }
 
             port.postMessage({
-                type: 'plot', buffer: u8.buffer
+                type: 'plot', buffer: u8.buffer, stageBoundaries
             }, [u8.buffer]);
             break;
         }
