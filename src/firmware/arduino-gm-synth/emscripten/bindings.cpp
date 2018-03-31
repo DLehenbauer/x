@@ -3,13 +3,8 @@ using namespace emscripten;
 extern uint8_t OCR2A;
 extern MidiSynth synth;
 
-static MidiSynth* getSynth() {
-	return &synth;
-}
-
-static double getSampleRate() {
-	return static_cast<double>(F_CPU) / 8L / static_cast<double>(Synth::sampleDivider);
-}
+static MidiSynth* getSynth() { return &synth; }
+static double getSampleRate() { return Synth::sampleRate; }
 
 EMSCRIPTEN_BINDINGS(firmware) {	function("midi_decode_byte", &midi_decode_byte);	function("getPercussionNotes", &Instruments::getPercussionNotes);
 	function("getWavetable", &Instruments::getWavetable);
