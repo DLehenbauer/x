@@ -131,7 +131,7 @@ export default class LerpEditor extends Component {
         this.props.actions.setLerps(stages, programs);
     }
 
-    loopChanged = e => {
+    programChanged = e => {
         const model = this.props.appState.model;
         const programs = model.persistant.synth.lerpPrograms.slice(0);
         programs[this.props.programIndex][e.target.name] = e.target.value;
@@ -180,8 +180,9 @@ export default class LerpEditor extends Component {
             <div class={style.lerp}>
                 <div class={style.selector}>
                     { props.modType }: <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} />
-                    <input name='loopStart' type='number' min='0' max='7' value={ program.loopStart } onchange={ this.loopChanged } />
-                    <input name='loopEnd' type='number' min='0' max='7' value={ program.loopEnd } onchange={ this.loopChanged } />
+                    <input name='loopStart' type='number' min='0' max='7' value={ program.loopStart } onchange={ this.programChanged } />
+                    <input name='loopEnd' type='number' min='0' max='7' value={ program.loopEnd } onchange={ this.programChanged } />
+                    <input name='initialValue' type='number' min='0' max='127' value={ program.initialValue } onchange={ this.programChanged } />
                     <button name={ program.start } onclick={ this.addStage } disabled={ program.start === 0 }>+</button>
                 </div>
 				<div class={style.graph}>

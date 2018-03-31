@@ -157,6 +157,7 @@ export default class Firmware {
         for (let i = 0; i < buffer.byteLength;) {
             const startAddress = i;
             const start = this.pointerToIndex(lerpMemory, dv.getUint32(i, /* littleEndian: */ true)); i += 4;
+            const initialValue = dv.getInt8(i); i += 1;
             const loopStartAndEnd = dv.getUint8(i); i += 1;
             i += (startAddress + memory.itemSize) - i;
 
@@ -180,6 +181,7 @@ export default class Firmware {
         programs.forEach(program => {
             const startAddress = i;
             dv.setUint32(i, this.indexToPointer(lerpMemory, program.start), /* littleEndian: */ true); i += 4;
+            dv.setInt8(i, program.initialValue, /* littleEndian: */ true); i += 1;
             dv.setUint8(i, program.loopStart << 4 | program.loopEnd, /* littleEndian: */ true); i += 1;
             i += (startAddress + memory.itemSize) - i;
         });

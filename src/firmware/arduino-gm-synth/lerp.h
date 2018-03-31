@@ -10,6 +10,7 @@ struct LerpStage {
 
 struct LerpProgram {
 	const LerpStage* start;
+	int8_t initialValue;
 	uint8_t loopStartAndEnd;
 };
 
@@ -48,7 +49,7 @@ class Lerp {
 			return out;
 		}
 		
-		void start(uint8_t program, uint8_t init) volatile;
+		void start(uint8_t program) volatile;
 
 		void stop() volatile {
 			if (stageIndex < loopEnd) {
@@ -62,7 +63,7 @@ class Lerp {
 		#ifdef __EMSCRIPTEN__
 
 		uint8_t sampleEm() { return sample(); }
-		void startEm(uint8_t program, uint8_t init) { start(program, init); }
+		void startEm(uint8_t program) { start(program); }
 		void stopEm() { stop(); }
 		uint8_t getStageIndex() { return stageIndex; }
 		

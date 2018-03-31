@@ -84,7 +84,7 @@ port.onmessage = e => {
         }
         case 'plotLerp': {
             const lerp = new Module["Lerp"];
-            lerp.start(msg.program, /* init */ 0);
+            lerp.start(msg.program);
 
             let previousStage = 0;
             const stageBoundaries = [];

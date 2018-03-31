@@ -235,9 +235,9 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
     v_vol[voice] = midiVelocity;
-    v_ampMod[voice].start(instrument.ampMod + ampOffset,	/* init */ 0x00);
-	v_freqMod[voice].start(instrument.freqMod,				/* init */ 0x40);
-	v_waveMod[voice].start(instrument.waveMod,				/* init */ 0x00);
+    v_ampMod[voice].start(instrument.ampMod + ampOffset);
+	v_freqMod[voice].start(instrument.freqMod);
+	v_waveMod[voice].start(instrument.waveMod);
     
     resume();
 }
