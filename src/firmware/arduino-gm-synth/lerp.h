@@ -3,9 +3,6 @@
 
 #include <stdint.h>
 
-#define min(a,b) ((a)<(b)?(a):(b))
-#define max(a,b) ((a)>(b)?(a):(b))
-
 struct LerpStage {
 	int16_t slope;
 	int8_t limit;
@@ -67,11 +64,9 @@ class Lerp {
 		uint8_t sampleEm() { return sample(); }
 		void startEm(uint8_t program, uint8_t init) { start(program, init); }
 		void stopEm() { stop(); }
+		uint8_t getStageIndex() { return stageIndex; }
 		
 		#endif // __EMSCRIPTEN__
 };
-
-#undef min
-#undef max
 
 #endif //__LERP_H__
