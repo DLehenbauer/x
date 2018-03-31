@@ -61,7 +61,7 @@ export default class Import extends Component {
 
 	get currentInstrument() {
 		const model = this.props.appState.model;
-		return model.instruments[this.currentInstrumentIndex];
+		return model.persistant.synth.instruments[this.currentInstrumentIndex];
 	}
 
 	get currentChannel() {
@@ -122,7 +122,7 @@ export default class Import extends Component {
 				<button onclick={ this.onCopy }>Copy</button>
 				<WaveEditor 
 					waveStyle={ style.waveEditor }
-					wave={ model.wavetable }
+					wave={ model.persistant.synth.wavetable }
 					selectionStart={ waveOffset }
 					selectionSize={ state.destSize }
 					xor={ this.currentInstrument.xor }

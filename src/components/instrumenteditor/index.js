@@ -19,7 +19,7 @@ export default class InstrumentEditor extends Component {
 
 	get currentInstrument() {
 		const model = this.props.appState.model;
-		return model.instruments[this.currentInstrumentIndex];
+		return model.persistant.synth.instruments[this.currentInstrumentIndex];
 	}
 
     instrumentChanged = e => {
@@ -55,7 +55,7 @@ export default class InstrumentEditor extends Component {
 
         const instrumentIndex = this.currentInstrumentIndex;
         if (instrumentIndex >= 0x80) {
-            const note = model.percussionNotes[this.currentInstrumentIndex - 0x80];
+            const note = model.persistant.synth.percussionNotes[this.currentInstrumentIndex - 0x80];
             const noteName = `${noteNames[note % 12]}${Math.floor(note / 12)}`;
             rows.push(
                 <div class={style.stage}>

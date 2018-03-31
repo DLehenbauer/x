@@ -12,10 +12,10 @@ export default class LerpEditor extends Component {
         const app = this.props.appState;
         const model = app.model;
 
-        const program = model.lerpPrograms[this.props.programIndex];
+        const program = model.persistant.synth.lerpPrograms[this.props.programIndex];
         
         return stageIndex !== program.start
-            ? model.lerpStages[stageIndex - 1].limit
+            ? model.persistant.synth.lerpStages[stageIndex - 1].limit
             : 0;
     }
 
@@ -23,7 +23,7 @@ export default class LerpEditor extends Component {
         const app = this.props.appState;
         const model = app.model;
         
-        return model.lerpStages[stageIndex].limit;
+        return model.persistant.synth.lerpStages[stageIndex].limit;
     }
 
     sliderToSlopeAngle(stageIndex, angle) {
@@ -92,14 +92,14 @@ export default class LerpEditor extends Component {
 
     get currentProgram() {
         const props = this.props;
-        return props.appState.model.lerpPrograms[props.programIndex];
+        return props.appState.model.persistant.synth.lerpPrograms[props.programIndex];
     }
 
     addStage = e => {
         const stageIndex = parseInt(e.target.name);
         const model = this.props.appState.model;
 
-        const programs = model.lerpPrograms.slice(0);
+        const programs = model.persistant.synth.lerpPrograms.slice(0);
         this.adjustPrograms(
             programs,
             stageIndex === this.currentProgram.start
@@ -107,7 +107,7 @@ export default class LerpEditor extends Component {
                 : stageIndex,
             1);
 
-        const stages = model.lerpStages.slice(0, model.lerpStages.length - 2);
+        const stages = model.persistant.synth.lerpStages.slice(0, model.persistant.synth.lerpStages.length - 2);
         stages.splice(stageIndex, 0, { slope: 0, limit: 0 });
 
         this.props.actions.setLerps(stages, programs);
@@ -117,7 +117,7 @@ export default class LerpEditor extends Component {
         const stageIndex = parseInt(e.target.name);
         const model = this.props.appState.model;
 
-        const programs = model.lerpPrograms.slice(0);
+        const programs = model.persistant.synth.lerpPrograms.slice(0);
         this.adjustPrograms(
             programs,
             stageIndex === this.currentProgram.start
@@ -125,7 +125,7 @@ export default class LerpEditor extends Component {
                 : stageIndex,
             -1);
 
-        const stages = model.lerpStages.concat({ start: 0, loopStart: 1, loopEnd: 0 });
+        const stages = model.persistant.synth.lerpStages.concat({ start: 0, loopStart: 1, loopEnd: 0 });
         stages.splice(stageIndex, 1);
 
         this.props.actions.setLerps(stages, programs);
@@ -133,9 +133,9 @@ export default class LerpEditor extends Component {
 
     loopChanged = e => {
         const model = this.props.appState.model;
-        const programs = model.lerpPrograms.slice(0);
+        const programs = model.persistant.synth.lerpPrograms.slice(0);
         programs[this.props.programIndex][e.target.name] = e.target.value;
-        this.props.actions.setLerps(model.lerpStages, programs);
+        this.props.actions.setLerps(model.persistant.synth.lerpStages, programs);
     }
 
 	render(props, state) {
@@ -145,13 +145,13 @@ export default class LerpEditor extends Component {
         }
 
         const model = app.model;
-        const programIndex = Math.min(props.programIndex, model.lerpPrograms.length - 1);
-        const programNames = model.lerpPrograms.map((lerp, index) => index);
+        const programIndex = Math.min(props.programIndex, model.persistant.synth.lerpPrograms.length - 1);
+        const programNames = model.persistant.synth.lerpPrograms.map((lerp, index) => index);
 
-        const program = model.lerpPrograms[programIndex];
+        const program = model.persistant.synth.lerpPrograms[programIndex];
         const rows = [];
 
-        for (let stageIndex = program.start, stage = model.lerpStages[stageIndex]; stageIndex.slope !== 0 && stage.limit !== -64; stage = model.lerpStages[++stageIndex]) {
+        for (let stageIndex = program.start, stage = model.persistant.synth.lerpStages[stageIndex]; stageIndex.slope !== 0 && stage.limit !== -64; stage = model.persistant.synth.lerpStages[++stageIndex]) {
             const angle = this.slopeToSlider(stageIndex, stage.slope);
             rows.push(
                 <div class={style.stage}>

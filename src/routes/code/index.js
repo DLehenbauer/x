@@ -123,11 +123,11 @@ export default class Settings extends Component {
     }
 
     cpp(cs, model) {
-        this.lerpStages(cs, model.lerpStages); cs.outLn();
-        this.lerpPrograms(cs, model.lerpPrograms); cs.outLn();
-        this.wavetable(cs, model.wavetable); cs.outLn();
-        this.instruments(cs, model.instruments); cs.outLn();
-        this.percussionNotes(cs, model.percussionNotes, model.instruments); cs.outLn();
+        this.lerpStages(cs, model.persistant.synth.lerpStages); cs.outLn();
+        this.lerpPrograms(cs, model.persistant.synth.lerpPrograms); cs.outLn();
+        this.wavetable(cs, model.persistant.synth.wavetable); cs.outLn();
+        this.instruments(cs, model.persistant.synth.instruments); cs.outLn();
+        this.percussionNotes(cs, model.persistant.synth.percussionNotes, model.persistant.synth.instruments); cs.outLn();
     }
 
 	copyToClipboard = () => {

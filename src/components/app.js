@@ -26,6 +26,9 @@ export default class App extends Component {
 		model: {
 			currentChannel: 0,
 			channelToInstrument: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			persistant: {
+				synth: {}
+			}
 		},
 	};
 
@@ -52,14 +55,14 @@ export default class App extends Component {
 
 			this.setState({ audioContext, audioOutput: stream, audioOutputX, audioOutputY });
 
-			const modelAsJSON = localStorage.getItem('model');
+			const persistantAsJSON = localStorage.getItem('persistant');
 
 			this.firmware = new Firmware();
 			this.firmware.connected.then(() => {
 				return this.loadFirmware().then(() => {
-					this.set(['firmwareDefaults'], this.state.model);
-					if (modelAsJSON) {
-						this.set(['model'], JSON.parse(modelAsJSON));
+					this.set(['firmwareDefaults'], this.state.model.persistant.synth);
+					if (persistantAsJSON) {
+						this.set(['model', 'persistant', 'synth'], JSON.parse(persistantAsJSON));
 					}
 					return this.storeFirmware();
 				});
@@ -92,10 +95,10 @@ export default class App extends Component {
 
 	set = (path, value) => {
 		this.setState(uc.set(path, value, this.state));
-		localStorage.setItem('model', JSON.stringify(this.state.model));
+		localStorage.setItem('synth', JSON.stringify(this.state.model.persistant.synth));
 	}
 
-	storeFirmware = () => this.firmware.storeAll(this.state.model);
+	storeFirmware = () => this.firmware.storeAll(this.state.model.persistant.synth);
 
 	syncInstrument = () => {
 		const state = this.state;
@@ -106,14 +109,14 @@ export default class App extends Component {
 	}
 
 	syncWavetable = () => {
-		this.firmware.setWavetable(new Int8Array(this.state.model.wavetable));
+		this.firmware.setWavetable(new Int8Array(this.state.model.persistant.synth.wavetable));
 	}
 
 	loadFirmware = () => this.firmware.loadAll((path, value) => {
-		this.set(['model'].concat(path), value);
+		this.set(['model', 'persistant', 'synth'].concat(path), value);
 	}).then(() => {
 		const state = this.state;
-		const instruments = state.model.instruments;
+		const instruments = state.model.persistant.synth.instruments;
 		instruments.forEach((instrument, index) => {
 			instruments[index].name = Midi.instrumentNames[index];
 		});
@@ -121,19 +124,19 @@ export default class App extends Component {
 
 	actions = {
 		setWave: (index, value) => {
-			this.set(['model', 'wavetable', index], value);
+			this.set(['model', 'persistant', 'synth', 'wavetable', index], value);
 			this.syncWavetable();
 		},
 		setWavetable: (value) => {
-			this.set(['model', 'wavetable'], value);
+			this.set(['model', 'persistant', 'synth', 'wavetable'], value);
 			this.syncWavetable();
 		},
 		updateWavetable: (start, end, fn) => {
-			const slice = this.state.model.wavetable.slice(start, end);
+			const slice = this.state.model.persistant.synth.wavetable.slice(start, end);
 			fn(slice);
-			const newWavetable = this.state.model.wavetable.slice(0);
+			const newWavetable = this.state.model.persistant.synth.wavetable.slice(0);
 			newWavetable.splice(start, end - start, ...slice);
-			this.set(['model', 'wavetable'], newWavetable);
+			this.set(['model', 'persistant', 'synth', 'wavetable'], newWavetable);
 			this.syncWavetable();
 		},
 		noteOn: () => {
@@ -144,7 +147,7 @@ export default class App extends Component {
 
 			let note = 48;
 			if (program >= 0x80) {
-				note = model.percussionNotes[program - 0x80];
+				note = model.persistant.synth.percussionNotes[program - 0x80];
 			}
 			
 			this.firmware.noteOn(0, note, 127, 0);
@@ -166,40 +169,40 @@ export default class App extends Component {
 			const model = state.model;
 			const channel = model.currentChannel;
 			const program = model.channelToInstrument[channel];
-			this.set(['model', 'instruments', program].concat(path), value);
-			this.firmware.setInstruments(this.state.model.instruments);
+			this.set(['model', 'persistant', 'synth', 'instruments', program].concat(path), value);
+			this.firmware.setInstruments(this.state.model.persistant.synth.instruments);
 			this.syncInstrument();
 		},
 		updateInstrumentAt: (index, path, value) => {
 			const state = this.state;
 			const model = state.model;
-			this.set(['model', 'instruments', index].concat(path), value);
-			this.firmware.setInstruments(this.state.model.instruments);
+			this.set(['model', 'persistant', 'synth', 'instruments', index].concat(path), value);
+			this.firmware.setInstruments(this.state.model.persistant.synth.instruments);
 			this.syncInstrument();
 		},
 		setPercussionNote: (index, value) => {
 			const state = this.state;
 			const model = state.model;
-			this.set(['model', 'percussionNotes', index - 0x80], value);
-			this.firmware.setPercussionNotes(this.state.model.percussionNotes);
+			this.set(['model', 'persistant', 'synth', 'percussionNotes', index - 0x80], value);
+			this.firmware.setPercussionNotes(this.state.model.persistant.synth.percussionNotes);
 			this.syncInstrument();
 		},
 		setLerpStage: (path, value) => {
-			this.set(`model.lerpStages${path}`,value);
-			this.firmware.setLerpStages(this.state.model.lerpStages);
+			this.set(`model.persistant.synth.lerpStages${path}`,value);
+			this.firmware.setLerpStages(this.state.model.persistant.synth.lerpStages);
 			this.syncInstrument();
 		},
 		setLerps: (stages, programs) => {
-			this.set(['model', 'lerpStages'], stages);
-			this.firmware.setLerpStages(this.state.model.lerpStages);
+			this.set(['model', 'persistant', 'synth', 'lerpStages'], stages);
+			this.firmware.setLerpStages(this.state.model.persistant.synth.lerpStages);
 
-			this.set(['model', 'lerpPrograms'], programs);
-			this.firmware.setLerpPrograms(this.state.model.lerpPrograms);
+			this.set(['model', 'persistant', 'synth', 'lerpPrograms'], programs);
+			this.firmware.setLerpPrograms(this.state.model.persistant.synth.lerpPrograms);
 
 			this.syncInstrument();
 		},
 		reset: () => {
-			this.set(['model'], this.state.firmwareDefaults);
+			this.set(['model', 'persistant', 'synth'], this.state.firmwareDefaults);
 			return this.storeFirmware();
 		}
 	};

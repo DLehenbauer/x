@@ -39,7 +39,7 @@ export default class Home extends Component {
 
 	get currentInstrument() {
 		const model = this.props.appState.model;
-		return model.instruments[this.currentInstrumentIndex];
+		return model.persistant.synth.instruments[this.currentInstrumentIndex];
 	}
 
 	get currentChannel() {
@@ -145,7 +145,7 @@ export default class Home extends Component {
 	}
 
 	getWave() {
-		const wavetable = this.props.appState.model.wavetable;
+		const wavetable = this.props.appState.model.persistant.synth.wavetable;
 		return wavetable.slice(this.selectionStart, this.selectionEnd);
 	}
 
@@ -230,7 +230,7 @@ export default class Home extends Component {
 	}
 
 	shiftInstruments(offset, delta) {
-		this.props.appState.model.instruments.forEach((instrument, index) => {
+		this.props.appState.model.persistant.synth.instruments.forEach((instrument, index) => {
 			if (instrument.waveOffset >= offset) {
 				this.props.actions.updateInstrumentAt(index, 'waveOffset', instrument.waveOffset + delta);
 			}
@@ -238,7 +238,7 @@ export default class Home extends Component {
 	}
 
 	onLsh = () => {
-		const wavetable = this.props.appState.model.wavetable;
+		const wavetable = this.props.appState.model.persistant.synth.wavetable;
 		const offset = this.currentInstrument.waveOffset;
 		wavetable.splice(offset, 0, ...new Array(64).fill(0));
 		this.props.actions.setWavetable(wavetable.slice(0, wavetable.length - 64));
@@ -246,7 +246,7 @@ export default class Home extends Component {
 	}
 
 	onRsh = () => {
-		const wavetable = this.props.appState.model.wavetable;
+		const wavetable = this.props.appState.model.persistant.synth.wavetable;
 		const offset = this.currentInstrument.waveOffset;
 		const moved = wavetable.splice(offset - 64, 64);
 		wavetable.splice(wavetable.length, 0, ...moved);
@@ -255,9 +255,9 @@ export default class Home extends Component {
 	}
 
 	onCopy = () => {
-		const wavetable = this.props.appState.model.wavetable;
+		const wavetable = this.props.appState.model.persistant.synth.wavetable;
 		this.setState({
-			clipboard: this.props.appState.model.wavetable.slice(
+			clipboard: this.props.appState.model.persistant.synth.wavetable.slice(
 				this.selectionStart, this.selectionEnd
 			)
 		});
@@ -267,7 +267,7 @@ export default class Home extends Component {
 		const wave = this.state.clipboard;
 		const offset = this.selectionStart;
 
-		const wavetable = this.props.appState.model.wavetable;
+		const wavetable = this.props.appState.model.persistant.synth.wavetable;
 		wavetable.splice(wavetable.length - wave.length, wave.length);
 		wavetable.splice(offset, 0, ...wave);
 		this.props.actions.setWavetable(wavetable);
@@ -314,7 +314,7 @@ export default class Home extends Component {
 					Wavetable:
 					<WaveEditor 
 						waveStyle={ style.waveEditor }
-						wave={ model.wavetable }
+						wave={ model.persistant.synth.wavetable }
 						selectionStart={ waveOffset }
 						selectionSize={ state.selectionSize }
 						xor={ this.currentInstrument.xor }
