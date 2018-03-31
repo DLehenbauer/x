@@ -92,14 +92,13 @@ SIGNAL(TIMER2_COMPA_vect) {
 				break;
 			}
 			
-			case 0x80: {
+			case 0x50: {
 				int8_t waveMod = (v_waveMod[voice].sample());
 				v_wave[voice] = v_baseWave[voice] + waveMod;
 				break;
 			}
 
-            case 0x40:
-			case 0xC0: {                                    // Advance the ADSR and update '_amp' for the current voice.
+			case 0xA0: {                                    // Advance the ADSR and update '_amp' for the current voice.
                 uint16_t amp = v_ampMod[voice].sample();
                 v_amp[voice] = (amp * v_vol[voice]) >> 8;
                 break;
