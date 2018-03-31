@@ -67,7 +67,7 @@ export default class Settings extends Component {
     lerpPrograms(cs, programs) {
         this.array(cs, 'LerpProgram', 'LerpPrograms', '', () => {
             programs.forEach((program, index) => {
-                cs.outLn(`/* ${this.hex8(index)}: */ { &LerpStages[0x${this.hex8(program.start)}], 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
+                cs.outLn(`/* ${this.hex8(index)}: */ { &LerpStages[0x${this.hex8(program.start)}], ${this.pad("    ", program.initialValue)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
             });
         });
     }

@@ -163,6 +163,7 @@ export default class Firmware {
 
             programs.push({
                 start,
+                initialValue,
                 loopStart: loopStartAndEnd >> 4,
                 loopEnd: loopStartAndEnd & 0x0F
             });
