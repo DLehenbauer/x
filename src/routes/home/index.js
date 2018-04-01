@@ -2,10 +2,8 @@ import Scope from '../../components/scope';
 import WaveEditor from '../../components/waveeditor';
 import LerpEditor from '../../components/lerpeditor';
 import InstrumentEditor from '../../components/instrumenteditor';
-import ArraySelector from '../../components/arrayselector';
 import { h, Component } from 'preact';
 import style from './style';
-import Midi from '../../common/midi';
 
 // High pass FIR at ~7760hz
 const hiPass = [-0.075579, 0.800000, -0.075579];
@@ -15,8 +13,6 @@ const loPass = [0.187098, 0.800000, 0.187098];
 
 // Gaussian Low-Pass for smoothing wave edges for zero-crossing
 const zeroCross = [0.028532, 0.067234, 0.124009, 0.179044, 0.20236, 0.179044, 0.124009, 0.067234, 0.028532];
-
-const channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
 export default class Home extends Component {
 	state = {
@@ -49,15 +45,6 @@ export default class Home extends Component {
 
 	get selectionStart() { return this.currentInstrument.waveOffset; }
 	get selectionEnd() { return this.selectionStart + this.state.selectionSize; }
-
-	instrumentSelected = index => {
-		this.props.actions.selectInstrument(index);
-		this.state.selectionSize = 256;
-	}
-
-	channelSelected = index => {
-		this.props.actions.selectChannel(index);
-	}
 
 	onFormulaError(error) {
 		this.waveFormula = (t, i, s, a0, a1) => s(i);
@@ -294,13 +281,10 @@ export default class Home extends Component {
 
 		const model = app.model;
 		const actions = props.actions;
-		const instrumentNames = Midi.instrumentNames.map((name, index) => `${index}: ${name}`);
 		const waveOffset = this.currentInstrument.waveOffset;
 
 		return (
 			<div class={style.home}>
-				<ArraySelector onselect={this.channelSelected} selectedIndex={this.currentChannel} options={channels} />
-				<ArraySelector onselect={this.instrumentSelected} selectedIndex={this.currentInstrumentIndex} options={instrumentNames} />
 				<input type='checkbox' checked={ state.trackMidi } onchange={ this.trackMidiChanged } />Track Midi
 				<button onclick={this.startClicked}>Start</button>
 				<button onclick={this.stopClicked}>Stop</button>

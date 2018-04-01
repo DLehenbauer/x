@@ -230,7 +230,7 @@ export default class App extends Component {
 	render(props, state) {
 		return (
 			<div id="app">
-				<Header reset={ this.actions.reset } />
+				<Header actions={ this.actions } appState={ state } />
 				<Router onChange={this.handleRoute}>
 					<Play path="/"
 						appState={ state } />
