@@ -26,7 +26,7 @@
     display: grid;
     grid-template-areas:
       "index slider slope limit add remove";
-    grid-template-columns: 20px auto 50px auto 28px 28px;
+    grid-template-columns: 50px auto 50px auto 28px 28px;
     grid-template-rows: auto;
 }
 

@@ -1,5 +1,6 @@
 import { h, Component } from 'preact';
 import style from './style';
+import Util from '../../common/util';
 
 class CodeSink {
     indentPrefix = "";
@@ -32,21 +33,14 @@ class CodeSink {
     }
 }
 
-export default class Settings extends Component {
+export default class Code extends Component {
     pad(padding, text) {
         text = "" + text;
         return padding.substr(text.length) + text;
     }
 
-    hex8(value) {
-        const hex = (value & 0xFF).toString(16);
-        return this.pad("00", hex);
-    }
-
-    hex16(value) {
-        const hex = (value & 0xFFFF).toString(16);
-        return this.pad("0000", hex);
-    }
+    hex8(value) { return Util.hex8(value); }
+    hex16(value) { return Util.hex16(value); }
 
     array(cs, type, name, size, block) {
         cs.outLn(`static constexpr ${type} ${name}[${size}] PROGMEM = {`);
@@ -59,7 +53,8 @@ export default class Settings extends Component {
     lerpStages(cs, stages) {
         this.array(cs, 'LerpStage', 'LerpStages', '', () => {
             stages.forEach((stage, index) => {
-                cs.outLn(`/* ${this.hex16(index)}: */ { ${this.pad("      ", stage.slope)}, ${this.pad("    ", stage.limit)} },`);
+                const slope = Math.max(Math.min(stage.slope, 127*256), -127*256);
+                cs.outLn(`/* ${this.hex16(index)}: */ { ${this.pad("      ", slope)}, ${this.pad("    ", stage.limit)} },`);
             });
         });
     }
@@ -67,7 +62,7 @@ export default class Settings extends Component {
     lerpPrograms(cs, programs) {
         this.array(cs, 'LerpProgram', 'LerpPrograms', '', () => {
             programs.forEach((program, index) => {
-                cs.outLn(`/* ${this.hex16(index)}: */ { &LerpStages[0x${this.hex16(program.start)}], ${this.pad("    ", program.initialValue)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
+                cs.outLn(`/* ${this.hex8(index)}: */ { &LerpStages[0x${this.hex16(program.start)}], ${this.pad("    ", program.initialValue)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
             });
         });
     }

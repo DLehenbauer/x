@@ -145,18 +145,23 @@ export default class LerpEditor extends Component {
         }
 
         const model = app.model;
-        const programIndex = Math.min(props.programIndex, model.persistant.synth.lerpPrograms.length - 1);
-        const programNames = model.persistant.synth.lerpPrograms.map((lerp, index) => index);
+        const lerpPrograms = model.persistant.synth.lerpPrograms;
+        const programIndex = Math.min(props.programIndex, lerpPrograms.length - 1);
+        const programNames = lerpPrograms.map((lerp, index) => Util.hex8(index));
 
-        const program = model.persistant.synth.lerpPrograms[programIndex];
+        const program = lerpPrograms[programIndex];
         const rows = [];
 
-        for (let stageIndex = program.start, stage = model.persistant.synth.lerpStages[stageIndex]; stageIndex.slope !== 0 && stage.limit !== -64; stage = model.persistant.synth.lerpStages[++stageIndex]) {
+        const lerpStages = model.persistant.synth.lerpStages;
+        for (let stageIndex = program.start, stage = lerpStages[stageIndex];
+            stageIndex.slope !== 0 && stage.limit !== -64;
+            stage = lerpStages[++stageIndex]
+        ) {
             const angle = this.slopeToSlider(stageIndex, stage.slope);
             rows.push(
                 <div class={style.stage}>
                     <span class={style.stageIndex}>
-                        { Util.hex8(stageIndex) }:
+                        { Util.hex16(stageIndex) }:
                     </span>
                     <input class={style.stageSlider } 
                         name={ stageIndex } 
