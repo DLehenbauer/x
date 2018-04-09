@@ -136,7 +136,13 @@ void loop() {
     displayChannel++;
     displayChannel &= 0x0F;
 
-    const uint8_t y = synth.getAmp(displayChannel);
+    uint8_t y = synth.getAmp(displayChannel);
+	if (y < 96) {
+		y += y >> 1;
+	} else {
+		y = 128;
+	}
+	
     const uint8_t x = displayChannel << 3;
     const int8_t page = 7 - (y >> 3);
     midi_process();
