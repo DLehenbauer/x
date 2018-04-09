@@ -4,26 +4,7 @@
 #include "instruments.h"
 #include "ssd1306.h"
 
-#if X4
-#define ATTACK_KNOB 0x07
-#define DECAY_KNOB 0x0A
-#define SUSTAIN_KNOB 0x0B
-#define RELEASE_KNOB 0x5B
-#else
-#define ATTACK_KNOB 0x47
-#define DECAY_KNOB 0x4A
-#define SUSTAIN_KNOB 0x54
-#define RELEASE_KNOB 0x07
-#endif
-
-#define RECORD_BUTTON 0x19
-#define BACK_BUTTON 0x15
-#define FORWARD_BUTTON 0x16
-#define XOR_KNOB 0x5D
-#define WAVE_OFFSET_KNOB 0x0A
-
 ssd1306 display;
-bool isEditing = false;
 
 MidiSynth synth;
 
@@ -35,74 +16,7 @@ void noteOff(uint8_t channel, uint8_t note) {
 	synth.midiNoteOff(channel, note);
 }
 
-void sysex(uint8_t cbData, uint8_t data[]) {
-#if false
-    if (data[0] != 0x7D) {
-        return;
-    }
-    
-    int8_t inAvailable = 7;
-    int8_t outAvailable = 8;
-    uint8_t out = 0;
-    uint8_t len = 0;
-    
-    for (uint8_t i = 1; i < cbData;) {
-        uint8_t byte = data[i];
-
-        int8_t shift = outAvailable - inAvailable;
-        if (shift > 0) {
-            out |= (byte << shift) & 0xFF;
-            outAvailable -= inAvailable;
-            inAvailable -= inAvailable;
-        } else {
-            out |= byte >> -shift;
-            inAvailable -= outAvailable;
-            outAvailable -= outAvailable;
-        }
-
-        if (inAvailable == 0) {
-            i++;
-            inAvailable = 7;
-        }
-
-        if (outAvailable == 0) {
-            data[len++] = out;
-            out = 0;
-            outAvailable = 8;
-        }
-    }
-
-    uint8_t cursor = 0;
-    uint8_t sysexCmd = data[cursor++];
-    
-    if (sysexCmd < 16) {
-        synth.setWaveform(sysexCmd * 16, &data[cursor], 16);
-    } else {
-        switch (sysexCmd) {
-            case 0x10: {
-                const uint8_t channel = data[cursor++];
-                Instrument& instrument = channels[channel];
-                instrument.wave = Instruments::getWavetableAddress(static_cast<uint16_t>(data[cursor]) << 8 | data[cursor + 1]);
-                cursor += 2;
-                for (uint8_t i = 0; i < 4; i++) {
-                    instrument.adsr.stages[i].divider = data[cursor++];
-                    instrument.adsr.stages[i].slope = data[cursor++];
-                    instrument.adsr.stages[i].limit = data[cursor++];
-                }
-				instrument.adsr.idleDivider = 0xFF;
-                instrument.xorBits = data[cursor++];
-                instrument.flags = static_cast<InstrumentFlags>(data[cursor++]);
-            }
-        }
-    }
-#endif
-}
-
-#if false
-void setWaveform(int8_t delta) {
-    channels[0].wave += delta * 64;
-}
-#endif
+void sysex(uint8_t cbData, uint8_t data[]) { }
 
 void controlChange(uint8_t channel, uint8_t control, uint8_t value) {
 	synth.midiControlChange(channel, control, value);

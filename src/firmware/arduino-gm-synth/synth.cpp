@@ -56,10 +56,6 @@ volatile uint16_t		v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post 
 volatile const int8_t*  v_baseWave[Synth::numVoices]	= { 0 };    // Original starting address in wavetable.
 volatile uint8_t		_note[Synth::numVoices]			= { 0 };    // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
 
-#ifdef WAVE_EDIT
-uint8_t        v_waveform[256]                      = { 0 };
-#endif
-
 #ifdef __EMSCRIPTEN__
 uint16_t retValFromSample;
 #endif // __EMSCRIPTEN__
@@ -118,13 +114,8 @@ SIGNAL(TIMER2_COMPA_vect) {
     // sample offset as 'offset##voice'.
     #define PHASE(voice) uint8_t offset##voice = ((v_phase[voice] += v_pitch[voice]) >> 8)
 
-#ifndef WAVE_EDIT
     // Macro that samples the wavetable at the offset '_wave[voice] + offset##voice', and stores as 'sample##voice'.
     #define SAMPLE(voice) int8_t sample##voice = (pgm_read_byte(v_wave[voice] + offset##voice))
-#else
-    // Macro that samples the 256B wave buffer at offset 'offset##voice', and stores as 'sample##voice'.
-    #define SAMPLE(voice) int8_t sample##voice = (v_waveform[offset##voice])
-#endif
 
     // Macro that applies '_xor[voice]' to 'sample##voice' and multiplies by '_amp[voice]'.
     #define MIX(voice) ((sample##voice ^ v_xor[voice]) * v_amp[voice])
@@ -307,6 +298,7 @@ void Synth::begin() {
     ICR1H = 0;
     ICR1L = 0x7F;                                       // Top = 127 (7-bit PWM per output)
     DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2
+	DDRC |= _BV(DDC0) | _BV(DDC1);						// Output top 2 bits to DDC0 / DDC1
     TIMSK1 = 0;
 #endif
 
@@ -317,10 +309,4 @@ void Synth::begin() {
     OCR2A  <<= 1;                       // Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
 #endif                                  // avoid starving MIDI dispatch.
     TIMSK2 = _BV(OCIE2A);
-}
-
-void Synth::setWaveform(uint8_t start, uint8_t bytes[], uint8_t length) {
-#ifdef WAVE_EDIT
-    memcpy(&v_waveform[start], bytes, length);
-#endif
 }
