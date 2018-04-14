@@ -209,7 +209,6 @@ export default class App extends Component {
 
 	processMidi = (data) => {
 		if (this.state.trackMidi) {
-			this.set('lastMidiMessage', data);
 			if (data[0] & 0x80) {
 				const status = data[0] & 0xF0;
 				const channel = data[0] & 0x0F;

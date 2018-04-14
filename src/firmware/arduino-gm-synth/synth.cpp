@@ -64,6 +64,11 @@ uint16_t retValFromSample;
 uint16_t wavOut = 0x8000;
 
 SIGNAL(TIMER2_COMPA_vect) {
+#ifndef DAC
+	OCR1B = wavOut & 0xFF;
+	OCR1A = wavOut >> 8;
+#endif
+	
     TIMSK2 = 0;         // Disable timer2 interrupts to prevent reentrancy.
     sei();              // Re-enable interrupts to ensure we do not miss MIDI events.
     
@@ -151,13 +156,8 @@ SIGNAL(TIMER2_COMPA_vect) {
 #ifdef DAC
     while (!(SPSR & _BV(SPIF)));                                        // SPI transfer should already be finished (i.e., loop exits immediately).
     PORTB |= _BV(DDB2);
-#else
-    wavOut >>= 2;
-
-    OCR1B = wavOut >> 7;
-    OCR1A = wavOut & 0x7F;
 #endif
-
+	
     TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.
 }
 
@@ -293,12 +293,12 @@ void Synth::begin() {
     
     DDRB |= _BV(DDB5) | _BV(DDB3);      // Set MOSI and SCK as outputs after enabling SPI.
 #else
-    TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);    // Toggle OC1A/OC1B on Compare Match, Fast PWM
+	// Setup Timer1 for PWM
+    TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)
     TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);       // Fast PWM, Top ICR1H/L, Prescale None
     ICR1H = 0;
-    ICR1L = 0x7F;                                       // Top = 127 (7-bit PWM per output)
-    DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2
-	DDRC |= _BV(DDC0) | _BV(DDC1);						// Output top 2 bits to DDC0 / DDC1
+    ICR1L = 0xFF;                                       // Top = 255 (8-bit PWM per output)
+    DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2                                                                                        
     TIMSK1 = 0;
 #endif
 
