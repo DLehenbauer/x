@@ -65,8 +65,8 @@ uint16_t wavOut = 0x8000;
 
 SIGNAL(TIMER2_COMPA_vect) {
 #ifndef DAC
-	OCR1B = wavOut & 0xFF;
-	OCR1A = wavOut >> 8;
+	OCR0B = wavOut & 0xFF;
+	OCR0A = wavOut >> 8;
 #endif
 	
     TIMSK2 = 0;         // Disable timer2 interrupts to prevent reentrancy.
@@ -293,13 +293,21 @@ void Synth::begin() {
     
     DDRB |= _BV(DDB5) | _BV(DDB3);      // Set MOSI and SCK as outputs after enabling SPI.
 #else
-	// Setup Timer1 for PWM
-    TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)
-    TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);       // Fast PWM, Top ICR1H/L, Prescale None
-    ICR1H = 0;
-    ICR1L = 0xFF;                                       // Top = 255 (8-bit PWM per output), 62.5khz carrier frequency
-    DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2                                                                                        
-    TIMSK1 = 0;
+	//// Setup Timer1 for PWM
+    //TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)
+    //TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);       // Fast PWM, Top ICR1H/L, Prescale None
+    //ICR1H = 0;
+    //ICR1L = 0xFF;                                       // Top = 255 (8-bit PWM per output), 62.5khz carrier frequency
+    //DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2                                                                                        
+    //TIMSK1 = 0;
+	
+    TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)
+    TCCR0B = _BV(CS10);       // Fast PWM, Top ICR1H/L, Prescale None
+    //ICR1H = 0;
+    //ICR1L = 0xFF;                                       // Top = 255 (8-bit PWM per output), 62.5khz carrier frequency
+    DDRD |= _BV(DDD5) | _BV(DDD6);                      // Output PWM to DDB1 / DDB2
+    //TIMSK1 = 0;
+	
 #endif
 
     TCCR2A = _BV(WGM21);                // CTC Mode (Clears timer and raises interrupt when OCR2B reaches OCR2A)
