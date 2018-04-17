@@ -1,11 +1,16 @@
-﻿#include <stdint.h>
+﻿/*
+	Baseline:
+				Program Memory Usage 	:	32458 bytes   99.1 % Full
+				Data Memory Usage 		:	1021 bytes   49.9 % Full
+*/
+				
+#include <stdint.h>
 #include "midi.h"
 #include "midisynth.h"
 #include "instruments.h"
 #include "ssd1306.h"
 
 ssd1306 display;
-
 MidiSynth synth;
 
 void noteOn(uint8_t channel, uint8_t note, uint8_t velocity) {

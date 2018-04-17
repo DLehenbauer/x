@@ -3,11 +3,9 @@
 
 #include <stdint.h>
 
-template<class T> class RingBuffer
-{
+template<class T, uint8_t Log2Capacity> class RingBuffer {
     private:
-        static constexpr uint8_t lengthLog2 = 6;                // 64B buffer (to deal w/large SysEx messages)
-        static constexpr uint8_t length = (1 << lengthLog2);
+        static constexpr uint8_t length = (1 << Log2Capacity);
         static constexpr uint8_t lengthModMask = length - 1;
     
         volatile uint8_t _head;
