@@ -5,9 +5,6 @@
 #include <stdint.h>
 #include "instruments.h"
 
-// Uncomment below #define to use 256B editable wave buffer instead of wavetable in PROGMEM.
-//#define WAVE_EDIT
-
 //#define DAC
 
 #ifdef __EMSCRIPTEN__

@@ -270,8 +270,35 @@ void Synth::pitchBend(uint8_t voice, int16_t value) {
         hi = pitch;
     }
 
-    int32_t delta = hi - lo;
-    pitch += static_cast<int16_t>((delta * value) / 0x2000);
+    uint16_t delta = hi - lo;
+	int32_t product;
+
+#ifndef __EMSCRIPTEN__
+	// https://mekonik.wordpress.com/2009/03/18/arduino-avr-gcc-multiplication/
+	asm volatile (
+		"clr r26 \n\t"
+		"mul %A1, %A2 \n\t"
+		"movw %A0, r0 \n\t"
+		"mulsu %B1, %B2 \n\t"
+		"movw %C0, r0 \n\t"
+		"mul %B2, %A1 \n\t"
+		"add %B0, r0 \n\t"
+		"adc %C0, r1 \n\t"
+		"adc %D0, r26 \n\t"
+		"mulsu %B1, %A2 \n\t"
+		"sbc %D0, r26 \n\t"
+		"add %B0, r0 \n\t"
+		"adc %C0, r1 \n\t"
+		"adc %D0, r26 \n\t"
+		"clr r1 \n\t"
+		: "=&r" (product)
+		: "a" (value), "a" (delta)
+		: "r26");
+#else
+	product = value * delta;
+#endif
+
+    pitch += static_cast<int16_t>(product / 0x2000);
 
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
