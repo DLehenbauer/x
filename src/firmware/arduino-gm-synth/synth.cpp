@@ -65,8 +65,7 @@ uint16_t wavOut = 0x8000;
 
 SIGNAL(TIMER2_COMPA_vect) {
 #ifndef DAC
-	OCR0B = wavOut & 0xFF;
-	OCR0A = wavOut >> 8;
+	OCR0A = wavOut >> 8;		// Update PWM outputs prior to re-enabling interrupts to write OCR0A/B	OCR0B = wavOut & 0xFF;		// as atomically as possible.
 #endif
 	
     TIMSK2 = 0;         // Disable timer2 interrupts to prevent reentrancy.
@@ -87,19 +86,19 @@ SIGNAL(TIMER2_COMPA_vect) {
 
         const uint8_t fn = divider & 0xF0;                  // Top 4 bits of 'divider' selects which additional work to perform.
         switch (fn) {
-			case 0x00: {
+			case 0x00: {									// Advance frequency modulation and update 'v_pitch' for the current voice.
 				int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
 				v_pitch[voice] = v_bentPitch[voice] + freqMod;
 				break;
 			}
 			
-			case 0x50: {
+			case 0x50: {									// Advance wave modulation and update 'v_wave' for the current voice.
 				int8_t waveMod = (v_waveMod[voice].sample());
 				v_wave[voice] = v_baseWave[voice] + waveMod;
 				break;
 			}
 
-			case 0xA0: {                                    // Advance the ADSR and update '_amp' for the current voice.
+			case 0xA0: {                                    // Advance the amplitude modulation and update 'v_amp' for the current voice.
                 uint16_t amp = v_ampMod[voice].sample();
                 v_amp[voice] = (amp * v_vol[voice]) >> 8;
                 break;
@@ -176,13 +175,13 @@ uint8_t Synth::getNextVoice() {
 	int8_t currentAmp;
 	
 	{
-		const volatile Lerp& currentMod		= v_ampMod[current];
+		const volatile Lerp& currentMod	= v_ampMod[current];
 		currentStage = currentMod.stageIndex;
 		currentAmp = currentMod.amp;
 	}
 
     for (int8_t candidate = maxVoice - 1; candidate >= 0; candidate--) {
-        const volatile Lerp& candidateMod   = v_ampMod[candidate];
+        const volatile Lerp& candidateMod = v_ampMod[candidate];
         const uint8_t candidateStage = candidateMod.stageIndex;
         
         if (candidateStage >= currentStage) {                                  // If the currently chosen voice is in a later ADSR stage, keep it.
@@ -231,9 +230,11 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     _note[voice] = note;
 
     uint16_t pitch = pgm_read_word(&_midiToPitch[note]);
+
 #if DEBUG
 	pitch <<= 1;						// Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
 #endif                                  // avoid starving MIDI dispatch.
+
     // Suspend audio processing before updating state shared with the ISR.
     suspend();
 
@@ -328,12 +329,10 @@ void Synth::begin() {
     //DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2                                                                                        
     //TIMSK1 = 0;
 	
-    TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)
-    TCCR0B = _BV(CS10);       // Fast PWM, Top ICR1H/L, Prescale None
-    //ICR1H = 0;
-    //ICR1L = 0xFF;                                       // Top = 255 (8-bit PWM per output), 62.5khz carrier frequency
-    DDRD |= _BV(DDD5) | _BV(DDD6);                      // Output PWM to DDB1 / DDB2
-    //TIMSK1 = 0;
+	// Setup Timer0 for PWM
+    TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);   // Fast PWM (non-inverting), Top 0xFF
+    TCCR0B = _BV(CS10);												// Prescale None
+    DDRD |= _BV(DDD5) | _BV(DDD6);									// Output PWM to DDD5 / DDD6
 	
 #endif
 
