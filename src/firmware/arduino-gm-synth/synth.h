@@ -40,8 +40,6 @@ class Synth {
             TIMSK2 = _BV(OCIE2A);
         }
         
-        void setWaveform(uint8_t start, uint8_t bytes[], uint8_t length);
-	
 #ifdef __EMSCRIPTEN__
 		Instrument instrument0;
 
