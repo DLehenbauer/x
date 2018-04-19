@@ -33,8 +33,8 @@ class Lerp {
 
 			const bool nextStage = (out < 0) ||
 				(slope <= 0)
-					? out < limit
-					: out > limit;
+					? out <= limit
+					: out >= limit;
 		
 			if (nextStage) {
 				out = limit;

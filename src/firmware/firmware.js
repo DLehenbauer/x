@@ -7074,7 +7074,7 @@ function __ZNV4Lerp6sampleEv($0) {
    $33 = ((($4)) + 12|0); //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
    $34 = HEAP8[$33>>0]|0; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
    $35 = $34 << 24 >> 24; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-   $36 = ($32|0)>($35|0); //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $36 = ($32|0)>=($35|0); //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
    $38 = $36;
   }
  }
@@ -7084,7 +7084,7 @@ function __ZNV4Lerp6sampleEv($0) {
   $27 = ((($4)) + 12|0); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
   $28 = HEAP8[$27>>0]|0; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
   $29 = $28 << 24 >> 24; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $30 = ($26|0)<($29|0); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $30 = ($26|0)<=($29|0); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
   $38 = $30;
  }
  $37 = $38&1; //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
