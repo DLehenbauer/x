@@ -10,7 +10,7 @@ struct LerpStage {
 
 struct LerpProgram {
 	const LerpStage* start;
-	int8_t initialValue;
+	uint8_t initialValue;
 	uint8_t loopStartAndEnd;
 };
 
