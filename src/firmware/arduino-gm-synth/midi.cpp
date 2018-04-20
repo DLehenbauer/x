@@ -17,9 +17,19 @@ ISR(USART_RX_vect) {
 }
 
 void midi_setup() {
-    constexpr uint16_t baud = 31250;    constexpr uint16_t ubrr = F_CPU / 16 / baud - 1;
-    UBRR0H = static_cast<uint8_t>(ubrr >> 8);                   // 31250 baud    UBRR0L = static_cast<uint8_t>(ubrr);
-    UCSR0C= (0 << UMSEL00) | (0 << UMSEL01) |                   // async            (0 << UPM00)   | (0 << UPM01)   |                   // parity none            (0 << USBS0)   |                                    // 1 stop bits 1            (0 << UCSZ02)  | (1 << UCSZ01)  | (1 << UCSZ00);    // 8 data bits    UCSR0B |= _BV(RXEN0) | _BV(RXCIE0);                         // Enable receive w/interrupt}
+    constexpr uint16_t baud = 31250;
+    constexpr uint16_t ubrr = F_CPU / 16 / baud - 1;
+
+    UBRR0H = static_cast<uint8_t>(ubrr >> 8);                   // 31250 baud
+    UBRR0L = static_cast<uint8_t>(ubrr);
+
+    UCSR0C= (0 << UMSEL00) | (0 << UMSEL01) |                   // async
+            (0 << UPM00)   | (0 << UPM01)   |                   // parity none
+            (0 << USBS0)   |                                    // 1 stop bits 1
+            (0 << UCSZ02)  | (1 << UCSZ01)  | (1 << UCSZ00);    // 8 data bits
+
+    UCSR0B |= _BV(RXEN0) | _BV(RXCIE0);                         // Enable receive w/interrupt
+}
 
 enum MidiStatus {
     /* 0x8n */ MidiStatus_NoteOff				= 0,     // 2 data bytes
@@ -44,11 +54,11 @@ int8_t midiStatusToDataLength[] = {
     /* 0xFn: MidiCommand_Extended              */ maxMidiData
 };
 
-MidiStatus midiStatus = MidiStatus_Unknown;
-uint8_t midiChannel = 0xFF;
-uint8_t midiDataRemaining = 0;
-uint8_t midiDataIndex = 0;
-uint8_t midiData[maxMidiData] = { 0 };
+MidiStatus midiStatus = MidiStatus_Unknown;     // Status of the incoming message
+uint8_t midiChannel = 0xFF;                     // Channel of the incoming message
+uint8_t midiDataRemaining = 0;                  // Expected number of data bytes remaining 
+uint8_t midiDataIndex = 0;                      // Location at which next data byte will be written
+uint8_t midiData[maxMidiData] = { 0 };          // Buffer containing incoming data bytes
 
 void dispatchCommand() {
 	const uint8_t midiData0 = midiData[0];
@@ -87,7 +97,9 @@ void dispatchCommand() {
     }
 	
 /* TODO: Handle running status?	
-	midiDataRemaining = midiStatusToDataLength[midiStatus];				// Running Status: reset the midi data buffer for the current midi status	midiDataIndex = 0;*/
+	midiDataRemaining = midiStatusToDataLength[midiStatus];				// Running Status: reset the midi data buffer for the current midi status
+	midiDataIndex = 0;
+*/
 }
 
 void midi_decode_byte(uint8_t nextByte) {

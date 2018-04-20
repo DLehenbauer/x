@@ -21,7 +21,7 @@ class Synth {
 
         void begin();
         uint8_t getNextVoice();
-        void noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Instrument& instrument);
+        void noteOn(uint8_t voice, uint8_t note, uint8_t velocity, const Instrument& instrument);
         void noteOff(uint8_t voice);
         void pitchBend(uint8_t voice, int16_t value);
         uint8_t getAmp(uint8_t voice);

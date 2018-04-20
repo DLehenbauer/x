@@ -15,7 +15,7 @@ constexpr static uint16_t pitch(double note) {
 #endif
 
 // Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval
-constexpr static uint16_t _midiToPitch[] PROGMEM = {
+constexpr static uint16_t _noteToPitch[] PROGMEM = {
 #ifndef __EMSCRIPTEN__
 	pitch(0x00), pitch(0x01), pitch(0x02), pitch(0x03), pitch(0x04), pitch(0x05), pitch(0x06), pitch(0x07), pitch(0x08), pitch(0x09), pitch(0x0A), pitch(0x0B), pitch(0x0C), pitch(0x0D), pitch(0x0E), pitch(0x0F),
 	pitch(0x10), pitch(0x11), pitch(0x12), pitch(0x13), pitch(0x14), pitch(0x15), pitch(0x16), pitch(0x17), pitch(0x18), pitch(0x19), pitch(0x1A), pitch(0x1B), pitch(0x1C), pitch(0x1D), pitch(0x1E), pitch(0x1F),
@@ -210,10 +210,10 @@ uint8_t Synth::getNextVoice() {
 
 constexpr uint8_t offsetTable[] = { 0, 0, 1, 1, 2, 3, 3, 3 };
 
-void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Instrument& instrument) {
+void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t velocity, const Instrument& instrument) {
 	const uint8_t flags = instrument.flags;
     if (flags & InstrumentFlags_HalfAmplitude) {
-        midiVelocity >>= 1;
+        velocity >>= 1;
     }
     
     bool isNoise = flags & InstrumentFlags_Noise;
@@ -229,7 +229,7 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
 		
     _note[voice] = note;
 
-    uint16_t pitch = pgm_read_word(&_midiToPitch[note]);
+    uint16_t pitch = pgm_read_word(&_noteToPitch[note]);
 
 #if DEBUG
 	pitch <<= 1;						// Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
@@ -244,7 +244,7 @@ void Synth::noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Inst
     v_xor[voice] = instrument.xorBits;
     v_amp[voice] = 0;
     v_isNoise[voice] = isNoise;
-    v_vol[voice] = midiVelocity;
+    v_vol[voice] = velocity;
     v_ampMod[voice].start(instrument.ampMod + ampOffset);
 	v_freqMod[voice].start(instrument.freqMod);
 	v_waveMod[voice].start(instrument.waveMod);
@@ -333,7 +333,6 @@ void Synth::begin() {
     TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);   // Fast PWM (non-inverting), Top 0xFF
     TCCR0B = _BV(CS10);												// Prescale None
     DDRD |= _BV(DDD5) | _BV(DDD6);									// Output PWM to DDD5 / DDD6
-	
 #endif
 
     TCCR2A = _BV(WGM21);                // CTC Mode (Clears timer and raises interrupt when OCR2B reaches OCR2A)

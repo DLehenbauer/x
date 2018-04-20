@@ -6067,13 +6067,13 @@ function __ZN5Synth8noteOnEmEhhhh($0,$1,$2,$3,$4) {
  $8 = $3;
  $9 = $4;
  $10 = $5;
- $11 = $9; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- __ZN11Instruments13getInstrumentEhR10Instrument($11,$10); //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- $12 = $6; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- $13 = $7; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- $14 = $8; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- __ZN5Synth6noteOnEhhhRK10Instrument($10,$12,$13,$14,$10); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- STACKTOP = sp;return; //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $11 = $9; //@line 46 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ __ZN11Instruments13getInstrumentEhR10Instrument($11,$10); //@line 46 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $12 = $6; //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $13 = $7; //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $14 = $8; //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ __ZN5Synth6noteOnEhhhRK10Instrument($10,$12,$13,$14,$10); //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ STACKTOP = sp;return; //@line 48 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM5SynthFvhhhhEvPS2_JhhhhEE6invokeERKS4_S5_hhhh($0,$1,$2,$3,$4,$5) {
  $0 = $0|0;
@@ -9131,8 +9131,8 @@ function __ZN5Synth6noteOnEhhhRK10Instrument($0,$1,$2,$3,$4) {
  $64 = (__Z13pgm_read_wordPVKv($63)|0); //@line 233 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $17 = $64; //@line 233 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $6 = $18;
- __Z3cliv(); //@line 33 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- __Z3seiv(); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3cliv(); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3seiv(); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
  $65 = $11; //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $66 = HEAP32[$65>>2]|0; //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $67 = $16; //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
@@ -9227,8 +9227,8 @@ function __ZN5Synth7noteOffEh($0,$1) {
  $5 = $1;
  $6 = $4;
  $3 = $6;
- __Z3cliv(); //@line 33 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- __Z3seiv(); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3cliv(); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3seiv(); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
  $7 = $5; //@line 259 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $8 = $7&255; //@line 259 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $9 = (904 + ($8<<4)|0); //@line 259 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
@@ -9240,81 +9240,77 @@ function __ZN5Synth9pitchBendEhs($0,$1,$2) {
  $0 = $0|0;
  $1 = $1|0;
  $2 = $2|0;
- var $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0, $26 = 0, $27 = 0, $28 = 0, $29 = 0;
- var $3 = 0, $30 = 0, $31 = 0, $32 = 0, $33 = 0, $34 = 0, $35 = 0, $36 = 0, $37 = 0, $38 = 0, $39 = 0, $4 = 0, $40 = 0, $41 = 0, $42 = 0, $43 = 0, $44 = 0, $45 = 0, $46 = 0, $47 = 0;
- var $48 = 0, $49 = 0, $5 = 0, $50 = 0, $51 = 0, $52 = 0, $53 = 0, $54 = 0, $55 = 0, $56 = 0, $57 = 0, $58 = 0, $59 = 0, $6 = 0, $60 = 0, $61 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0;
- var sp = 0;
+ var $$sink = 0, $$sink2 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0, $26 = 0, $27 = 0;
+ var $28 = 0, $29 = 0, $3 = 0, $30 = 0, $31 = 0, $32 = 0, $33 = 0, $34 = 0, $35 = 0, $36 = 0, $37 = 0, $38 = 0, $39 = 0, $4 = 0, $40 = 0, $41 = 0, $42 = 0, $43 = 0, $44 = 0, $45 = 0;
+ var $46 = 0, $47 = 0, $48 = 0, $49 = 0, $5 = 0, $50 = 0, $51 = 0, $52 = 0, $53 = 0, $54 = 0, $55 = 0, $56 = 0, $57 = 0, $58 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 32|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(32|0);
  $5 = $0;
  $6 = $1;
  $7 = $2;
- $13 = $5;
- $14 = $6; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $15 = $14&255; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $16 = (39456 + ($15<<1)|0); //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $17 = HEAP16[$16>>1]|0; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $8 = $17; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $18 = $7; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $19 = $18 << 16 >> 16; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $20 = ($19|0)>(0); //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- if ($20) {
-  $21 = $8; //@line 268 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $10 = $21; //@line 268 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $22 = $6; //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $23 = $22&255; //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $24 = (39587 + ($23)|0); //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $25 = HEAP8[$24>>0]|0; //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $26 = $25&255; //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $27 = (($26) + 2)|0; //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $28 = (6528 + ($27<<1)|0); //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $29 = (__Z13pgm_read_wordPVKv($28)|0); //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $9 = $29; //@line 269 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $11 = $5;
+ $12 = $6; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $13 = $12&255; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $14 = (39456 + ($13<<1)|0); //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $15 = HEAP16[$14>>1]|0; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $8 = $15; //@line 264 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $16 = $7; //@line 265 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $17 = $16 << 16 >> 16; //@line 265 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $18 = ($17|0)>=(0); //@line 265 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ if ($18) {
+  $19 = $6; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $20 = $19&255; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $21 = (39587 + ($20)|0); //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $22 = HEAP8[$21>>0]|0; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $23 = $22&255; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $24 = (($23) + 2)|0; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $25 = (6528 + ($24<<1)|0); //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $26 = (__Z13pgm_read_wordPVKv($25)|0); //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $27 = $26&65535; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $28 = $8; //@line 266 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $$sink = $27;$$sink2 = $28;
  } else {
-  $30 = $6; //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $31 = $30&255; //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $32 = (39587 + ($31)|0); //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $33 = HEAP8[$32>>0]|0; //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $34 = $33&255; //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $35 = (($34) - 2)|0; //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $36 = (6528 + ($35<<1)|0); //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $37 = (__Z13pgm_read_wordPVKv($36)|0); //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $10 = $37; //@line 271 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $38 = $8; //@line 272 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $9 = $38; //@line 272 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $29 = $8; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $30 = $29&65535; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $31 = $6; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $32 = $31&255; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $33 = (39587 + ($32)|0); //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $34 = HEAP8[$33>>0]|0; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $35 = $34&255; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $36 = (($35) - 2)|0; //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $37 = (6528 + ($36<<1)|0); //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $38 = (__Z13pgm_read_wordPVKv($37)|0); //@line 267 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $$sink = $30;$$sink2 = $38;
  }
- $39 = $9; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $40 = $39&65535; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $41 = $10; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $42 = $41&65535; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $43 = (($40) - ($42))|0; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $44 = $43&65535; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $11 = $44; //@line 275 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $45 = $7; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $46 = $45 << 16 >> 16; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $47 = $11; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $48 = $47&65535; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $49 = Math_imul($46, $48)|0; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $12 = $49; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $50 = $12; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $51 = (($50|0) / 8192)&-1; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $52 = $51&65535; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $53 = $52 << 16 >> 16; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $54 = $8; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $55 = $54&65535; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $56 = (($55) + ($53))|0; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $57 = $56&65535; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $8 = $57; //@line 303 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $4 = $13;
- __Z3cliv(); //@line 33 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- __Z3seiv(); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- $58 = $8; //@line 307 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $59 = $6; //@line 307 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $60 = $59&255; //@line 307 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $61 = (39488 + ($60<<1)|0); //@line 307 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[$61>>1] = $58; //@line 307 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $3 = $13;
- STACKTOP = sp;return; //@line 309 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $39 = $$sink2&65535;
+ $40 = (($$sink) - ($39))|0;
+ $41 = $40&65535; //@line 265 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $9 = $41; //@line 265 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $42 = $7; //@line 293 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $43 = $42 << 16 >> 16; //@line 293 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $44 = $9; //@line 293 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $45 = $44&65535; //@line 293 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $46 = Math_imul($43, $45)|0; //@line 293 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $10 = $46; //@line 293 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $47 = $10; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $48 = (($47|0) / 8192)&-1; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $49 = $48&65535; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $50 = $49 << 16 >> 16; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $51 = $8; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $52 = $51&65535; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $53 = (($52) + ($50))|0; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $54 = $53&65535; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $8 = $54; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $4 = $11;
+ __Z3cliv(); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3seiv(); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ $55 = $8; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $56 = $6; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $57 = $56&255; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $58 = (39488 + ($57<<1)|0); //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[$58>>1] = $55; //@line 300 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $3 = $11;
+ STACKTOP = sp;return; //@line 302 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN11Instruments13getInstrumentEhR10Instrument($0,$1) {
  $0 = $0|0;
