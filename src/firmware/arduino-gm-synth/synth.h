@@ -24,7 +24,6 @@ class Synth {
         void noteOn(uint8_t voice, uint8_t note, uint8_t midiVelocity, const Instrument& instrument);
         void noteOff(uint8_t voice);
         void pitchBend(uint8_t voice, int16_t value);
-        bool isIdle(uint8_t voice);
         uint8_t getAmp(uint8_t voice);
         
         // Suspends audio processing ISR.  While suspended, it is safe to update of volatile state
