@@ -21,7 +21,7 @@ class MidiSynth final : public Synth {
 		void midiPitchBend(uint8_t channel, int16_t value) {			for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {					// For each voice				if (voiceToChannel[voice] == channel) {									//   which is currently playing a note on this channel					pitchBend(voice, value);											//     update pitch bench with the given value.				}			}		}				void midiControlChange(uint8_t channel, uint8_t controller, uint8_t value) {			switch (controller) {
 				case 0x7B: {
 					switch (value) {
-						case 0: {
+						case 0: {															// All Notes Off (for current channel):
 							for (int8_t voice = Synth::maxVoice; voice >= 0; voice--) {		// For each voice								if (voiceToChannel[voice] == channel) {						//   currently playing any note on this channel									noteOff(voice);											//	   stop playing the note									voiceToChannel[voice] = 0xFF;							//      and remove the voice from our voice -> note/channel									voiceToNote[voice] = 0xFF;								//      maps so we ignore it for future node off / pitch bench								}															//      messages.							}							break;
 						}
 					}

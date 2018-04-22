@@ -1,6 +1,6 @@
 ﻿/*
 	Baseline:
-				Program Memory Usage 	:	32438 bytes   99.0 % Full
+				Program Memory Usage 	:	32434 bytes   99.0 % Full
 				Data Memory Usage 		:	1021 bytes   49.9 % Full
 */
 				

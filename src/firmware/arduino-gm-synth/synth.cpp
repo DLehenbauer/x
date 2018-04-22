@@ -56,10 +56,6 @@ volatile uint16_t		v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post 
 volatile const int8_t*  v_baseWave[Synth::numVoices]	= { 0 };    // Original starting address in wavetable.
 volatile uint8_t		_note[Synth::numVoices]			= { 0 };    // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
 
-#ifdef __EMSCRIPTEN__
-uint16_t retValFromSample;
-#endif // __EMSCRIPTEN__
-
 // Audio output as biased/unsigned (0 signed -> 0x8000).
 uint16_t wavOut = 0x8000;
 
@@ -261,17 +257,10 @@ void Synth::noteOff(uint8_t voice) {
 
 void Synth::pitchBend(uint8_t voice, int16_t value) {
     uint16_t pitch = v_basePitch[voice];
-    uint16_t hi, lo;
+    uint16_t delta = value >= 0
+		? pgm_read_word(&_noteToPitch[_note[voice] + 2]) - pitch
+		: pitch - pgm_read_word(&_noteToPitch[_note[voice] - 2]);
 
-    if (value > 0) {
-        lo = pitch;
-        hi = pgm_read_word(&_midiToPitch[_note[voice] + 2]);
-    } else {
-        lo = pgm_read_word(&_midiToPitch[_note[voice] - 2]);
-        hi = pitch;
-    }
-
-    uint16_t delta = hi - lo;
 	int32_t product;
 
 #ifndef __EMSCRIPTEN__
