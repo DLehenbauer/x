@@ -182,10 +182,10 @@ uint8_t Synth::getNextVoice() {
         
         if (candidateStage >= currentStage) {                                  // If the currently chosen voice is in a later ADSR stage, keep it.
             if (candidateStage == currentStage) {                              // Otherwise, if both voices are in the same ADSR stage
-                const int8_t candidateAmp = candidateMod.amp;                  //   compare amplitudes to determine which voice to steal.
+                const int8_t candidateAmp = candidateMod.amp;                  //   compare amplitudes to determine which voice to prefer.
             
                 bool selectCandidate = candidateMod.slope > 0                  // If amplitude is increasing...
-                    ? candidateAmp >= currentAmp                               //   steal the lower amplitude voice
+                    ? candidateAmp >= currentAmp                               //   prefer the lower amplitude voice
                     : candidateAmp <= currentAmp;                              //   otherwise the higher amplitude voice
 
                 if (selectCandidate) {
@@ -194,7 +194,7 @@ uint8_t Synth::getNextVoice() {
 					currentAmp = candidateAmp;
                 }
             } else {
-                current = candidate;											// Else, if the candidate is in a later ADSR stage, steal it.
+                current = candidate;											// Else, if the candidate is in a later ADSR stage, prefer it.
 				currentStage = candidateStage;
 				currentAmp = candidateMod.amp;
             }
@@ -326,7 +326,7 @@ void Synth::begin() {
 
     TCCR2A = _BV(WGM21);                // CTC Mode (Clears timer and raises interrupt when OCR2B reaches OCR2A)
     TCCR2B = _BV(CS21);                 // Prescale None = C_FPU / 8 tick frequency
-    OCR2A  = sampleDivider;             // Sample rate
+    OCR2A  = samplingInterval;			// Set timer top to sampling interval
 #if DEBUG
     OCR2A  <<= 1;                       // Reduce sampling frequency by 1/2 in DEBUG (non-optimized) builds to
 #endif                                  // avoid starving MIDI dispatch.

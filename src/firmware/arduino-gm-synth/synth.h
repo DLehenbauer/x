@@ -16,8 +16,8 @@ class Synth {
     public:
         constexpr static uint8_t numVoices = 16;
         constexpr static uint8_t maxVoice = Synth::numVoices - 1;
-		constexpr static uint8_t sampleDivider = 0x65;
-		constexpr static double sampleRate = static_cast<double>(F_CPU) / 8.0 / static_cast<double>(Synth::sampleDivider);
+		constexpr static uint8_t samplingInterval = 0x65;
+		constexpr static double sampleRate = static_cast<double>(F_CPU) / 8.0 / static_cast<double>(Synth::samplingInterval);
 
         void begin();
         uint8_t getNextVoice();
