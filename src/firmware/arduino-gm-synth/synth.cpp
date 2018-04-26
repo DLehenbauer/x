@@ -176,7 +176,7 @@ uint8_t Synth::getNextVoice() {
 		currentAmp = currentMod.amp;
 	}
 
-    for (int8_t candidate = maxVoice - 1; candidate >= 0; candidate--) {
+	for (uint8_t candidate = maxVoice - 1; candidate < maxVoice; candidate--) {
         const volatile Lerp& candidateMod = v_ampMod[candidate];
         const uint8_t candidateStage = candidateMod.stageIndex;
         
@@ -184,8 +184,8 @@ uint8_t Synth::getNextVoice() {
             if (candidateStage == currentStage) {                              // Otherwise, if both voices are in the same ADSR stage
                 const int8_t candidateAmp = candidateMod.amp;                  //   compare amplitudes to determine which voice to prefer.
             
-                bool selectCandidate = candidateMod.slope > 0                  // If amplitude is increasing...
-                    ? candidateAmp >= currentAmp                               //   prefer the lower amplitude voice
+                bool selectCandidate = candidateMod.slope >= 0                 // If amplitude is increasing...
+                    ? candidateAmp >= currentAmp							   //   prefer the lower amplitude voice
                     : candidateAmp <= currentAmp;                              //   otherwise the higher amplitude voice
 
                 if (selectCandidate) {
