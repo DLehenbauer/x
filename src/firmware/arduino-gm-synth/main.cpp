@@ -1,7 +1,9 @@
 ﻿/*
-	Baseline:
+	Baseline (PWM):
 				Program Memory Usage 	:	32340 bytes   99.0 % Full
 				Data Memory Usage 		:	1021 bytes   49.9 % Full
+				
+	Ltc16xx: +16B
 */
 				
 #include <stdint.h>
