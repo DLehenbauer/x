@@ -203,6 +203,12 @@
     <None Include="emscripten\bindings.cpp">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="drivers\pin.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="drivers\spi.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="emscripten\util\delay.h">
       <SubType>compile</SubType>
     </Compile>
@@ -252,6 +258,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="drivers\" />
+    <Folder Include="drivers\dac\" />
     <Folder Include="emscripten" />
     <Folder Include="emscripten\avr" />
     <Folder Include="emscripten\util" />

@@ -8,10 +8,7 @@
 #include "common.h"
 #include "pgmspace.h"
 
-uint8_t DDRB;
-uint8_t DDRD;
 uint8_t OCR2A;
-uint8_t PORTD;
 uint8_t SPCR;
 uint8_t TCCR2A;
 uint8_t TCCR2B;
