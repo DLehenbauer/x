@@ -209,6 +209,9 @@
     <Compile Include="drivers\spi.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="drivers\ssd1306.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="emscripten\util\delay.h">
       <SubType>compile</SubType>
     </Compile>
@@ -227,9 +230,6 @@
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="midi.cpp">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="midi.h">
       <SubType>compile</SubType>
     </Compile>
@@ -237,9 +237,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ringbuffer.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="ssd1306.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="synth.cpp">

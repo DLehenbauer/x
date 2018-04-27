@@ -106,7 +106,7 @@ public:
 	    endCommand();
     }
     
-	void setRegion(uint8_t minX, uint8_t maxX, uint8_t minPage, uint8_t maxPage, uint8_t value) __attribute__((always_inline)) {
+	void setRegion(uint8_t minX, uint8_t maxX, uint8_t minPage, uint8_t maxPage, uint8_t value) {
 	    select(minX, maxX, minPage, maxPage);
 	    
 	    const uint8_t numX = maxX - minX;
@@ -121,7 +121,7 @@ public:
 	    endData();
     }
 	
-    void send7(uint8_t value) __attribute__((always_inline)) {
+    void send7(uint8_t value) {
 	    beginData();
 	    send(value);
 	    send(value);
