@@ -105,10 +105,8 @@ SIGNAL(TIMER2_COMPA_vect) {
     // Each interrupt, we transmit the previous output to the DAC concurrently with calculating
     // the next wavOut.  This avoids unproductive busy-waiting for SPI to finish.
 #ifdef DAC    
-	asm volatile("": : :"memory");										
     PORTB &= ~_BV(DDB2);                                                // Begin transmitting upper 8-bits to DAC.
     SPDR = wavOut >> 8;                                                 
-	asm volatile("": : :"memory");
 #endif
 
     // Macro that advances '_phase[voice]' by the sampling interval '_pitch[voice]' and stores the next 8-bit
@@ -134,9 +132,7 @@ SIGNAL(TIMER2_COMPA_vect) {
     mix += (MIX(4) + MIX(5) + MIX(6) + MIX(7)) >> 1;
 
 #ifdef DAC
-	asm volatile("": : :"memory");
     SPDR = wavOut;                                                      // Begin transmitting the lower 8-bits.
-	asm volatile("": : :"memory");
 #endif
 
     PHASE(8); PHASE(9); PHASE(10); PHASE(11);                           // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
@@ -151,10 +147,8 @@ SIGNAL(TIMER2_COMPA_vect) {
     wavOut = mix + 0x8000;                                              // Store resulting wave output for transmission on next interrupt.
 
 #ifdef DAC
-	asm volatile("": : :"memory");
     PORTB |= _BV(DDB2);
-	SPSR &= ~_BV(SPIF);													// Clear SPIF flag to avoid confusing other SPI users when returning from interrupt.
-	asm volatile("": : :"memory");
+	SPSR;																// Clear SPIF flag to avoid confusing other SPI users when returning from interrupt.
 #endif
 	
     TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.

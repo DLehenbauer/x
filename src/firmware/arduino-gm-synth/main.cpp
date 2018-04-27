@@ -1,16 +1,14 @@
 ﻿/*
-	Baseline (PWM):
-				Program Memory Usage 	:	32340 bytes   99.0 % Full
-				Data Memory Usage 		:	1021 bytes   49.9 % Full
-				
-	Ltc16xx: +16B
+	Baseline (w/Ltc16xx):
+				Program Memory Usage 	:	32222 bytes
+				Data Memory Usage 		:	1021 bytes
 */
 				
 #include <stdint.h>
 #include "midi.h"
 #include "midisynth.h"
 #include "instruments.h"
-#include "ssd1306.h"
+#include "drivers/ssd1306.h"
 
 ssd1306 display;
 MidiSynth synth;
@@ -39,7 +37,7 @@ void pitchBend(uint8_t channel, int16_t value) {
 
 #include <avr/io.h>
 
-void setup() {   
+void setup() {
     midi_setup();
 
     display.begin();
