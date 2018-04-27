@@ -8,7 +8,7 @@ template<class T, uint8_t Log2Capacity> class RingBuffer {
         static constexpr uint8_t length = (1 << Log2Capacity);
         static constexpr uint8_t lengthModMask = length - 1;
     
-        T _buffer[length];
+        volatile T _buffer[length];
         volatile uint8_t _head;		// The location at which the next inserted item will be stored.
         volatile uint8_t _tail;		// The location of the next item to be dequeued.
     

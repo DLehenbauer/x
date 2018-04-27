@@ -1,11 +1,9 @@
 #ifndef __MIDI_H__
 #define __MIDI_H__
 
-#include "ringbuffer.h"
-
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include "midi.h"
+#include "ringbuffer.h"
 
 constexpr uint8_t maxMidiData = 32;
 RingBuffer<uint8_t, /* Log2Capacity: */ 6> _midiBuffer;
@@ -48,7 +46,7 @@ enum MidiStatus {
     /* ???  */ MidiStatus_Unknown				= 8      // (unknown)
 };
 
-int8_t midiStatusToDataLength[] = {
+static constexpr int8_t midiStatusToDataLength[] = {
     /* 0x8n: MidiCommand_NoteOff               */ 2,
     /* 0x9n: MidiCommand_NoteOn                */ 2,
     /* 0xAn: MidiCommand_PolyKeyPressure       */ 2,
