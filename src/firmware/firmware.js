@@ -194,9 +194,8 @@ else {
 
 // console.log is checked first, as 'print' on the web will open a print dialogue
 // printErr is preferable to console.warn (works better in shells)
-// bind(console) is necessary to fix IE/Edge closed dev tools panel behavior.
-Module['print'] = typeof console !== 'undefined' ? console.log.bind(console) : (typeof print !== 'undefined' ? print : null);
-Module['printErr'] = typeof printErr !== 'undefined' ? printErr : ((typeof console !== 'undefined' && console.warn.bind(console)) || Module['print']);
+Module['print'] = typeof console !== 'undefined' ? console.log : (typeof print !== 'undefined' ? print : null);
+Module['printErr'] = typeof printErr !== 'undefined' ? printErr : ((typeof console !== 'undefined' && console.warn) || Module['print']);
 
 // *** Environment setup code ***
 
@@ -286,27 +285,20 @@ function warnOnce(text) {
 
 
 
-var jsCallStartIndex = 1;
 var functionPointers = new Array(0);
 
-// 'sig' parameter is only used on LLVM wasm backend
-function addFunction(func, sig) {
-  if (typeof sig === 'undefined') {
-    Module.printErr('Warning: addFunction: Provide a wasm function signature ' +
-                    'string as a second argument');
-  }
-  var base = 0;
-  for (var i = base; i < base + 0; i++) {
+function addFunction(func) {
+  for (var i = 0; i < functionPointers.length; i++) {
     if (!functionPointers[i]) {
       functionPointers[i] = func;
-      return jsCallStartIndex + i;
+      return 1 + i;
     }
   }
   throw 'Finished up all reserved function pointers. Use a higher value for RESERVED_FUNCTION_POINTERS.';
 }
 
 function removeFunction(index) {
-  functionPointers[index-jsCallStartIndex] = null;
+  functionPointers[index-1] = null;
 }
 
 var funcWrappers = {};
@@ -3870,12 +3862,12 @@ function getTempRet0() {
 function __Z3cliv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 28 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ return; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
 }
 function __Z3seiv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 29 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ return; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
 }
 function __Z13pgm_read_bytePVKv($0) {
  $0 = $0|0;
@@ -3883,9 +3875,9 @@ function __Z13pgm_read_bytePVKv($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
- $3 = HEAP8[$2>>0]|0; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
- STACKTOP = sp;return ($3|0); //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ $2 = $1; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ $3 = HEAP8[$2>>0]|0; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ STACKTOP = sp;return ($3|0); //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
 }
 function __Z13pgm_read_wordPVKv($0) {
  $0 = $0|0;
@@ -3893,9 +3885,9 @@ function __Z13pgm_read_wordPVKv($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
- $3 = HEAP16[$2>>1]|0; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
- STACKTOP = sp;return ($3|0); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ $2 = $1; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ $3 = HEAP16[$2>>1]|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
+ STACKTOP = sp;return ($3|0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\avr\mocks.cpp"
 }
 function __GLOBAL__sub_I_bindings_cpp() {
  var label = 0, sp = 0;
@@ -3906,8 +3898,8 @@ function __GLOBAL__sub_I_bindings_cpp() {
 function ___cxx_global_var_init() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN37EmscriptenBindingInitializer_firmwareC2Ev(39409); //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- return; //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN37EmscriptenBindingInitializer_firmwareC2Ev(39409); //@line 17 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ return; //@line 17 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
 }
 function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
  $0 = $0|0;
@@ -4001,242 +3993,242 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
  $180 = sp + 96|0;
  $181 = sp + 88|0;
  $156 = $0;
- __ZN10emscripten8functionIvJhEJEEEvPKcPFT_DpT0_EDpT1_(12268,29); //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten8functionIK10HeapRegionIhEJEJEEEvPKcPFT_DpT0_EDpT1_(12285,30); //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten8functionIK10HeapRegionIaEJEJEEEvPKcPFT_DpT0_EDpT1_(12304,31); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten8functionIK10HeapRegionI9LerpStageEJEJEEEvPKcPFT_DpT0_EDpT1_(12317,32); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten8functionIK10HeapRegionI11LerpProgramEJEJEEEvPKcPFT_DpT0_EDpT1_(12331,33); //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten8functionIK10HeapRegionI10InstrumentEJEJEEEvPKcPFT_DpT0_EDpT1_(12347,34); //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten12value_objectI10HeapRegionIaEEC2EPKc($157,12362); //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten8functionIvJhEJEEEvPKcPFT_DpT0_EDpT1_(12268,29); //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten8functionIK10HeapRegionIhEJEJEEEvPKcPFT_DpT0_EDpT1_(12285,30); //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten8functionIK10HeapRegionIaEJEJEEEvPKcPFT_DpT0_EDpT1_(12304,31); //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten8functionIK10HeapRegionI9LerpStageEJEJEEEvPKcPFT_DpT0_EDpT1_(12317,32); //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten8functionIK10HeapRegionI11LerpProgramEJEJEEEvPKcPFT_DpT0_EDpT1_(12331,33); //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten8functionIK10HeapRegionI10InstrumentEJEJEEEvPKcPFT_DpT0_EDpT1_(12347,34); //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten12value_objectI10HeapRegionIaEEC2EPKc($157,12362); //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
  __THREW__ = 0;
- $182 = (invoke_iiii(35,($157|0),(12366|0),0)|0); //@line 26 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ $182 = (invoke_iiii(35,($157|0),(12366|0),0)|0); //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
  $183 = __THREW__; __THREW__ = 0;
  $184 = $183&1;
  if (!($184)) {
   __THREW__ = 0;
-  $185 = (invoke_iiii(35,($182|0),(12372|0),4)|0); //@line 27 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+  $185 = (invoke_iiii(35,($182|0),(12372|0),4)|0); //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
   $186 = __THREW__; __THREW__ = 0;
   $187 = $186&1;
   if (!($187)) {
    __THREW__ = 0;
-   (invoke_iiii(35,($185|0),(12376|0),8)|0); //@line 28 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+   (invoke_iiii(35,($185|0),(12376|0),8)|0); //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
    $188 = __THREW__; __THREW__ = 0;
    $189 = $188&1;
    if (!($189)) {
-    __ZN10emscripten12value_objectI10HeapRegionIaEED2Ev($157); //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-    __ZN10emscripten12value_objectI10HeapRegionIhEEC2EPKc($160,12385); //@line 30 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    __ZN10emscripten12value_objectI10HeapRegionIaEED2Ev($157); //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    __ZN10emscripten12value_objectI10HeapRegionIhEEC2EPKc($160,12385); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
     __THREW__ = 0;
-    $190 = (invoke_iiii(36,($160|0),(12366|0),0)|0); //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    $190 = (invoke_iiii(36,($160|0),(12366|0),0)|0); //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
     $191 = __THREW__; __THREW__ = 0;
     $192 = $191&1;
     if (!($192)) {
      __THREW__ = 0;
-     $193 = (invoke_iiii(36,($190|0),(12372|0),4)|0); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+     $193 = (invoke_iiii(36,($190|0),(12372|0),4)|0); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
      $194 = __THREW__; __THREW__ = 0;
      $195 = $194&1;
      if (!($195)) {
       __THREW__ = 0;
-      (invoke_iiii(36,($193|0),(12376|0),8)|0); //@line 33 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+      (invoke_iiii(36,($193|0),(12376|0),8)|0); //@line 33 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
       $196 = __THREW__; __THREW__ = 0;
       $197 = $196&1;
       if (!($197)) {
-       __ZN10emscripten12value_objectI10HeapRegionIhEED2Ev($160); //@line 30 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-       __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEEC2EPKc($161,12389); //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       __ZN10emscripten12value_objectI10HeapRegionIhEED2Ev($160); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEEC2EPKc($161,12389); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
        __THREW__ = 0;
-       $198 = (invoke_iiii(37,($161|0),(12366|0),0)|0); //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       $198 = (invoke_iiii(37,($161|0),(12366|0),0)|0); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
        $199 = __THREW__; __THREW__ = 0;
        $200 = $199&1;
        if (!($200)) {
         __THREW__ = 0;
-        $201 = (invoke_iiii(37,($198|0),(12372|0),4)|0); //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+        $201 = (invoke_iiii(37,($198|0),(12372|0),4)|0); //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
         $202 = __THREW__; __THREW__ = 0;
         $203 = $202&1;
         if (!($203)) {
          __THREW__ = 0;
-         (invoke_iiii(37,($201|0),(12376|0),8)|0); //@line 38 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+         (invoke_iiii(37,($201|0),(12376|0),8)|0); //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
          $204 = __THREW__; __THREW__ = 0;
          $205 = $204&1;
          if (!($205)) {
-          __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEED2Ev($161); //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-          __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEEC2EPKc($162,12400); //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEED2Ev($161); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEEC2EPKc($162,12400); //@line 40 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
           __THREW__ = 0;
-          $206 = (invoke_iiii(38,($162|0),(12366|0),0)|0); //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          $206 = (invoke_iiii(38,($162|0),(12366|0),0)|0); //@line 41 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
           $207 = __THREW__; __THREW__ = 0;
           $208 = $207&1;
           if (!($208)) {
            __THREW__ = 0;
-           $209 = (invoke_iiii(38,($206|0),(12372|0),4)|0); //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+           $209 = (invoke_iiii(38,($206|0),(12372|0),4)|0); //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
            $210 = __THREW__; __THREW__ = 0;
            $211 = $210&1;
            if (!($211)) {
             __THREW__ = 0;
-            (invoke_iiii(38,($209|0),(12376|0),8)|0); //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+            (invoke_iiii(38,($209|0),(12376|0),8)|0); //@line 43 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
             $212 = __THREW__; __THREW__ = 0;
             $213 = $212&1;
             if (!($213)) {
-             __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEED2Ev($162); //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-             __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEEC2EPKc($163,12413); //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEED2Ev($162); //@line 40 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEEC2EPKc($163,12413); //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
              __THREW__ = 0;
-             $214 = (invoke_iiii(39,($163|0),(12366|0),0)|0); //@line 46 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             $214 = (invoke_iiii(39,($163|0),(12366|0),0)|0); //@line 46 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
              $215 = __THREW__; __THREW__ = 0;
              $216 = $215&1;
              if (!($216)) {
               __THREW__ = 0;
-              $217 = (invoke_iiii(39,($214|0),(12372|0),4)|0); //@line 47 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+              $217 = (invoke_iiii(39,($214|0),(12372|0),4)|0); //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
               $218 = __THREW__; __THREW__ = 0;
               $219 = $218&1;
               if (!($219)) {
                __THREW__ = 0;
-               (invoke_iiii(39,($217|0),(12376|0),8)|0); //@line 48 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+               (invoke_iiii(39,($217|0),(12376|0),8)|0); //@line 48 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                $220 = __THREW__; __THREW__ = 0;
                $221 = $220&1;
                if (!($221)) {
-                __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEED2Ev($163); //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                __ZN10emscripten8functionIdJEJEEEvPKcPFT_DpT0_EDpT1_(12425,40); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                ;HEAP8[$$byval_copy>>0]=HEAP8[$164>>0]|0; //@line 51 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                __ZN10emscripten8functionIP9MidiSynthJEJNS_17allow_raw_pointerINS_7ret_valEEEEEEvPKcPFT_DpT0_EDpT1_(12439,41,$$byval_copy); //@line 51 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEED2Ev($163); //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                __ZN10emscripten8functionIdJEJEEEvPKcPFT_DpT0_EDpT1_(12425,40); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                ;HEAP8[$$byval_copy>>0]=HEAP8[$164>>0]|0; //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                __ZN10emscripten8functionIP9MidiSynthJEJNS_17allow_raw_pointerINS_7ret_valEEEEEEvPKcPFT_DpT0_EDpT1_(12439,41,$$byval_copy); //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 $150 = $165;
                 $151 = 12448;
-                __ZN10emscripten8internal11NoBaseClass6verifyI9LerpStageEEvv(); //@line 1121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $152 = 42; //@line 1123 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $222 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI9LerpStageEEPFvvEv()|0); //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $153 = $222; //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $223 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI9LerpStageEEPFvvEv()|0); //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $154 = $223; //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $155 = 43; //@line 1126 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $224 = (__ZN10emscripten8internal6TypeIDI9LerpStageE3getEv()|0); //@line 1129 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $225 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI9LerpStageEEE3getEv()|0); //@line 1130 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $226 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK9LerpStageEEE3getEv()|0); //@line 1131 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $227 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $228 = $152; //@line 1133 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                __ZN10emscripten8internal11NoBaseClass6verifyI9LerpStageEEvv(); //@line 1121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $152 = 42; //@line 1123 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $222 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI9LerpStageEEPFvvEv()|0); //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $153 = $222; //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $223 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI9LerpStageEEPFvvEv()|0); //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $154 = $223; //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $155 = 43; //@line 1126 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $224 = (__ZN10emscripten8internal6TypeIDI9LerpStageE3getEv()|0); //@line 1129 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $225 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI9LerpStageEEE3getEv()|0); //@line 1130 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $226 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK9LerpStageEEE3getEv()|0); //@line 1131 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $227 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $228 = $152; //@line 1133 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $149 = $228;
-                $229 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $230 = $152; //@line 1134 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $231 = $153; //@line 1135 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $229 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $230 = $152; //@line 1134 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $231 = $153; //@line 1135 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $148 = $231;
-                $232 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $233 = $153; //@line 1136 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $234 = $154; //@line 1137 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $232 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $233 = $153; //@line 1136 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $234 = $154; //@line 1137 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $147 = $234;
-                $235 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $236 = $154; //@line 1138 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $237 = $151; //@line 1139 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $238 = $155; //@line 1140 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $235 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $236 = $154; //@line 1138 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $237 = $151; //@line 1139 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $238 = $155; //@line 1140 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $146 = $238;
-                $239 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $240 = $155; //@line 1141 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class(($224|0),($225|0),($226|0),($227|0),($229|0),($230|0),($232|0),($233|0),($235|0),($236|0),($237|0),($239|0),($240|0)); //@line 1128 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $239 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $240 = $155; //@line 1141 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class(($224|0),($225|0),($226|0),($227|0),($229|0),($230|0),($232|0),($233|0),($235|0),($236|0),($237|0),($239|0),($240|0)); //@line 1128 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $140 = $166;
                 $141 = 12458;
-                __ZN10emscripten8internal11NoBaseClass6verifyI11LerpProgramEEvv(); //@line 1121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $142 = 44; //@line 1123 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $241 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI11LerpProgramEEPFvvEv()|0); //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $143 = $241; //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $242 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI11LerpProgramEEPFvvEv()|0); //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $144 = $242; //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $145 = 45; //@line 1126 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $243 = (__ZN10emscripten8internal6TypeIDI11LerpProgramE3getEv()|0); //@line 1129 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $244 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI11LerpProgramEEE3getEv()|0); //@line 1130 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $245 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK11LerpProgramEEE3getEv()|0); //@line 1131 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $246 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $247 = $142; //@line 1133 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                __ZN10emscripten8internal11NoBaseClass6verifyI11LerpProgramEEvv(); //@line 1121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $142 = 44; //@line 1123 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $241 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI11LerpProgramEEPFvvEv()|0); //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $143 = $241; //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $242 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI11LerpProgramEEPFvvEv()|0); //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $144 = $242; //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $145 = 45; //@line 1126 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $243 = (__ZN10emscripten8internal6TypeIDI11LerpProgramE3getEv()|0); //@line 1129 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $244 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI11LerpProgramEEE3getEv()|0); //@line 1130 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $245 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK11LerpProgramEEE3getEv()|0); //@line 1131 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $246 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $247 = $142; //@line 1133 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $139 = $247;
-                $248 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $249 = $142; //@line 1134 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $250 = $143; //@line 1135 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $248 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $249 = $142; //@line 1134 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $250 = $143; //@line 1135 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $138 = $250;
-                $251 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $252 = $143; //@line 1136 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $253 = $144; //@line 1137 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $251 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $252 = $143; //@line 1136 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $253 = $144; //@line 1137 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $137 = $253;
-                $254 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $255 = $144; //@line 1138 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $256 = $141; //@line 1139 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $257 = $145; //@line 1140 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $254 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $255 = $144; //@line 1138 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $256 = $141; //@line 1139 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $257 = $145; //@line 1140 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $136 = $257;
-                $258 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $259 = $145; //@line 1141 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class(($243|0),($244|0),($245|0),($246|0),($248|0),($249|0),($251|0),($252|0),($254|0),($255|0),($256|0),($258|0),($259|0)); //@line 1128 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $258 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $259 = $145; //@line 1141 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class(($243|0),($244|0),($245|0),($246|0),($248|0),($249|0),($251|0),($252|0),($254|0),($255|0),($256|0),($258|0),($259|0)); //@line 1128 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $130 = $167;
                 $131 = 12470;
-                __ZN10emscripten8internal11NoBaseClass6verifyI10InstrumentEEvv(); //@line 1121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $132 = 46; //@line 1123 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $260 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI10InstrumentEEPFvvEv()|0); //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $133 = $260; //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $261 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI10InstrumentEEPFvvEv()|0); //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $134 = $261; //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $135 = 47; //@line 1126 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $262 = (__ZN10emscripten8internal6TypeIDI10InstrumentE3getEv()|0); //@line 1129 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $263 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI10InstrumentEEE3getEv()|0); //@line 1130 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $264 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK10InstrumentEEE3getEv()|0); //@line 1131 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $265 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $266 = $132; //@line 1133 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                __ZN10emscripten8internal11NoBaseClass6verifyI10InstrumentEEvv(); //@line 1121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $132 = 46; //@line 1123 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $260 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI10InstrumentEEPFvvEv()|0); //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $133 = $260; //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $261 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI10InstrumentEEPFvvEv()|0); //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $134 = $261; //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $135 = 47; //@line 1126 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $262 = (__ZN10emscripten8internal6TypeIDI10InstrumentE3getEv()|0); //@line 1129 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $263 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI10InstrumentEEE3getEv()|0); //@line 1130 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $264 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK10InstrumentEEE3getEv()|0); //@line 1131 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $265 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $266 = $132; //@line 1133 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $129 = $266;
-                $267 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $268 = $132; //@line 1134 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $269 = $133; //@line 1135 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $267 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $268 = $132; //@line 1134 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $269 = $133; //@line 1135 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $128 = $269;
-                $270 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $271 = $133; //@line 1136 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $272 = $134; //@line 1137 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $270 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $271 = $133; //@line 1136 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $272 = $134; //@line 1137 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $127 = $272;
-                $273 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $274 = $134; //@line 1138 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $275 = $131; //@line 1139 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $276 = $135; //@line 1140 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $273 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $274 = $134; //@line 1138 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $275 = $131; //@line 1139 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $276 = $135; //@line 1140 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $126 = $276;
-                $277 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $278 = $135; //@line 1141 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class(($262|0),($263|0),($264|0),($265|0),($267|0),($268|0),($270|0),($271|0),($273|0),($274|0),($275|0),($277|0),($278|0)); //@line 1128 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $277 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $278 = $135; //@line 1141 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class(($262|0),($263|0),($264|0),($265|0),($267|0),($268|0),($270|0),($271|0),($273|0),($274|0),($275|0),($277|0),($278|0)); //@line 1128 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $120 = $168;
                 $121 = 12481;
-                __ZN10emscripten8internal11NoBaseClass6verifyI4LerpEEvv(); //@line 1121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $122 = 48; //@line 1123 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $279 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI4LerpEEPFvvEv()|0); //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $123 = $279; //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $280 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI4LerpEEPFvvEv()|0); //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $124 = $280; //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $125 = 49; //@line 1126 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $281 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1129 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $282 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI4LerpEEE3getEv()|0); //@line 1130 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $283 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK4LerpEEE3getEv()|0); //@line 1131 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $284 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $285 = $122; //@line 1133 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                __ZN10emscripten8internal11NoBaseClass6verifyI4LerpEEvv(); //@line 1121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $122 = 48; //@line 1123 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $279 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI4LerpEEPFvvEv()|0); //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $123 = $279; //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $280 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI4LerpEEPFvvEv()|0); //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $124 = $280; //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $125 = 49; //@line 1126 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $281 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1129 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $282 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI4LerpEEE3getEv()|0); //@line 1130 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $283 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK4LerpEEE3getEv()|0); //@line 1131 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $284 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $285 = $122; //@line 1133 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $119 = $285;
-                $286 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $287 = $122; //@line 1134 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $288 = $123; //@line 1135 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $286 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $287 = $122; //@line 1134 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $288 = $123; //@line 1135 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $118 = $288;
-                $289 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $290 = $123; //@line 1136 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $291 = $124; //@line 1137 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $289 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $290 = $123; //@line 1136 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $291 = $124; //@line 1137 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $117 = $291;
-                $292 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $293 = $124; //@line 1138 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $294 = $121; //@line 1139 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $295 = $125; //@line 1140 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $292 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $293 = $124; //@line 1138 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $294 = $121; //@line 1139 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $295 = $125; //@line 1140 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $116 = $295;
-                $296 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $297 = $125; //@line 1141 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class(($281|0),($282|0),($283|0),($284|0),($286|0),($287|0),($289|0),($290|0),($292|0),($293|0),($294|0),($296|0),($297|0)); //@line 1128 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $296 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $297 = $125; //@line 1141 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class(($281|0),($282|0),($283|0),($284|0),($286|0),($287|0),($289|0),($290|0),($292|0),($293|0),($294|0),($296|0),($297|0)); //@line 1128 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $115 = $168;
                 $298 = $115;
                 $111 = $298;
                 $112 = 50;
                 $299 = $111;
-                $114 = 51; //@line 1187 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $300 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1189 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $301 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP4LerpEE8getCountEv($113)|0); //@line 1190 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $302 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP4LerpEE8getTypesEv($113)|0); //@line 1191 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $303 = $114; //@line 1192 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $114 = 51; //@line 1187 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $300 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1189 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $301 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP4LerpEE8getCountEv($113)|0); //@line 1190 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $302 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP4LerpEE8getTypesEv($113)|0); //@line 1191 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $303 = $114; //@line 1192 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $110 = $303;
-                $304 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $305 = $114; //@line 1193 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $306 = $112; //@line 1194 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_constructor(($300|0),($301|0),($302|0),($304|0),($305|0),($306|0)); //@line 1188 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$169>>2] = (52); //@line 57 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index1 = ((($169)) + 4|0); //@line 57 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index1>>2] = 0; //@line 57 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $304 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $305 = $114; //@line 1193 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $306 = $112; //@line 1194 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_constructor(($300|0),($301|0),($302|0),($304|0),($305|0),($306|0)); //@line 1188 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$169>>2] = (52); //@line 57 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index1 = ((($169)) + 4|0); //@line 57 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index1>>2] = 0; //@line 57 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$109>>0]=HEAP8[$169>>0]|0;HEAP8[$109+1>>0]=HEAP8[$169+1>>0]|0;HEAP8[$109+2>>0]=HEAP8[$169+2>>0]|0;HEAP8[$109+3>>0]=HEAP8[$169+3>>0]|0;HEAP8[$109+4>>0]=HEAP8[$169+4>>0]|0;HEAP8[$109+5>>0]=HEAP8[$169+5>>0]|0;HEAP8[$109+6>>0]=HEAP8[$169+6>>0]|0;HEAP8[$109+7>>0]=HEAP8[$169+7>>0]|0;
                 $$field = HEAP32[$109>>2]|0;
                 $$index3 = ((($109)) + 4|0);
@@ -4247,20 +4239,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index7 = ((($106)) + 4|0);
                 HEAP32[$$index7>>2] = $$field4;
                 $307 = $104;
-                $107 = 53; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $308 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $309 = $105; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $310 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($108)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $311 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($108)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $312 = $107; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $107 = 53; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $308 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $309 = $105; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $310 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($108)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $311 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($108)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $312 = $107; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $103 = $312;
-                $313 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $314 = $107; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $315 = (__ZN10emscripten8internal10getContextIM4LerpFhvEEEPT_RKS5_($106)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($308|0),($309|0),($310|0),($311|0),($313|0),($314|0),($315|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$170>>2] = (54); //@line 58 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index9 = ((($170)) + 4|0); //@line 58 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index9>>2] = 0; //@line 58 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $313 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $314 = $107; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $315 = (__ZN10emscripten8internal10getContextIM4LerpFhvEEEPT_RKS5_($106)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($308|0),($309|0),($310|0),($311|0),($313|0),($314|0),($315|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$170>>2] = (54); //@line 58 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index9 = ((($170)) + 4|0); //@line 58 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index9>>2] = 0; //@line 58 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$102>>0]=HEAP8[$170>>0]|0;HEAP8[$102+1>>0]=HEAP8[$170+1>>0]|0;HEAP8[$102+2>>0]=HEAP8[$170+2>>0]|0;HEAP8[$102+3>>0]=HEAP8[$170+3>>0]|0;HEAP8[$102+4>>0]=HEAP8[$170+4>>0]|0;HEAP8[$102+5>>0]=HEAP8[$170+5>>0]|0;HEAP8[$102+6>>0]=HEAP8[$170+6>>0]|0;HEAP8[$102+7>>0]=HEAP8[$170+7>>0]|0;
                 $$field11 = HEAP32[$102>>2]|0;
                 $$index13 = ((($102)) + 4|0);
@@ -4271,20 +4263,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index17 = ((($99)) + 4|0);
                 HEAP32[$$index17>>2] = $$field14;
                 $316 = $97;
-                $100 = 55; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $317 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $318 = $98; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $319 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEhEE8getCountEv($101)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $320 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEhEE8getTypesEv($101)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $321 = $100; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $100 = 55; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $317 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $318 = $98; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $319 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEhEE8getCountEv($101)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $320 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEhEE8getTypesEv($101)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $321 = $100; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $96 = $321;
-                $322 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $323 = $100; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $324 = (__ZN10emscripten8internal10getContextIM4LerpFvhEEEPT_RKS5_($99)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($317|0),($318|0),($319|0),($320|0),($322|0),($323|0),($324|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$171>>2] = (56); //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index19 = ((($171)) + 4|0); //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index19>>2] = 0; //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $322 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $323 = $100; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $324 = (__ZN10emscripten8internal10getContextIM4LerpFvhEEEPT_RKS5_($99)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($317|0),($318|0),($319|0),($320|0),($322|0),($323|0),($324|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$171>>2] = (56); //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index19 = ((($171)) + 4|0); //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index19>>2] = 0; //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$95>>0]=HEAP8[$171>>0]|0;HEAP8[$95+1>>0]=HEAP8[$171+1>>0]|0;HEAP8[$95+2>>0]=HEAP8[$171+2>>0]|0;HEAP8[$95+3>>0]=HEAP8[$171+3>>0]|0;HEAP8[$95+4>>0]=HEAP8[$171+4>>0]|0;HEAP8[$95+5>>0]=HEAP8[$171+5>>0]|0;HEAP8[$95+6>>0]=HEAP8[$171+6>>0]|0;HEAP8[$95+7>>0]=HEAP8[$171+7>>0]|0;
                 $$field21 = HEAP32[$95>>2]|0;
                 $$index23 = ((($95)) + 4|0);
@@ -4295,20 +4287,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index27 = ((($92)) + 4|0);
                 HEAP32[$$index27>>2] = $$field24;
                 $325 = $90;
-                $93 = 57; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $326 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $327 = $91; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $328 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($94)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $329 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($94)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $330 = $93; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $93 = 57; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $326 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $327 = $91; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $328 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($94)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $329 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($94)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $330 = $93; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $89 = $330;
-                $331 = (__ZN10emscripten8internal19getGenericSignatureIJviiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $332 = $93; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $333 = (__ZN10emscripten8internal10getContextIM4LerpFvvEEEPT_RKS5_($92)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($326|0),($327|0),($328|0),($329|0),($331|0),($332|0),($333|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$172>>2] = (58); //@line 60 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index29 = ((($172)) + 4|0); //@line 60 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index29>>2] = 0; //@line 60 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $331 = (__ZN10emscripten8internal19getGenericSignatureIJviiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $332 = $93; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $333 = (__ZN10emscripten8internal10getContextIM4LerpFvvEEEPT_RKS5_($92)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($326|0),($327|0),($328|0),($329|0),($331|0),($332|0),($333|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$172>>2] = (58); //@line 60 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index29 = ((($172)) + 4|0); //@line 60 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index29>>2] = 0; //@line 60 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$88>>0]=HEAP8[$172>>0]|0;HEAP8[$88+1>>0]=HEAP8[$172+1>>0]|0;HEAP8[$88+2>>0]=HEAP8[$172+2>>0]|0;HEAP8[$88+3>>0]=HEAP8[$172+3>>0]|0;HEAP8[$88+4>>0]=HEAP8[$172+4>>0]|0;HEAP8[$88+5>>0]=HEAP8[$172+5>>0]|0;HEAP8[$88+6>>0]=HEAP8[$172+6>>0]|0;HEAP8[$88+7>>0]=HEAP8[$172+7>>0]|0;
                 $$field31 = HEAP32[$88>>2]|0;
                 $$index33 = ((($88)) + 4|0);
@@ -4318,66 +4310,66 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 HEAP32[$85>>2] = $$field31;
                 $$index37 = ((($85)) + 4|0);
                 HEAP32[$$index37>>2] = $$field34;
-                $86 = 53; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $334 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $335 = $84; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $336 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($87)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $337 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($87)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $338 = $86; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $86 = 53; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $334 = (__ZN10emscripten8internal6TypeIDI4LerpE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $335 = $84; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $336 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($87)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $337 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($87)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $338 = $86; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $82 = $338;
-                $339 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $340 = $86; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $341 = (__ZN10emscripten8internal10getContextIM4LerpFhvEEEPT_RKS5_($85)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($334|0),($335|0),($336|0),($337|0),($339|0),($340|0),($341|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $339 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $340 = $86; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $341 = (__ZN10emscripten8internal10getContextIM4LerpFhvEEEPT_RKS5_($85)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($334|0),($335|0),($336|0),($337|0),($339|0),($340|0),($341|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $76 = $173;
                 $77 = 12512;
-                __ZN10emscripten8internal11NoBaseClass6verifyI5SynthEEvv(); //@line 1121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $78 = 59; //@line 1123 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $342 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI5SynthEEPFvvEv()|0); //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $79 = $342; //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $343 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI5SynthEEPFvvEv()|0); //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $80 = $343; //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $81 = 60; //@line 1126 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $344 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1129 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $345 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI5SynthEEE3getEv()|0); //@line 1130 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $346 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK5SynthEEE3getEv()|0); //@line 1131 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $347 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $348 = $78; //@line 1133 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                __ZN10emscripten8internal11NoBaseClass6verifyI5SynthEEvv(); //@line 1121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $78 = 59; //@line 1123 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $342 = (__ZN10emscripten8internal11NoBaseClass11getUpcasterI5SynthEEPFvvEv()|0); //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $79 = $342; //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $343 = (__ZN10emscripten8internal11NoBaseClass13getDowncasterI5SynthEEPFvvEv()|0); //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $80 = $343; //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $81 = 60; //@line 1126 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $344 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1129 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $345 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI5SynthEEE3getEv()|0); //@line 1130 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $346 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK5SynthEEE3getEv()|0); //@line 1131 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $347 = (__ZN10emscripten8internal11NoBaseClass3getEv()|0); //@line 1132 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $348 = $78; //@line 1133 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $75 = $348;
-                $349 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $350 = $78; //@line 1134 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $351 = $79; //@line 1135 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $349 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $350 = $78; //@line 1134 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $351 = $79; //@line 1135 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $74 = $351;
-                $352 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $353 = $79; //@line 1136 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $354 = $80; //@line 1137 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $352 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $353 = $79; //@line 1136 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $354 = $80; //@line 1137 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $73 = $354;
-                $355 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $356 = $80; //@line 1138 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $357 = $77; //@line 1139 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $358 = $81; //@line 1140 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $355 = (__ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $356 = $80; //@line 1138 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $357 = $77; //@line 1139 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $358 = $81; //@line 1140 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $72 = $358;
-                $359 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $360 = $81; //@line 1141 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class(($344|0),($345|0),($346|0),($347|0),($349|0),($350|0),($352|0),($353|0),($355|0),($356|0),($357|0),($359|0),($360|0)); //@line 1128 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $359 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $360 = $81; //@line 1141 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class(($344|0),($345|0),($346|0),($347|0),($349|0),($350|0),($352|0),($353|0),($355|0),($356|0),($357|0),($359|0),($360|0)); //@line 1128 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $71 = $173;
                 $361 = $71;
                 $67 = $361;
                 $68 = 61;
                 $362 = $67;
-                $70 = 62; //@line 1187 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $363 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1189 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $364 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP5SynthEE8getCountEv($69)|0); //@line 1190 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $365 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP5SynthEE8getTypesEv($69)|0); //@line 1191 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $366 = $70; //@line 1192 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $70 = 62; //@line 1187 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $363 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1189 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $364 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP5SynthEE8getCountEv($69)|0); //@line 1190 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $365 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP5SynthEE8getTypesEv($69)|0); //@line 1191 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $366 = $70; //@line 1192 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $66 = $366;
-                $367 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $368 = $70; //@line 1193 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $369 = $68; //@line 1194 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_constructor(($363|0),($364|0),($365|0),($367|0),($368|0),($369|0)); //@line 1188 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$174>>2] = (63); //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index39 = ((($174)) + 4|0); //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index39>>2] = 0; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $367 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $368 = $70; //@line 1193 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $369 = $68; //@line 1194 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_constructor(($363|0),($364|0),($365|0),($367|0),($368|0),($369|0)); //@line 1188 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$174>>2] = (63); //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index39 = ((($174)) + 4|0); //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index39>>2] = 0; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$65>>0]=HEAP8[$174>>0]|0;HEAP8[$65+1>>0]=HEAP8[$174+1>>0]|0;HEAP8[$65+2>>0]=HEAP8[$174+2>>0]|0;HEAP8[$65+3>>0]=HEAP8[$174+3>>0]|0;HEAP8[$65+4>>0]=HEAP8[$174+4>>0]|0;HEAP8[$65+5>>0]=HEAP8[$174+5>>0]|0;HEAP8[$65+6>>0]=HEAP8[$174+6>>0]|0;HEAP8[$65+7>>0]=HEAP8[$174+7>>0]|0;
                 $$field41 = HEAP32[$65>>2]|0;
                 $$index43 = ((($65)) + 4|0);
@@ -4388,20 +4380,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index47 = ((($62)) + 4|0);
                 HEAP32[$$index47>>2] = $$field44;
                 $370 = $60;
-                $63 = 64; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $371 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $372 = $61; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $373 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17AllowedRawPointerI5SynthEEEE8getCountEv($64)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $374 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17AllowedRawPointerI5SynthEEEE8getTypesEv($64)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $375 = $63; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $63 = 64; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $371 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $372 = $61; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $373 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17AllowedRawPointerI5SynthEEEE8getCountEv($64)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $374 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17AllowedRawPointerI5SynthEEEE8getTypesEv($64)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $375 = $63; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $59 = $375;
-                $376 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $377 = $63; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $378 = (__ZN10emscripten8internal10getContextIM5SynthFtvEEEPT_RKS5_($62)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($371|0),($372|0),($373|0),($374|0),($376|0),($377|0),($378|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$175>>2] = (65); //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index49 = ((($175)) + 4|0); //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index49>>2] = 0; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $376 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $377 = $63; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $378 = (__ZN10emscripten8internal10getContextIM5SynthFtvEEEPT_RKS5_($62)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($371|0),($372|0),($373|0),($374|0),($376|0),($377|0),($378|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$175>>2] = (65); //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index49 = ((($175)) + 4|0); //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index49>>2] = 0; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$58>>0]=HEAP8[$175>>0]|0;HEAP8[$58+1>>0]=HEAP8[$175+1>>0]|0;HEAP8[$58+2>>0]=HEAP8[$175+2>>0]|0;HEAP8[$58+3>>0]=HEAP8[$175+3>>0]|0;HEAP8[$58+4>>0]=HEAP8[$175+4>>0]|0;HEAP8[$58+5>>0]=HEAP8[$175+5>>0]|0;HEAP8[$58+6>>0]=HEAP8[$175+6>>0]|0;HEAP8[$58+7>>0]=HEAP8[$175+7>>0]|0;
                 $$field51 = HEAP32[$58>>2]|0;
                 $$index53 = ((($58)) + 4|0);
@@ -4412,20 +4404,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index57 = ((($55)) + 4|0);
                 HEAP32[$$index57>>2] = $$field54;
                 $379 = $53;
-                $56 = 66; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $380 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $381 = $54; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $382 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEE8getCountEv($57)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $383 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEE8getTypesEv($57)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $384 = $56; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $56 = 66; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $380 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $381 = $54; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $382 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEE8getCountEv($57)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $383 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEE8getTypesEv($57)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $384 = $56; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $52 = $384;
-                $385 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $386 = $56; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $387 = (__ZN10emscripten8internal10getContextIM5SynthFvhhhhEEEPT_RKS5_($55)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($380|0),($381|0),($382|0),($383|0),($385|0),($386|0),($387|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$176>>2] = (67); //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index59 = ((($176)) + 4|0); //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index59>>2] = 0; //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $385 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $386 = $56; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $387 = (__ZN10emscripten8internal10getContextIM5SynthFvhhhhEEEPT_RKS5_($55)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($380|0),($381|0),($382|0),($383|0),($385|0),($386|0),($387|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$176>>2] = (67); //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index59 = ((($176)) + 4|0); //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index59>>2] = 0; //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$51>>0]=HEAP8[$176>>0]|0;HEAP8[$51+1>>0]=HEAP8[$176+1>>0]|0;HEAP8[$51+2>>0]=HEAP8[$176+2>>0]|0;HEAP8[$51+3>>0]=HEAP8[$176+3>>0]|0;HEAP8[$51+4>>0]=HEAP8[$176+4>>0]|0;HEAP8[$51+5>>0]=HEAP8[$176+5>>0]|0;HEAP8[$51+6>>0]=HEAP8[$176+6>>0]|0;HEAP8[$51+7>>0]=HEAP8[$176+7>>0]|0;
                 $$field61 = HEAP32[$51>>2]|0;
                 $$index63 = ((($51)) + 4|0);
@@ -4435,66 +4427,66 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 HEAP32[$48>>2] = $$field61;
                 $$index67 = ((($48)) + 4|0);
                 HEAP32[$$index67>>2] = $$field64;
-                $49 = 68; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $388 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $389 = $47; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $390 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhEE8getCountEv($50)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $391 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhEE8getTypesEv($50)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $392 = $49; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $49 = 68; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $388 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $389 = $47; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $390 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhEE8getCountEv($50)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $391 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhEE8getTypesEv($50)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $392 = $49; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $45 = $392;
-                $393 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $394 = $49; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $395 = (__ZN10emscripten8internal10getContextIM5SynthFvhEEEPT_RKS5_($48)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($388|0),($389|0),($390|0),($391|0),($393|0),($394|0),($395|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $393 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $394 = $49; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $395 = (__ZN10emscripten8internal10getContextIM5SynthFvhEEEPT_RKS5_($48)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($388|0),($389|0),($390|0),($391|0),($393|0),($394|0),($395|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $39 = $177;
                 $40 = 12533;
-                __ZN10emscripten4baseI5SynthE6verifyI9MidiSynthEEvv(); //@line 1121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $41 = 69; //@line 1123 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $396 = (__ZN10emscripten4baseI5SynthE11getUpcasterI9MidiSynthEEPFPS1_PT_Ev()|0); //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $42 = $396; //@line 1124 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $397 = (__ZN10emscripten4baseI5SynthE13getDowncasterI9MidiSynthEEPFPT_PS1_Ev()|0); //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $43 = $397; //@line 1125 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $44 = 70; //@line 1126 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $398 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1129 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $399 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI9MidiSynthEEE3getEv()|0); //@line 1130 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $400 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK9MidiSynthEEE3getEv()|0); //@line 1131 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $401 = (__ZN10emscripten4baseI5SynthE3getEv()|0); //@line 1132 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $402 = $41; //@line 1133 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                __ZN10emscripten4baseI5SynthE6verifyI9MidiSynthEEvv(); //@line 1121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $41 = 69; //@line 1123 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $396 = (__ZN10emscripten4baseI5SynthE11getUpcasterI9MidiSynthEEPFPS1_PT_Ev()|0); //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $42 = $396; //@line 1124 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $397 = (__ZN10emscripten4baseI5SynthE13getDowncasterI9MidiSynthEEPFPT_PS1_Ev()|0); //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $43 = $397; //@line 1125 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $44 = 70; //@line 1126 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $398 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1129 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $399 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI9MidiSynthEEE3getEv()|0); //@line 1130 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $400 = (__ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK9MidiSynthEEE3getEv()|0); //@line 1131 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $401 = (__ZN10emscripten4baseI5SynthE3getEv()|0); //@line 1132 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $402 = $41; //@line 1133 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $38 = $402;
-                $403 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $404 = $41; //@line 1134 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $405 = $42; //@line 1135 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $403 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $404 = $41; //@line 1134 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $405 = $42; //@line 1135 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $37 = $405;
-                $406 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $407 = $42; //@line 1136 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $408 = $43; //@line 1137 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $406 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $407 = $42; //@line 1136 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $408 = $43; //@line 1137 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $36 = $408;
-                $409 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $410 = $43; //@line 1138 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $411 = $40; //@line 1139 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $412 = $44; //@line 1140 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $409 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $410 = $43; //@line 1138 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $411 = $40; //@line 1139 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $412 = $44; //@line 1140 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $35 = $412;
-                $413 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $414 = $44; //@line 1141 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class(($398|0),($399|0),($400|0),($401|0),($403|0),($404|0),($406|0),($407|0),($409|0),($410|0),($411|0),($413|0),($414|0)); //@line 1128 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $413 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $414 = $44; //@line 1141 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class(($398|0),($399|0),($400|0),($401|0),($403|0),($404|0),($406|0),($407|0),($409|0),($410|0),($411|0),($413|0),($414|0)); //@line 1128 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $34 = $177;
                 $415 = $34;
                 $30 = $415;
                 $31 = 71;
                 $416 = $30;
-                $33 = 72; //@line 1187 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $417 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1189 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $418 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP9MidiSynthEE8getCountEv($32)|0); //@line 1190 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $419 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP9MidiSynthEE8getTypesEv($32)|0); //@line 1191 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $420 = $33; //@line 1192 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $33 = 72; //@line 1187 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $417 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1189 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $418 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP9MidiSynthEE8getCountEv($32)|0); //@line 1190 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $419 = (__ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP9MidiSynthEE8getTypesEv($32)|0); //@line 1191 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $420 = $33; //@line 1192 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $29 = $420;
-                $421 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $422 = $33; //@line 1193 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $423 = $31; //@line 1194 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_constructor(($417|0),($418|0),($419|0),($421|0),($422|0),($423|0)); //@line 1188 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$178>>2] = (73); //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index69 = ((($178)) + 4|0); //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index69>>2] = 0; //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $421 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $422 = $33; //@line 1193 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $423 = $31; //@line 1194 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_constructor(($417|0),($418|0),($419|0),($421|0),($422|0),($423|0)); //@line 1188 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$178>>2] = (73); //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index69 = ((($178)) + 4|0); //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index69>>2] = 0; //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$28>>0]=HEAP8[$178>>0]|0;HEAP8[$28+1>>0]=HEAP8[$178+1>>0]|0;HEAP8[$28+2>>0]=HEAP8[$178+2>>0]|0;HEAP8[$28+3>>0]=HEAP8[$178+3>>0]|0;HEAP8[$28+4>>0]=HEAP8[$178+4>>0]|0;HEAP8[$28+5>>0]=HEAP8[$178+5>>0]|0;HEAP8[$28+6>>0]=HEAP8[$178+6>>0]|0;HEAP8[$28+7>>0]=HEAP8[$178+7>>0]|0;
                 $$field71 = HEAP32[$28>>2]|0;
                 $$index73 = ((($28)) + 4|0);
@@ -4505,20 +4497,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index77 = ((($25)) + 4|0);
                 HEAP32[$$index77>>2] = $$field74;
                 $424 = $23;
-                $26 = 74; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $425 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $426 = $24; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $427 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEE8getCountEv($27)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $428 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEE8getTypesEv($27)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $429 = $26; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $26 = 74; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $425 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $426 = $24; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $427 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEE8getCountEv($27)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $428 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEE8getTypesEv($27)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $429 = $26; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $22 = $429;
-                $430 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $431 = $26; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $432 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhhhEEEPT_RKS5_($25)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($425|0),($426|0),($427|0),($428|0),($430|0),($431|0),($432|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$179>>2] = (75); //@line 69 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index79 = ((($179)) + 4|0); //@line 69 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index79>>2] = 0; //@line 69 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $430 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $431 = $26; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $432 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhhhEEEPT_RKS5_($25)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($425|0),($426|0),($427|0),($428|0),($430|0),($431|0),($432|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$179>>2] = (75); //@line 69 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index79 = ((($179)) + 4|0); //@line 69 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index79>>2] = 0; //@line 69 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$21>>0]=HEAP8[$179>>0]|0;HEAP8[$21+1>>0]=HEAP8[$179+1>>0]|0;HEAP8[$21+2>>0]=HEAP8[$179+2>>0]|0;HEAP8[$21+3>>0]=HEAP8[$179+3>>0]|0;HEAP8[$21+4>>0]=HEAP8[$179+4>>0]|0;HEAP8[$21+5>>0]=HEAP8[$179+5>>0]|0;HEAP8[$21+6>>0]=HEAP8[$179+6>>0]|0;HEAP8[$21+7>>0]=HEAP8[$179+7>>0]|0;
                 $$field81 = HEAP32[$21>>2]|0;
                 $$index83 = ((($21)) + 4|0);
@@ -4529,20 +4521,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index87 = ((($18)) + 4|0);
                 HEAP32[$$index87>>2] = $$field84;
                 $433 = $16;
-                $19 = 76; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $434 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $435 = $17; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $436 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getCountEv($20)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $437 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getTypesEv($20)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $438 = $19; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $19 = 76; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $434 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $435 = $17; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $436 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getCountEv($20)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $437 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getTypesEv($20)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $438 = $19; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $15 = $438;
-                $439 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $440 = $19; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $441 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhhEEEPT_RKS5_($18)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($434|0),($435|0),($436|0),($437|0),($439|0),($440|0),($441|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$180>>2] = (77); //@line 70 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index89 = ((($180)) + 4|0); //@line 70 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index89>>2] = 0; //@line 70 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $439 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $440 = $19; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $441 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhhEEEPT_RKS5_($18)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($434|0),($435|0),($436|0),($437|0),($439|0),($440|0),($441|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$180>>2] = (77); //@line 70 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index89 = ((($180)) + 4|0); //@line 70 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index89>>2] = 0; //@line 70 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$14>>0]=HEAP8[$180>>0]|0;HEAP8[$14+1>>0]=HEAP8[$180+1>>0]|0;HEAP8[$14+2>>0]=HEAP8[$180+2>>0]|0;HEAP8[$14+3>>0]=HEAP8[$180+3>>0]|0;HEAP8[$14+4>>0]=HEAP8[$180+4>>0]|0;HEAP8[$14+5>>0]=HEAP8[$180+5>>0]|0;HEAP8[$14+6>>0]=HEAP8[$180+6>>0]|0;HEAP8[$14+7>>0]=HEAP8[$180+7>>0]|0;
                 $$field91 = HEAP32[$14>>2]|0;
                 $$index93 = ((($14)) + 4|0);
@@ -4553,20 +4545,20 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 $$index97 = ((($11)) + 4|0);
                 HEAP32[$$index97>>2] = $$field94;
                 $442 = $9;
-                $12 = 76; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $443 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $444 = $10; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $445 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getCountEv($13)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $446 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getTypesEv($13)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $447 = $12; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $12 = 76; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $443 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $444 = $10; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $445 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getCountEv($13)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $446 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getTypesEv($13)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $447 = $12; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $8 = $447;
-                $448 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $449 = $12; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $450 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhhEEEPT_RKS5_($11)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($443|0),($444|0),($445|0),($446|0),($448|0),($449|0),($450|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                HEAP32[$181>>2] = (78); //@line 71 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                $$index99 = ((($181)) + 4|0); //@line 71 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-                HEAP32[$$index99>>2] = 0; //@line 71 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $448 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $449 = $12; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $450 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhhEEEPT_RKS5_($11)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($443|0),($444|0),($445|0),($446|0),($448|0),($449|0),($450|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                HEAP32[$181>>2] = (78); //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $$index99 = ((($181)) + 4|0); //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                HEAP32[$$index99>>2] = 0; //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                 ;HEAP8[$7>>0]=HEAP8[$181>>0]|0;HEAP8[$7+1>>0]=HEAP8[$181+1>>0]|0;HEAP8[$7+2>>0]=HEAP8[$181+2>>0]|0;HEAP8[$7+3>>0]=HEAP8[$181+3>>0]|0;HEAP8[$7+4>>0]=HEAP8[$181+4>>0]|0;HEAP8[$7+5>>0]=HEAP8[$181+5>>0]|0;HEAP8[$7+6>>0]=HEAP8[$181+6>>0]|0;HEAP8[$7+7>>0]=HEAP8[$181+7>>0]|0;
                 $$field101 = HEAP32[$7>>2]|0;
                 $$index103 = ((($7)) + 4|0);
@@ -4576,28 +4568,28 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
                 HEAP32[$4>>2] = $$field101;
                 $$index107 = ((($4)) + 4|0);
                 HEAP32[$$index107>>2] = $$field104;
-                $5 = 79; //@line 1270 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $451 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $452 = $3; //@line 1275 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $453 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEE8getCountEv($6)|0); //@line 1276 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $454 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEE8getTypesEv($6)|0); //@line 1277 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $455 = $5; //@line 1278 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+                $5 = 79; //@line 1270 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $451 = (__ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv()|0); //@line 1274 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $452 = $3; //@line 1275 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $453 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEE8getCountEv($6)|0); //@line 1276 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $454 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEE8getTypesEv($6)|0); //@line 1277 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $455 = $5; //@line 1278 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
                 $1 = $455;
-                $456 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $457 = $5; //@line 1279 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                $458 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhsEEEPT_RKS5_($4)|0); //@line 1280 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                __embind_register_class_function(($451|0),($452|0),($453|0),($454|0),($456|0),($457|0),($458|0),0); //@line 1273 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-                STACKTOP = sp;return; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+                $456 = (__ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $457 = $5; //@line 1279 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                $458 = (__ZN10emscripten8internal10getContextIM9MidiSynthFvhsEEEPT_RKS5_($4)|0); //@line 1280 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                __embind_register_class_function(($451|0),($452|0),($453|0),($454|0),($456|0),($457|0),($458|0),0); //@line 1273 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+                STACKTOP = sp;return; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
                }
               }
              }
              $467 = ___cxa_find_matching_catch_2()|0;
              $468 = tempRet0;
-             $158 = $467; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-             $159 = $468; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-             __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEED2Ev($163); //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-             $469 = $158; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-             $470 = $159; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             $158 = $467; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             $159 = $468; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEED2Ev($163); //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             $469 = $158; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+             $470 = $159; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
              ___resumeException($469|0);
              // unreachable;
             }
@@ -4605,11 +4597,11 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
           }
           $465 = ___cxa_find_matching_catch_2()|0;
           $466 = tempRet0;
-          $158 = $465; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-          $159 = $466; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-          __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEED2Ev($162); //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-          $469 = $158; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-          $470 = $159; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          $158 = $465; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          $159 = $466; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEED2Ev($162); //@line 40 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          $469 = $158; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+          $470 = $159; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
           ___resumeException($469|0);
           // unreachable;
          }
@@ -4617,11 +4609,11 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
        }
        $463 = ___cxa_find_matching_catch_2()|0;
        $464 = tempRet0;
-       $158 = $463; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-       $159 = $464; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-       __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEED2Ev($161); //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-       $469 = $158; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-       $470 = $159; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       $158 = $463; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       $159 = $464; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEED2Ev($161); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       $469 = $158; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+       $470 = $159; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
        ___resumeException($469|0);
        // unreachable;
       }
@@ -4629,11 +4621,11 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
     }
     $461 = ___cxa_find_matching_catch_2()|0;
     $462 = tempRet0;
-    $158 = $461; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-    $159 = $462; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-    __ZN10emscripten12value_objectI10HeapRegionIhEED2Ev($160); //@line 30 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-    $469 = $158; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
-    $470 = $159; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    $158 = $461; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    $159 = $462; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    __ZN10emscripten12value_objectI10HeapRegionIhEED2Ev($160); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    $469 = $158; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+    $470 = $159; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
     ___resumeException($469|0);
     // unreachable;
    }
@@ -4641,11 +4633,11 @@ function __ZN37EmscriptenBindingInitializer_firmwareC2Ev($0) {
  }
  $459 = ___cxa_find_matching_catch_2()|0;
  $460 = tempRet0;
- $158 = $459; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- $159 = $460; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- __ZN10emscripten12value_objectI10HeapRegionIaEED2Ev($157); //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- $469 = $158; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
- $470 = $159; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ $158 = $459; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ $159 = $460; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ __ZN10emscripten12value_objectI10HeapRegionIaEED2Ev($157); //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ $469 = $158; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ $470 = $159; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
  ___resumeException($469|0);
  // unreachable;
 }
@@ -4658,17 +4650,17 @@ function __ZN10emscripten8functionIvJhEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 80; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 80; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJviiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJviiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8functionIK10HeapRegionIhEJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $0 = $0|0;
@@ -4679,17 +4671,17 @@ function __ZN10emscripten8functionIK10HeapRegionIhEJEJEEEvPKcPFT_DpT0_EDpT1_($0,
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 81; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIhEEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIhEEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 81; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIhEEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIhEEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8functionIK10HeapRegionIaEJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $0 = $0|0;
@@ -4700,17 +4692,17 @@ function __ZN10emscripten8functionIK10HeapRegionIaEJEJEEEvPKcPFT_DpT0_EDpT1_($0,
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 82; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIaEEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIaEEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 82; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIaEEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIaEEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8functionIK10HeapRegionI9LerpStageEJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $0 = $0|0;
@@ -4721,17 +4713,17 @@ function __ZN10emscripten8functionIK10HeapRegionI9LerpStageEJEJEEEvPKcPFT_DpT0_E
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 83; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI9LerpStageEEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI9LerpStageEEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 83; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI9LerpStageEEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI9LerpStageEEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8functionIK10HeapRegionI11LerpProgramEJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $0 = $0|0;
@@ -4742,17 +4734,17 @@ function __ZN10emscripten8functionIK10HeapRegionI11LerpProgramEJEJEEEvPKcPFT_DpT
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 84; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI11LerpProgramEEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI11LerpProgramEEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 84; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI11LerpProgramEEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI11LerpProgramEEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8functionIK10HeapRegionI10InstrumentEJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $0 = $0|0;
@@ -4763,17 +4755,17 @@ function __ZN10emscripten8functionIK10HeapRegionI10InstrumentEJEJEEEvPKcPFT_DpT0
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 85; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI10InstrumentEEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI10InstrumentEEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 85; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI10InstrumentEEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI10InstrumentEEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionIaEEC2EPKc($0,$1) {
  $0 = $0|0;
@@ -4785,38 +4777,38 @@ function __ZN10emscripten12value_objectI10HeapRegionIaEEC2EPKc($0,$1) {
  $4 = $0;
  $5 = $1;
  $10 = $4;
- __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = 86; //@line 769 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = 87; //@line 770 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = 86; //@line 769 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = 87; //@line 770 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- $11 = (invoke_i(88)|0); //@line 773 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (invoke_i(88)|0); //@line 773 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $12 = __THREW__; __THREW__ = 0;
  $13 = $12&1;
  if (!($13)) {
-  $14 = $5; //@line 774 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = $6; //@line 775 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $14 = $5; //@line 774 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = $6; //@line 775 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $3 = $15;
-  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = $6; //@line 776 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $18 = $7; //@line 777 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = $6; //@line 776 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $18 = $7; //@line 777 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $2 = $18;
-  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $20 = $7; //@line 778 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $20 = $7; //@line 778 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   __THREW__ = 0;
-  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $21 = __THREW__; __THREW__ = 0;
   $22 = $21&1;
   if (!($22)) {
-   STACKTOP = sp;return; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $23 = ___cxa_find_matching_catch_2()|0;
  $24 = tempRet0;
- $8 = $23; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $24; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $8; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = $9; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $23; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $24; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $8; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = $9; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  ___resumeException($25|0);
  // unreachable;
 }
@@ -4833,24 +4825,24 @@ function __ZN10emscripten12value_objectI10HeapRegionIaEE5fieldIS2_jEERS3_PKcMT_T
  $6 = $1;
  HEAP32[$7>>2] = $2;
  $10 = $5;
- $8 = 90; //@line 790 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = 91; //@line 792 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionIaEE3getEv()|0); //@line 796 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 797 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $8; //@line 799 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = 90; //@line 790 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = 91; //@line 792 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionIaEE3getEv()|0); //@line 796 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 797 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $8; //@line 799 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $4 = $14;
- $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = $8; //@line 800 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionIaEjEEPT_RKS5_($7)|0); //@line 801 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $19 = $9; //@line 803 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = $8; //@line 800 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionIaEjEEPT_RKS5_($7)|0); //@line 801 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $19 = $9; //@line 803 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = $19;
- $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $9; //@line 804 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionIaEjEEPT_RKS5_($7)|0); //@line 805 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($10|0); //@line 806 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $9; //@line 804 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionIaEjEEPT_RKS5_($7)|0); //@line 805 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($10|0); //@line 806 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionIaEED2Ev($0) {
  $0 = $0|0;
@@ -4860,27 +4852,27 @@ function __ZN10emscripten12value_objectI10HeapRegionIaEED2Ev($0) {
  $1 = $0;
  $4 = $1;
  __THREW__ = 0;
- $5 = (invoke_i(88)|0); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = (invoke_i(88)|0); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $6 = __THREW__; __THREW__ = 0;
  $7 = $6&1;
  if (!($7)) {
   __THREW__ = 0;
-  invoke_vi(92,($5|0)); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_vi(92,($5|0)); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $8 = __THREW__; __THREW__ = 0;
   $9 = $8&1;
   if (!($9)) {
-   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-   STACKTOP = sp;return; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $10 = ___cxa_find_matching_catch_3(0|0)|0;
  $11 = tempRet0;
- $2 = $10; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $11; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $2; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ___clang_call_terminate($12); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- // unreachable; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $10; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $11; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $2; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ___clang_call_terminate($12); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ // unreachable; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionIhEEC2EPKc($0,$1) {
  $0 = $0|0;
@@ -4892,38 +4884,38 @@ function __ZN10emscripten12value_objectI10HeapRegionIhEEC2EPKc($0,$1) {
  $4 = $0;
  $5 = $1;
  $10 = $4;
- __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = 93; //@line 769 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = 94; //@line 770 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = 93; //@line 769 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = 94; //@line 770 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- $11 = (invoke_i(95)|0); //@line 773 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (invoke_i(95)|0); //@line 773 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $12 = __THREW__; __THREW__ = 0;
  $13 = $12&1;
  if (!($13)) {
-  $14 = $5; //@line 774 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = $6; //@line 775 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $14 = $5; //@line 774 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = $6; //@line 775 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $3 = $15;
-  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = $6; //@line 776 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $18 = $7; //@line 777 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = $6; //@line 776 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $18 = $7; //@line 777 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $2 = $18;
-  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $20 = $7; //@line 778 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $20 = $7; //@line 778 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   __THREW__ = 0;
-  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $21 = __THREW__; __THREW__ = 0;
   $22 = $21&1;
   if (!($22)) {
-   STACKTOP = sp;return; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $23 = ___cxa_find_matching_catch_2()|0;
  $24 = tempRet0;
- $8 = $23; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $24; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $8; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = $9; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $23; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $24; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $8; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = $9; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  ___resumeException($25|0);
  // unreachable;
 }
@@ -4940,24 +4932,24 @@ function __ZN10emscripten12value_objectI10HeapRegionIhEE5fieldIS2_jEERS3_PKcMT_T
  $6 = $1;
  HEAP32[$7>>2] = $2;
  $10 = $5;
- $8 = 96; //@line 790 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = 97; //@line 792 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionIhEE3getEv()|0); //@line 796 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 797 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $8; //@line 799 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = 96; //@line 790 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = 97; //@line 792 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionIhEE3getEv()|0); //@line 796 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 797 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $8; //@line 799 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $4 = $14;
- $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = $8; //@line 800 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionIhEjEEPT_RKS5_($7)|0); //@line 801 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $19 = $9; //@line 803 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = $8; //@line 800 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionIhEjEEPT_RKS5_($7)|0); //@line 801 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $19 = $9; //@line 803 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = $19;
- $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $9; //@line 804 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionIhEjEEPT_RKS5_($7)|0); //@line 805 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($10|0); //@line 806 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $9; //@line 804 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionIhEjEEPT_RKS5_($7)|0); //@line 805 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($10|0); //@line 806 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionIhEED2Ev($0) {
  $0 = $0|0;
@@ -4967,27 +4959,27 @@ function __ZN10emscripten12value_objectI10HeapRegionIhEED2Ev($0) {
  $1 = $0;
  $4 = $1;
  __THREW__ = 0;
- $5 = (invoke_i(95)|0); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = (invoke_i(95)|0); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $6 = __THREW__; __THREW__ = 0;
  $7 = $6&1;
  if (!($7)) {
   __THREW__ = 0;
-  invoke_vi(92,($5|0)); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_vi(92,($5|0)); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $8 = __THREW__; __THREW__ = 0;
   $9 = $8&1;
   if (!($9)) {
-   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-   STACKTOP = sp;return; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $10 = ___cxa_find_matching_catch_3(0|0)|0;
  $11 = tempRet0;
- $2 = $10; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $11; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $2; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ___clang_call_terminate($12); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- // unreachable; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $10; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $11; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $2; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ___clang_call_terminate($12); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ // unreachable; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEEC2EPKc($0,$1) {
  $0 = $0|0;
@@ -4999,38 +4991,38 @@ function __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEEC2EPKc($0,$1) {
  $4 = $0;
  $5 = $1;
  $10 = $4;
- __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = 98; //@line 769 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = 99; //@line 770 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = 98; //@line 769 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = 99; //@line 770 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- $11 = (invoke_i(100)|0); //@line 773 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (invoke_i(100)|0); //@line 773 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $12 = __THREW__; __THREW__ = 0;
  $13 = $12&1;
  if (!($13)) {
-  $14 = $5; //@line 774 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = $6; //@line 775 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $14 = $5; //@line 774 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = $6; //@line 775 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $3 = $15;
-  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = $6; //@line 776 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $18 = $7; //@line 777 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = $6; //@line 776 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $18 = $7; //@line 777 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $2 = $18;
-  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $20 = $7; //@line 778 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $20 = $7; //@line 778 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   __THREW__ = 0;
-  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $21 = __THREW__; __THREW__ = 0;
   $22 = $21&1;
   if (!($22)) {
-   STACKTOP = sp;return; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $23 = ___cxa_find_matching_catch_2()|0;
  $24 = tempRet0;
- $8 = $23; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $24; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $8; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = $9; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $23; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $24; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $8; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = $9; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  ___resumeException($25|0);
  // unreachable;
 }
@@ -5047,24 +5039,24 @@ function __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEE5fieldIS3_jEERS
  $6 = $1;
  HEAP32[$7>>2] = $2;
  $10 = $5;
- $8 = 101; //@line 790 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = 102; //@line 792 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionI9LerpStageEE3getEv()|0); //@line 796 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 797 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $8; //@line 799 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = 101; //@line 790 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = 102; //@line 792 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionI9LerpStageEE3getEv()|0); //@line 796 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 797 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $8; //@line 799 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $4 = $14;
- $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = $8; //@line 800 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionI9LerpStageEjEEPT_RKS6_($7)|0); //@line 801 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $19 = $9; //@line 803 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = $8; //@line 800 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionI9LerpStageEjEEPT_RKS6_($7)|0); //@line 801 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $19 = $9; //@line 803 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = $19;
- $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $9; //@line 804 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionI9LerpStageEjEEPT_RKS6_($7)|0); //@line 805 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($10|0); //@line 806 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $9; //@line 804 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionI9LerpStageEjEEPT_RKS6_($7)|0); //@line 805 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($10|0); //@line 806 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEED2Ev($0) {
  $0 = $0|0;
@@ -5074,27 +5066,27 @@ function __ZN10emscripten12value_objectI10HeapRegionI9LerpStageEED2Ev($0) {
  $1 = $0;
  $4 = $1;
  __THREW__ = 0;
- $5 = (invoke_i(100)|0); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = (invoke_i(100)|0); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $6 = __THREW__; __THREW__ = 0;
  $7 = $6&1;
  if (!($7)) {
   __THREW__ = 0;
-  invoke_vi(92,($5|0)); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_vi(92,($5|0)); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $8 = __THREW__; __THREW__ = 0;
   $9 = $8&1;
   if (!($9)) {
-   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-   STACKTOP = sp;return; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $10 = ___cxa_find_matching_catch_3(0|0)|0;
  $11 = tempRet0;
- $2 = $10; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $11; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $2; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ___clang_call_terminate($12); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- // unreachable; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $10; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $11; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $2; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ___clang_call_terminate($12); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ // unreachable; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEEC2EPKc($0,$1) {
  $0 = $0|0;
@@ -5106,38 +5098,38 @@ function __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEEC2EPKc($0,$1
  $4 = $0;
  $5 = $1;
  $10 = $4;
- __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = 103; //@line 769 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = 104; //@line 770 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = 103; //@line 769 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = 104; //@line 770 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- $11 = (invoke_i(105)|0); //@line 773 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (invoke_i(105)|0); //@line 773 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $12 = __THREW__; __THREW__ = 0;
  $13 = $12&1;
  if (!($13)) {
-  $14 = $5; //@line 774 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = $6; //@line 775 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $14 = $5; //@line 774 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = $6; //@line 775 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $3 = $15;
-  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = $6; //@line 776 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $18 = $7; //@line 777 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = $6; //@line 776 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $18 = $7; //@line 777 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $2 = $18;
-  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $20 = $7; //@line 778 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $20 = $7; //@line 778 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   __THREW__ = 0;
-  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $21 = __THREW__; __THREW__ = 0;
   $22 = $21&1;
   if (!($22)) {
-   STACKTOP = sp;return; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $23 = ___cxa_find_matching_catch_2()|0;
  $24 = tempRet0;
- $8 = $23; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $24; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $8; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = $9; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $23; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $24; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $8; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = $9; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  ___resumeException($25|0);
  // unreachable;
 }
@@ -5154,24 +5146,24 @@ function __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEE5fieldIS3_jE
  $6 = $1;
  HEAP32[$7>>2] = $2;
  $10 = $5;
- $8 = 106; //@line 790 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = 107; //@line 792 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionI11LerpProgramEE3getEv()|0); //@line 796 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 797 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $8; //@line 799 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = 106; //@line 790 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = 107; //@line 792 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionI11LerpProgramEE3getEv()|0); //@line 796 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 797 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $8; //@line 799 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $4 = $14;
- $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = $8; //@line 800 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionI11LerpProgramEjEEPT_RKS6_($7)|0); //@line 801 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $19 = $9; //@line 803 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = $8; //@line 800 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionI11LerpProgramEjEEPT_RKS6_($7)|0); //@line 801 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $19 = $9; //@line 803 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = $19;
- $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $9; //@line 804 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionI11LerpProgramEjEEPT_RKS6_($7)|0); //@line 805 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($10|0); //@line 806 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $9; //@line 804 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionI11LerpProgramEjEEPT_RKS6_($7)|0); //@line 805 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($10|0); //@line 806 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEED2Ev($0) {
  $0 = $0|0;
@@ -5181,27 +5173,27 @@ function __ZN10emscripten12value_objectI10HeapRegionI11LerpProgramEED2Ev($0) {
  $1 = $0;
  $4 = $1;
  __THREW__ = 0;
- $5 = (invoke_i(105)|0); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = (invoke_i(105)|0); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $6 = __THREW__; __THREW__ = 0;
  $7 = $6&1;
  if (!($7)) {
   __THREW__ = 0;
-  invoke_vi(92,($5|0)); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_vi(92,($5|0)); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $8 = __THREW__; __THREW__ = 0;
   $9 = $8&1;
   if (!($9)) {
-   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-   STACKTOP = sp;return; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $10 = ___cxa_find_matching_catch_3(0|0)|0;
  $11 = tempRet0;
- $2 = $10; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $11; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $2; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ___clang_call_terminate($12); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- // unreachable; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $10; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $11; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $2; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ___clang_call_terminate($12); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ // unreachable; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEEC2EPKc($0,$1) {
  $0 = $0|0;
@@ -5213,38 +5205,38 @@ function __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEEC2EPKc($0,$1)
  $4 = $0;
  $5 = $1;
  $10 = $4;
- __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = 108; //@line 769 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = 109; //@line 770 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableC2Ev($10); //@line 766 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = 108; //@line 769 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = 109; //@line 770 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- $11 = (invoke_i(110)|0); //@line 773 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (invoke_i(110)|0); //@line 773 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $12 = __THREW__; __THREW__ = 0;
  $13 = $12&1;
  if (!($13)) {
-  $14 = $5; //@line 774 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = $6; //@line 775 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $14 = $5; //@line 774 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = $6; //@line 775 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $3 = $15;
-  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = $6; //@line 776 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $18 = $7; //@line 777 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = (__ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = $6; //@line 776 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $18 = $7; //@line 777 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $2 = $18;
-  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $20 = $7; //@line 778 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $19 = (__ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $20 = $7; //@line 778 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   __THREW__ = 0;
-  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_viiiiii(89,($11|0),($14|0),($16|0),($17|0),($19|0),($20|0)); //@line 772 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $21 = __THREW__; __THREW__ = 0;
   $22 = $21&1;
   if (!($22)) {
-   STACKTOP = sp;return; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $23 = ___cxa_find_matching_catch_2()|0;
  $24 = tempRet0;
- $8 = $23; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $24; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $8; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = $9; //@line 779 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $23; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $24; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($10); //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $8; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = $9; //@line 779 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  ___resumeException($25|0);
  // unreachable;
 }
@@ -5261,24 +5253,24 @@ function __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEE5fieldIS3_jEE
  $6 = $1;
  HEAP32[$7>>2] = $2;
  $10 = $5;
- $8 = 111; //@line 790 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = 112; //@line 792 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionI10InstrumentEE3getEv()|0); //@line 796 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 797 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $8; //@line 799 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = 111; //@line 790 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = 112; //@line 792 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal6TypeIDI10HeapRegionI10InstrumentEE3getEv()|0); //@line 796 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 797 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 798 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $8; //@line 799 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $4 = $14;
- $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = $8; //@line 800 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionI10InstrumentEjEEPT_RKS6_($7)|0); //@line 801 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $19 = $9; //@line 803 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $15 = (__ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = $8; //@line 800 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $17 = (__ZN10emscripten8internal10getContextIM10HeapRegionI10InstrumentEjEEPT_RKS6_($7)|0); //@line 801 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 802 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $19 = $9; //@line 803 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = $19;
- $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $9; //@line 804 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionI10InstrumentEjEEPT_RKS6_($7)|0); //@line 805 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($10|0); //@line 806 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $9; //@line 804 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal10getContextIM10HeapRegionI10InstrumentEjEEPT_RKS6_($7)|0); //@line 805 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_value_object_field(($11|0),($12|0),($13|0),($15|0),($16|0),($17|0),($18|0),($20|0),($21|0),($22|0)); //@line 795 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($10|0); //@line 806 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEED2Ev($0) {
  $0 = $0|0;
@@ -5288,32 +5280,32 @@ function __ZN10emscripten12value_objectI10HeapRegionI10InstrumentEED2Ev($0) {
  $1 = $0;
  $4 = $1;
  __THREW__ = 0;
- $5 = (invoke_i(110)|0); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = (invoke_i(110)|0); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $6 = __THREW__; __THREW__ = 0;
  $7 = $6&1;
  if (!($7)) {
   __THREW__ = 0;
-  invoke_vi(92,($5|0)); //@line 783 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  invoke_vi(92,($5|0)); //@line 783 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $8 = __THREW__; __THREW__ = 0;
   $9 = $8&1;
   if (!($9)) {
-   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-   STACKTOP = sp;return; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+   __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+   STACKTOP = sp;return; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   }
  }
  $10 = ___cxa_find_matching_catch_3(0|0)|0;
  $11 = tempRet0;
- $2 = $10; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $11; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $2; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ___clang_call_terminate($12); //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- // unreachable; //@line 784 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $10; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $11; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN10emscripten8internal11noncopyableD2Ev($4); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $2; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ___clang_call_terminate($12); //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ // unreachable; //@line 784 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZL13getSampleRatev() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return +19801.980198019803; //@line 15 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ return +19801.980198019803; //@line 15 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
 }
 function __ZN10emscripten8functionIdJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $0 = $0|0;
@@ -5324,22 +5316,22 @@ function __ZN10emscripten8functionIdJEJEEEvPKcPFT_DpT0_EDpT1_($0,$1) {
  $5 = sp + 16|0;
  $3 = $0;
  $4 = $1;
- $6 = 113; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $3; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getCountEv($5)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getTypesEv($5)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $6; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = 113; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $3; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getCountEv($5)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getTypesEv($5)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $6; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $2 = $10;
- $11 = (__ZN10emscripten8internal19getGenericSignatureIJdiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $6; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $4; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal19getGenericSignatureIJdiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $6; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $4; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($7|0),($8|0),($9|0),($11|0),($12|0),($13|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZL8getSynthv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (38328|0); //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
+ return (38328|0); //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten\bindings.cpp"
 }
 function __ZN10emscripten8functionIP9MidiSynthJEJNS_17allow_raw_pointerINS_7ret_valEEEEEEvPKcPFT_DpT0_EDpT1_($0,$1,$2) {
  $0 = $0|0;
@@ -5351,22 +5343,22 @@ function __ZN10emscripten8functionIP9MidiSynthJEJNS_17allow_raw_pointerINS_7ret_
  $6 = sp + 16|0;
  $4 = $0;
  $5 = $1;
- $7 = 72; //@line 420 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $4; //@line 422 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7ret_valEEEEE11ArgTypeListIJP9MidiSynthEE8getCountEv($6)|0); //@line 423 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = (__ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7ret_valEEEEE11ArgTypeListIJP9MidiSynthEE8getTypesEv($6)|0); //@line 424 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = $7; //@line 425 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $7 = 72; //@line 420 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $4; //@line 422 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7ret_valEEEEE11ArgTypeListIJP9MidiSynthEE8getCountEv($6)|0); //@line 423 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = (__ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7ret_valEEEEE11ArgTypeListIJP9MidiSynthEE8getTypesEv($6)|0); //@line 424 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = $7; //@line 425 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = $11;
- $12 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $7; //@line 426 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $5; //@line 427 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __embind_register_function(($8|0),($9|0),($10|0),($12|0),($13|0),($14|0)); //@line 421 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 428 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $12 = (__ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv()|0); //@line 399 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $7; //@line 426 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $5; //@line 427 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __embind_register_function(($8|0),($9|0),($10|0),($12|0),($13|0),($14|0)); //@line 421 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 428 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass6verifyI9LerpStageEEvv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 1009 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return; //@line 1009 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13getActualTypeI9LerpStageEEPKvPT_($0) {
  $0 = $0|0;
@@ -5374,19 +5366,19 @@ function __ZN10emscripten8internal13getActualTypeI9LerpStageEEPKvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (__ZN10emscripten8internal14getLightTypeIDI9LerpStageEEPKvRKT_($2)|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($3|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (__ZN10emscripten8internal14getLightTypeIDI9LerpStageEEPKvRKT_($2)|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($3|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass11getUpcasterI9LerpStageEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1017 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1017 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass13getDowncasterI9LerpStageEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1022 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1022 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14raw_destructorI9LerpStageEEvPT_($0) {
  $0 = $0|0;
@@ -5394,55 +5386,55 @@ function __ZN10emscripten8internal14raw_destructorI9LerpStageEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDI9LerpStageE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI9LerpStageE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI9LerpStageE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI9LerpStageEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIP9LerpStageE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIP9LerpStageE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK9LerpStageEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIPK9LerpStageE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIPK9LerpStageE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11NoBaseClass3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1012 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1012 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJiiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12805|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12805|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJvEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12803|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12803|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJviEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12800|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12800|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass6verifyI11LerpProgramEEvv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 1009 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return; //@line 1009 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13getActualTypeI11LerpProgramEEPKvPT_($0) {
  $0 = $0|0;
@@ -5450,19 +5442,19 @@ function __ZN10emscripten8internal13getActualTypeI11LerpProgramEEPKvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (__ZN10emscripten8internal14getLightTypeIDI11LerpProgramEEPKvRKT_($2)|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($3|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (__ZN10emscripten8internal14getLightTypeIDI11LerpProgramEEPKvRKT_($2)|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($3|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass11getUpcasterI11LerpProgramEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1017 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1017 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass13getDowncasterI11LerpProgramEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1022 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1022 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14raw_destructorI11LerpProgramEEvPT_($0) {
  $0 = $0|0;
@@ -5470,35 +5462,35 @@ function __ZN10emscripten8internal14raw_destructorI11LerpProgramEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDI11LerpProgramE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI11LerpProgramE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI11LerpProgramE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI11LerpProgramEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIP11LerpProgramE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIP11LerpProgramE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK11LerpProgramEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIPK11LerpProgramE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIPK11LerpProgramE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11NoBaseClass6verifyI10InstrumentEEvv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 1009 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return; //@line 1009 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13getActualTypeI10InstrumentEEPKvPT_($0) {
  $0 = $0|0;
@@ -5506,19 +5498,19 @@ function __ZN10emscripten8internal13getActualTypeI10InstrumentEEPKvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (__ZN10emscripten8internal14getLightTypeIDI10InstrumentEEPKvRKT_($2)|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($3|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (__ZN10emscripten8internal14getLightTypeIDI10InstrumentEEPKvRKT_($2)|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($3|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass11getUpcasterI10InstrumentEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1017 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1017 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass13getDowncasterI10InstrumentEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1022 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1022 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14raw_destructorI10InstrumentEEvPT_($0) {
  $0 = $0|0;
@@ -5526,35 +5518,35 @@ function __ZN10emscripten8internal14raw_destructorI10InstrumentEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDI10InstrumentE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI10InstrumentE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI10InstrumentE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI10InstrumentEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIP10InstrumentE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIP10InstrumentE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK10InstrumentEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIPK10InstrumentE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIPK10InstrumentE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11NoBaseClass6verifyI4LerpEEvv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 1009 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return; //@line 1009 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13getActualTypeI4LerpEEPKvPT_($0) {
  $0 = $0|0;
@@ -5562,19 +5554,19 @@ function __ZN10emscripten8internal13getActualTypeI4LerpEEPKvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (__ZN10emscripten8internal14getLightTypeIDI4LerpEEPKvRKT_($2)|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($3|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (__ZN10emscripten8internal14getLightTypeIDI4LerpEEPKvRKT_($2)|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($3|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass11getUpcasterI4LerpEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1017 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1017 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass13getDowncasterI4LerpEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1022 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1022 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14raw_destructorI4LerpEEvPT_($0) {
  $0 = $0|0;
@@ -5582,38 +5574,38 @@ function __ZN10emscripten8internal14raw_destructorI4LerpEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDI4LerpE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI4LerpE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI4LerpE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI4LerpEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIP4LerpE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIP4LerpE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK4LerpEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIPK4LerpE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIPK4LerpE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12operator_newI4LerpJEEEPT_DpOT0_() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__Znwj(16)|0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ;HEAP32[$0>>2]=0|0;HEAP32[$0+4>>2]=0|0;HEAP32[$0+8>>2]=0|0;HEAP32[$0+12>>2]=0|0; //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- __ZN4LerpC2Ev($0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- return ($0|0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $0 = (__Znwj(16)|0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ;HEAP32[$0>>2]=0|0;HEAP32[$0+4>>2]=0|0;HEAP32[$0+8>>2]=0|0;HEAP32[$0+12>>2]=0|0; //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ __ZN4LerpC2Ev($0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ return ($0|0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal7InvokerIP4LerpJEE6invokeEPFS3_vE($0) {
  $0 = $0|0;
@@ -5621,10 +5613,10 @@ function __ZN10emscripten8internal7InvokerIP4LerpJEE6invokeEPFS3_vE($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (FUNCTION_TABLE_i[$2 & 127]()|0); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal11BindingTypeIP4LerpE10toWireTypeES3_($3)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (FUNCTION_TABLE_i[$2 & 127]()|0); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal11BindingTypeIP4LerpE10toWireTypeES3_($3)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP4LerpEE8getCountEv($0) {
  $0 = $0|0;
@@ -5632,7 +5624,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11A
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP4LerpEE8getTypesEv($0) {
  $0 = $0|0;
@@ -5640,8 +5632,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11A
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI4LerpEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI4LerpEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN4Lerp8sampleEmEv($0) {
  $0 = $0|0;
@@ -5650,8 +5642,8 @@ function __ZN4Lerp8sampleEmEv($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $2 = $1;
- $3 = (__ZNV4Lerp6sampleEv($2)|0); //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return ($3|0); //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $3 = (__ZNV4Lerp6sampleEv($2)|0); //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return ($3|0); //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM4LerpFhvEhPS2_JEE6invokeERKS4_S5_($0,$1) {
  $0 = $0|0;
@@ -5663,29 +5655,29 @@ function __ZN10emscripten8internal13MethodInvokerIM4LerpFhvEhPS2_JEE6invokeERKS4
  $4 = sp + 8|0;
  $2 = $0;
  $3 = $1;
- $5 = $3; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = (__ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($5)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $2; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$7>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($7)) + 4|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $$field2 >> 1; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (($6) + ($8)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $$field2 & 1; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = ($10|0)!=(0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = $3; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = (__ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($5)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $2; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$7>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($7)) + 4|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $$field2 >> 1; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (($6) + ($8)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $$field2 & 1; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = ($10|0)!=(0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($11) {
-  $12 = HEAP32[$9>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $13 = (($12) + ($$field)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $14 = HEAP32[$13>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $12 = HEAP32[$9>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $13 = (($12) + ($$field)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $14 = HEAP32[$13>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $16 = $14;
  } else {
-  $15 = $$field; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $15 = $$field; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $16 = $15;
  }
- $17 = (FUNCTION_TABLE_ii[$16 & 127]($9)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP8[$4>>0] = $17; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal11BindingTypeIhE10toWireTypeERKh($4)|0); //@line 493 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($18|0); //@line 493 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $17 = (FUNCTION_TABLE_ii[$16 & 127]($9)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP8[$4>>0] = $17; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal11BindingTypeIhE10toWireTypeERKh($4)|0); //@line 493 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($18|0); //@line 493 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($0) {
  $0 = $0|0;
@@ -5693,7 +5685,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 2; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 2; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -5701,13 +5693,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJhNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJhNS0_17AllowedRawPointerI4LerpEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJhNS0_17AllowedRawPointerI4LerpEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJiiiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12701|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12701|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM4LerpFhvEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -5715,15 +5707,15 @@ function __ZN10emscripten8internal10getContextIM4LerpFhvEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN4Lerp7startEmEh($0,$1) {
  $0 = $0|0;
@@ -5734,9 +5726,9 @@ function __ZN4Lerp7startEmEh($0,$1) {
  $2 = $0;
  $3 = $1;
  $4 = $2;
- $5 = $3; //@line 66 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- __ZNV4Lerp5startEh($4,$5); //@line 66 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return; //@line 66 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $5 = $3; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZNV4Lerp5startEh($4,$5); //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM4LerpFvhEvPS2_JhEE6invokeERKS4_S5_h($0,$1,$2) {
  $0 = $0|0;
@@ -5749,29 +5741,29 @@ function __ZN10emscripten8internal13MethodInvokerIM4LerpFvhEvPS2_JhEE6invokeERKS
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $4; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($6)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $3; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$8>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($8)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = (($7) + ($9)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = ($11|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $4; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($6)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $3; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$8>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($8)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = (($7) + ($9)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = ($11|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($12) {
-  $13 = HEAP32[$10>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $14 = (($13) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = HEAP32[$14>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $13 = HEAP32[$10>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $14 = (($13) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = HEAP32[$14>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $19 = $15;
  } else {
-  $16 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $19 = $16;
  }
- $17 = $5; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($17)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vii[$19 & 127]($10,$18); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $17 = $5; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($17)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vii[$19 & 127]($10,$18); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEhEE8getCountEv($0) {
  $0 = $0|0;
@@ -5779,7 +5771,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 3; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 3; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEhEE8getTypesEv($0) {
  $0 = $0|0;
@@ -5787,13 +5779,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI4LerpEEhEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI4LerpEEhEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJviiiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12696|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12696|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM4LerpFvhEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -5801,15 +5793,15 @@ function __ZN10emscripten8internal10getContextIM4LerpFvhEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN4Lerp6stopEmEv($0) {
  $0 = $0|0;
@@ -5818,8 +5810,8 @@ function __ZN4Lerp6stopEmEv($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $2 = $1;
- __ZNV4Lerp4stopEv($2); //@line 67 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return; //@line 67 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZNV4Lerp4stopEv($2); //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM4LerpFvvEvPS2_JEE6invokeERKS4_S5_($0,$1) {
  $0 = $0|0;
@@ -5829,28 +5821,28 @@ function __ZN10emscripten8internal13MethodInvokerIM4LerpFvvEvPS2_JEE6invokeERKS4
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = (__ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($4)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = $2; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$6>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($6)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (($5) + ($7)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = ($9|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $3; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = (__ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($4)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = $2; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$6>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($6)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (($5) + ($7)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = ($9|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($10) {
-  $11 = HEAP32[$8>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $12 = (($11) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $13 = HEAP32[$12>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $11 = HEAP32[$8>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $12 = (($11) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $13 = HEAP32[$12>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $15 = $13;
-  FUNCTION_TABLE_vi[$15 & 127]($8); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  FUNCTION_TABLE_vi[$15 & 127]($8); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  } else {
-  $14 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $14 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $15 = $14;
-  FUNCTION_TABLE_vi[$15 & 127]($8); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  FUNCTION_TABLE_vi[$15 & 127]($8); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEEE8getCountEv($0) {
@@ -5859,7 +5851,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 2; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 2; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI4LerpEEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -5867,13 +5859,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI4LerpEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI4LerpEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJviiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12679|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12679|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM4LerpFvvEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -5881,15 +5873,15 @@ function __ZN10emscripten8internal10getContextIM4LerpFvvEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN4Lerp13getStageIndexEv($0) {
  $0 = $0|0;
@@ -5898,14 +5890,14 @@ function __ZN4Lerp13getStageIndexEv($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $2 = $1;
- $3 = ((($2)) + 6|0); //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $4 = HEAP8[$3>>0]|0; //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return ($4|0); //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $3 = ((($2)) + 6|0); //@line 74 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $4 = HEAP8[$3>>0]|0; //@line 74 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return ($4|0); //@line 74 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal11NoBaseClass6verifyI5SynthEEvv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 1009 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return; //@line 1009 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13getActualTypeI5SynthEEPKvPT_($0) {
  $0 = $0|0;
@@ -5913,19 +5905,19 @@ function __ZN10emscripten8internal13getActualTypeI5SynthEEPKvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (__ZN10emscripten8internal14getLightTypeIDI5SynthEEPKvRKT_($2)|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($3|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (__ZN10emscripten8internal14getLightTypeIDI5SynthEEPKvRKT_($2)|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($3|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass11getUpcasterI5SynthEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1017 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1017 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11NoBaseClass13getDowncasterI5SynthEEPFvvEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (0|0); //@line 1022 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (0|0); //@line 1022 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14raw_destructorI5SynthEEvPT_($0) {
  $0 = $0|0;
@@ -5933,37 +5925,37 @@ function __ZN10emscripten8internal14raw_destructorI5SynthEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDI5SynthE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI5SynthE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI5SynthE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI5SynthEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIP5SynthE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIP5SynthE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK5SynthEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIPK5SynthE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIPK5SynthE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12operator_newI5SynthJEEEPT_DpOT0_() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__Znwj(12)|0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- ;HEAP32[$0>>2]=0|0;HEAP32[$0+4>>2]=0|0;HEAP32[$0+8>>2]=0|0; //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- return ($0|0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $0 = (__Znwj(12)|0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ ;HEAP32[$0>>2]=0|0;HEAP32[$0+4>>2]=0|0;HEAP32[$0+8>>2]=0|0; //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ return ($0|0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal7InvokerIP5SynthJEE6invokeEPFS3_vE($0) {
  $0 = $0|0;
@@ -5971,10 +5963,10 @@ function __ZN10emscripten8internal7InvokerIP5SynthJEE6invokeEPFS3_vE($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (FUNCTION_TABLE_i[$2 & 127]()|0); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal11BindingTypeIP5SynthE10toWireTypeES3_($3)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (FUNCTION_TABLE_i[$2 & 127]()|0); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal11BindingTypeIP5SynthE10toWireTypeES3_($3)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP5SynthEE8getCountEv($0) {
  $0 = $0|0;
@@ -5982,7 +5974,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11A
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP5SynthEE8getTypesEv($0) {
  $0 = $0|0;
@@ -5990,8 +5982,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11A
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI5SynthEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI5SynthEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM5SynthFtvEtPS2_JEE6invokeERKS4_S5_($0,$1) {
  $0 = $0|0;
@@ -6003,29 +5995,29 @@ function __ZN10emscripten8internal13MethodInvokerIM5SynthFtvEtPS2_JEE6invokeERKS
  $4 = sp + 8|0;
  $2 = $0;
  $3 = $1;
- $5 = $3; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = (__ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($5)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = $2; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$7>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($7)) + 4|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $$field2 >> 1; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (($6) + ($8)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $$field2 & 1; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = ($10|0)!=(0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $5 = $3; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = (__ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($5)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = $2; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$7>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($7)) + 4|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $$field2 >> 1; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (($6) + ($8)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $$field2 & 1; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = ($10|0)!=(0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($11) {
-  $12 = HEAP32[$9>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $13 = (($12) + ($$field)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $14 = HEAP32[$13>>2]|0; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $12 = HEAP32[$9>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $13 = (($12) + ($$field)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $14 = HEAP32[$13>>2]|0; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $16 = $14;
  } else {
-  $15 = $$field; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $15 = $$field; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $16 = $15;
  }
- $17 = (FUNCTION_TABLE_ii[$16 & 127]($9)|0); //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP16[$4>>1] = $17; //@line 494 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal11BindingTypeItE10toWireTypeERKt($4)|0); //@line 493 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($18|0); //@line 493 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $17 = (FUNCTION_TABLE_ii[$16 & 127]($9)|0); //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP16[$4>>1] = $17; //@line 494 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal11BindingTypeItE10toWireTypeERKt($4)|0); //@line 493 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($18|0); //@line 493 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17AllowedRawPointerI5SynthEEEE8getCountEv($0) {
  $0 = $0|0;
@@ -6033,7 +6025,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 2; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 2; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17AllowedRawPointerI5SynthEEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6041,8 +6033,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJtNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJtNS0_17AllowedRawPointerI5SynthEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJtNS0_17AllowedRawPointerI5SynthEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal10getContextIM5SynthFtvEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -6050,15 +6042,15 @@ function __ZN10emscripten8internal10getContextIM5SynthFtvEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN5Synth8noteOnEmEhhhh($0,$1,$2,$3,$4) {
  $0 = $0|0;
@@ -6075,13 +6067,13 @@ function __ZN5Synth8noteOnEmEhhhh($0,$1,$2,$3,$4) {
  $8 = $3;
  $9 = $4;
  $10 = $5;
- $11 = $9; //@line 46 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- __ZN11Instruments13getInstrumentEhR10Instrument($11,$10); //@line 46 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- $12 = $6; //@line 47 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- $13 = $7; //@line 47 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- $14 = $8; //@line 47 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- __ZN5Synth6noteOnEhhhRK10Instrument($10,$12,$13,$14,$10); //@line 47 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
- STACKTOP = sp;return; //@line 48 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $11 = $9; //@line 46 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ __ZN11Instruments13getInstrumentEhR10Instrument($11,$10); //@line 46 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $12 = $6; //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $13 = $7; //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ $14 = $8; //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ __ZN5Synth6noteOnEhhhRK10Instrument($10,$12,$13,$14,$10); //@line 47 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
+ STACKTOP = sp;return; //@line 48 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../synth.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM5SynthFvhhhhEvPS2_JhhhhEE6invokeERKS4_S5_hhhh($0,$1,$2,$3,$4,$5) {
  $0 = $0|0;
@@ -6100,35 +6092,35 @@ function __ZN10emscripten8internal13MethodInvokerIM5SynthFvhhhhEvPS2_JhhhhEE6inv
  $9 = $3;
  $10 = $4;
  $11 = $5;
- $12 = $7; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = (__ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($12)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = $6; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$14>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($14)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $15 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = (($13) + ($15)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $17 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = ($17|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $12 = $7; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = (__ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($12)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = $6; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$14>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($14)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $15 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = (($13) + ($15)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $17 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = ($17|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($18) {
-  $19 = HEAP32[$16>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $20 = (($19) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $21 = HEAP32[$20>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $19 = HEAP32[$16>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $20 = (($19) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $21 = HEAP32[$20>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $31 = $21;
  } else {
-  $22 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $22 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $31 = $22;
  }
- $23 = $8; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $24 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($23)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $9; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($25)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $27 = $10; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $28 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($27)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $29 = $11; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $30 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($29)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_viiiii[$31 & 127]($16,$24,$26,$28,$30); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $23 = $8; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $24 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($23)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $9; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($25)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $27 = $10; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $28 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($27)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $29 = $11; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $30 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($29)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_viiiii[$31 & 127]($16,$24,$26,$28,$30); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEE8getCountEv($0) {
  $0 = $0|0;
@@ -6136,7 +6128,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 6; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 6; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6144,13 +6136,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJviiiiiiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12662|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12662|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM5SynthFvhhhhEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -6158,15 +6150,15 @@ function __ZN10emscripten8internal10getContextIM5SynthFvhhhhEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM5SynthFvhEvPS2_JhEE6invokeERKS4_S5_h($0,$1,$2) {
  $0 = $0|0;
@@ -6179,29 +6171,29 @@ function __ZN10emscripten8internal13MethodInvokerIM5SynthFvhEvPS2_JhEE6invokeERK
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $4; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($6)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $3; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$8>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($8)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = (($7) + ($9)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = ($11|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $4; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($6)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $3; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$8>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($8)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = (($7) + ($9)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = ($11|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($12) {
-  $13 = HEAP32[$10>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $14 = (($13) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $15 = HEAP32[$14>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $13 = HEAP32[$10>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $14 = (($13) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $15 = HEAP32[$14>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $19 = $15;
  } else {
-  $16 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $16 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $19 = $16;
  }
- $17 = $5; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $18 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($17)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vii[$19 & 127]($10,$18); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $17 = $5; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $18 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($17)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vii[$19 & 127]($10,$18); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhEE8getCountEv($0) {
  $0 = $0|0;
@@ -6209,7 +6201,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 3; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 3; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI5SynthEEhEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6217,8 +6209,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI5SynthEEhEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI5SynthEEhEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal10getContextIM5SynthFvhEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -6226,20 +6218,20 @@ function __ZN10emscripten8internal10getContextIM5SynthFvhEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten4baseI5SynthE6verifyI9MidiSynthEEvv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return; //@line 1041 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return; //@line 1041 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal13getActualTypeI9MidiSynthEEPKvPT_($0) {
  $0 = $0|0;
@@ -6247,19 +6239,19 @@ function __ZN10emscripten8internal13getActualTypeI9MidiSynthEEPKvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (__ZN10emscripten8internal14getLightTypeIDI9MidiSynthEEPKvRKT_($2)|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($3|0); //@line 1029 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (__ZN10emscripten8internal14getLightTypeIDI9MidiSynthEEPKvRKT_($2)|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($3|0); //@line 1029 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten4baseI5SynthE11getUpcasterI9MidiSynthEEPFPS1_PT_Ev() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (114|0); //@line 1055 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (114|0); //@line 1055 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten4baseI5SynthE13getDowncasterI9MidiSynthEEPFPT_PS1_Ev() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (115|0); //@line 1060 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (115|0); //@line 1060 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14raw_destructorI9MidiSynthEEvPT_($0) {
  $0 = $0|0;
@@ -6267,58 +6259,58 @@ function __ZN10emscripten8internal14raw_destructorI9MidiSynthEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDI9MidiSynthE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI9MidiSynthE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI9MidiSynthE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerI9MidiSynthEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIP9MidiSynthE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIP9MidiSynthE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS0_17AllowedRawPointerIK9MidiSynthEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIPK9MidiSynthE3getEv()|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 121 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIPK9MidiSynthE3getEv()|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 121 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten4baseI5SynthE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1044 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- return ($0|0); //@line 1044 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $0 = (__ZN10emscripten8internal6TypeIDI5SynthE3getEv()|0); //@line 1044 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ return ($0|0); //@line 1044 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal12operator_newI9MidiSynthJEEEPT_DpOT0_() {
  var $0 = 0, $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = (__Znwj(236)|0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(236)|0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- invoke_vi(116,($2|0)); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ invoke_vi(116,($2|0)); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = __THREW__; __THREW__ = 0;
  $4 = $3&1;
  if ($4) {
   $5 = ___cxa_find_matching_catch_2()|0;
   $6 = tempRet0;
-  $0 = $5; //@line 434 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $1 = $6; //@line 434 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  __ZdlPv($2); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $7 = $0; //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $8 = $1; //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $0 = $5; //@line 434 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $1 = $6; //@line 434 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $7 = $0; //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $8 = $1; //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   ___resumeException($7|0);
   // unreachable;
  } else {
-  STACKTOP = sp;return ($2|0); //@line 433 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  STACKTOP = sp;return ($2|0); //@line 433 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
  return (0)|0;
 }
@@ -6328,10 +6320,10 @@ function __ZN10emscripten8internal7InvokerIP9MidiSynthJEE6invokeEPFS3_vE($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = (FUNCTION_TABLE_i[$2 & 127]()|0); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE10toWireTypeES3_($3)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = (FUNCTION_TABLE_i[$2 & 127]()|0); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE10toWireTypeES3_($3)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP9MidiSynthEE8getCountEv($0) {
  $0 = $0|0;
@@ -6339,7 +6331,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11A
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11ArgTypeListIJP9MidiSynthEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6347,8 +6339,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_18allow_raw_pointersEEE11A
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI9MidiSynthEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI9MidiSynthEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN9MidiSynth10midiNoteOnEhhh($0,$1,$2,$3) {
  $0 = $0|0;
@@ -6365,54 +6357,54 @@ function __ZN9MidiSynth10midiNoteOnEhhh($0,$1,$2,$3) {
  $6 = $2;
  $7 = $3;
  $10 = $4;
- $11 = $5; //@line 30 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $12 = $11&255; //@line 30 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $13 = ($12|0)==(9); //@line 30 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $11 = $5; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $12 = $11&255; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $13 = ($12|0)==(9); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  if ($13) {
-  $14 = $6; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $15 = $14&255; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $16 = (($15) - 35)|0; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $17 = $16&255; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $8 = $17; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $18 = $8; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $19 = $18&255; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $20 = ($19|0)>=(46); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $$ = $20 ? 45 : $17; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $14 = $6; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $15 = $14&255; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $16 = (($15) - 35)|0; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $17 = $16&255; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $8 = $17; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $18 = $8; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $19 = $18&255; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $20 = ($19|0)>=(46); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $$ = $20 ? 45 : $17; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   $8 = $$;
-  $21 = $8; //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $22 = (__ZN11Instruments17getPercussionNoteEh($21)|0); //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $6 = $22; //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $23 = $8; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $24 = $23&255; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $25 = (128 + ($24))|0; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $26 = $25&255; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $27 = ((($10)) + 44|0); //@line 38 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $28 = ((($27)) + 108|0); //@line 38 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  __ZN11Instruments13getInstrumentEhR10Instrument($26,$28); //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $21 = $8; //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $22 = (__ZN11Instruments17getPercussionNoteEh($21)|0); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $6 = $22; //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $23 = $8; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $24 = $23&255; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $25 = (128 + ($24))|0; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $26 = $25&255; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $27 = ((($10)) + 44|0); //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $28 = ((($27)) + 108|0); //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  __ZN11Instruments13getInstrumentEhR10Instrument($26,$28); //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  }
- $29 = (__ZN5Synth12getNextVoiceEv($10)|0); //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $9 = $29; //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $30 = $9; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $31 = $6; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $32 = $7; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $33 = ((($10)) + 44|0); //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $34 = $5; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $35 = $34&255; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $36 = (($33) + (($35*12)|0)|0); //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- __ZN5Synth6noteOnEhhhRK10Instrument($10,$30,$31,$32,$36); //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $37 = $6; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $38 = ((($10)) + 12|0); //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $39 = $9; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $40 = $39&255; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $41 = (($38) + ($40)|0); //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- HEAP8[$41>>0] = $37; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $42 = $5; //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $43 = ((($10)) + 28|0); //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $44 = $9; //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $45 = $44&255; //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $46 = (($43) + ($45)|0); //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- HEAP8[$46>>0] = $42; //@line 45 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- STACKTOP = sp;return; //@line 46 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $29 = (__ZN5Synth12getNextVoiceEv($10)|0); //@line 41 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $9 = $29; //@line 41 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $30 = $9; //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $31 = $6; //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $32 = $7; //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $33 = ((($10)) + 44|0); //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $34 = $5; //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $35 = $34&255; //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $36 = (($33) + (($35*12)|0)|0); //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ __ZN5Synth6noteOnEhhhRK10Instrument($10,$30,$31,$32,$36); //@line 42 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $37 = $6; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $38 = ((($10)) + 12|0); //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $39 = $9; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $40 = $39&255; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $41 = (($38) + ($40)|0); //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ HEAP8[$41>>0] = $37; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $42 = $5; //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $43 = ((($10)) + 28|0); //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $44 = $9; //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $45 = $44&255; //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $46 = (($43) + ($45)|0); //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ HEAP8[$46>>0] = $42; //@line 45 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ STACKTOP = sp;return; //@line 46 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM9MidiSynthFvhhhEvPS2_JhhhEE6invokeERKS4_S5_hhh($0,$1,$2,$3,$4) {
  $0 = $0|0;
@@ -6429,33 +6421,33 @@ function __ZN10emscripten8internal13MethodInvokerIM9MidiSynthFvhhhEvPS2_JhhhEE6i
  $7 = $2;
  $8 = $3;
  $9 = $4;
- $10 = $6; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($10)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = $5; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$12>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($12)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = (($11) + ($13)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $15 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $16 = ($15|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $10 = $6; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($10)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = $5; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$12>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($12)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = (($11) + ($13)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $15 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $16 = ($15|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($16) {
-  $17 = HEAP32[$14>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $18 = (($17) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $19 = HEAP32[$18>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $17 = HEAP32[$14>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $18 = (($17) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $19 = HEAP32[$18>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $27 = $19;
  } else {
-  $20 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $20 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $27 = $20;
  }
- $21 = $7; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($21)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $23 = $8; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $24 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($23)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $25 = $9; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $26 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($25)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_viiii[$27 & 127]($14,$22,$24,$26); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $21 = $7; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($21)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $23 = $8; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $24 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($23)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $25 = $9; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $26 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($25)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_viiii[$27 & 127]($14,$22,$24,$26); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEE8getCountEv($0) {
  $0 = $0|0;
@@ -6463,7 +6455,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 5; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 5; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6471,13 +6463,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJviiiiiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12634|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12634|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM9MidiSynthFvhhhEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -6485,15 +6477,15 @@ function __ZN10emscripten8internal10getContextIM9MidiSynthFvhhhEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN9MidiSynth11midiNoteOffEhh($0,$1,$2) {
  $0 = $0|0;
@@ -6507,53 +6499,53 @@ function __ZN9MidiSynth11midiNoteOffEhh($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $7 = $3;
- $6 = 15; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $6 = 15; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  while(1) {
-  $8 = $6; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $9 = $8 << 24 >> 24; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $10 = ($9|0)>=(0); //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $8 = $6; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $9 = $8 << 24 >> 24; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $10 = ($9|0)>=(0); //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   if (!($10)) {
    break;
   }
-  $11 = ((($7)) + 12|0); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $12 = $6; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $13 = $12 << 24 >> 24; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $14 = (($11) + ($13)|0); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $15 = HEAP8[$14>>0]|0; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $16 = $15&255; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $17 = $5; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $18 = $17&255; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $19 = ($16|0)==($18|0); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $11 = ((($7)) + 12|0); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $12 = $6; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $13 = $12 << 24 >> 24; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $14 = (($11) + ($13)|0); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $15 = HEAP8[$14>>0]|0; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $16 = $15&255; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $17 = $5; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $18 = $17&255; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $19 = ($16|0)==($18|0); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   if ($19) {
-   $20 = ((($7)) + 28|0); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $21 = $6; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $22 = $21 << 24 >> 24; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $23 = (($20) + ($22)|0); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $24 = HEAP8[$23>>0]|0; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $25 = $24&255; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $26 = $4; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $27 = $26&255; //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $28 = ($25|0)==($27|0); //@line 50 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $20 = ((($7)) + 28|0); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $21 = $6; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $22 = $21 << 24 >> 24; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $23 = (($20) + ($22)|0); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $24 = HEAP8[$23>>0]|0; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $25 = $24&255; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $26 = $4; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $27 = $26&255; //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $28 = ($25|0)==($27|0); //@line 50 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
    if ($28) {
-    $29 = $6; //@line 51 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    __ZN5Synth7noteOffEh($7,$29); //@line 51 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $30 = ((($7)) + 28|0); //@line 52 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $31 = $6; //@line 52 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $32 = $31 << 24 >> 24; //@line 52 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $33 = (($30) + ($32)|0); //@line 52 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    HEAP8[$33>>0] = -1; //@line 52 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $34 = ((($7)) + 12|0); //@line 53 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $35 = $6; //@line 53 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $36 = $35 << 24 >> 24; //@line 53 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    $37 = (($34) + ($36)|0); //@line 53 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-    HEAP8[$37>>0] = -1; //@line 53 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $29 = $6; //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    __ZN5Synth7noteOffEh($7,$29); //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $30 = ((($7)) + 28|0); //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $31 = $6; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $32 = $31 << 24 >> 24; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $33 = (($30) + ($32)|0); //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    HEAP8[$33>>0] = -1; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $34 = ((($7)) + 12|0); //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $35 = $6; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $36 = $35 << 24 >> 24; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    $37 = (($34) + ($36)|0); //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+    HEAP8[$37>>0] = -1; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
    }
   }
-  $38 = $6; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $39 = (($38) + -1)<<24>>24; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $6 = $39; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $38 = $6; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $39 = (($38) + -1)<<24>>24; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $6 = $39; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  }
- STACKTOP = sp;return; //@line 56 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ STACKTOP = sp;return; //@line 56 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM9MidiSynthFvhhEvPS2_JhhEE6invokeERKS4_S5_hh($0,$1,$2,$3) {
  $0 = $0|0;
@@ -6568,31 +6560,31 @@ function __ZN10emscripten8internal13MethodInvokerIM9MidiSynthFvhhEvPS2_JhhEE6inv
  $5 = $1;
  $6 = $2;
  $7 = $3;
- $8 = $5; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($8)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $4; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$10>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($10)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = (($9) + ($11)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = ($13|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $5; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($8)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $4; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$10>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($10)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = (($9) + ($11)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = ($13|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($14) {
-  $15 = HEAP32[$12>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $16 = (($15) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = HEAP32[$16>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $15 = HEAP32[$12>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $16 = (($15) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = HEAP32[$16>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $23 = $17;
  } else {
-  $18 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $18 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $23 = $18;
  }
- $19 = $6; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $20 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($19)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $7; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($21)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_viii[$23 & 127]($12,$20,$22); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $19 = $6; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($19)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $7; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($21)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_viii[$23 & 127]($12,$20,$22); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getCountEv($0) {
  $0 = $0|0;
@@ -6600,7 +6592,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 4; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 4; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6608,13 +6600,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJviiiiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12628|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12628|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM9MidiSynthFvhhEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -6622,15 +6614,15 @@ function __ZN10emscripten8internal10getContextIM9MidiSynthFvhhEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN9MidiSynth17midiProgramChangeEhh($0,$1,$2) {
  $0 = $0|0;
@@ -6643,13 +6635,13 @@ function __ZN9MidiSynth17midiProgramChangeEhh($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $6 = $3;
- $7 = $5; //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $8 = ((($6)) + 44|0); //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $9 = $4; //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $10 = $9&255; //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $11 = (($8) + (($10*12)|0)|0); //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- __ZN11Instruments13getInstrumentEhR10Instrument($7,$11); //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- STACKTOP = sp;return; //@line 60 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $7 = $5; //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $8 = ((($6)) + 44|0); //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $9 = $4; //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $10 = $9&255; //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $11 = (($8) + (($10*12)|0)|0); //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ __ZN11Instruments13getInstrumentEhR10Instrument($7,$11); //@line 59 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ STACKTOP = sp;return; //@line 60 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
 }
 function __ZN9MidiSynth13midiPitchBendEhs($0,$1,$2) {
  $0 = $0|0;
@@ -6663,33 +6655,33 @@ function __ZN9MidiSynth13midiPitchBendEhs($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $7 = $3;
- $6 = 15; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $6 = 15; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  while(1) {
-  $8 = $6; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $9 = $8 << 24 >> 24; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $10 = ($9|0)>=(0); //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $8 = $6; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $9 = $8 << 24 >> 24; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $10 = ($9|0)>=(0); //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   if (!($10)) {
    break;
   }
-  $11 = ((($7)) + 28|0); //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $12 = $6; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $13 = $12 << 24 >> 24; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $14 = (($11) + ($13)|0); //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $15 = HEAP8[$14>>0]|0; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $16 = $15&255; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $17 = $4; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $18 = $17&255; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $19 = ($16|0)==($18|0); //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $11 = ((($7)) + 28|0); //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $12 = $6; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $13 = $12 << 24 >> 24; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $14 = (($11) + ($13)|0); //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $15 = HEAP8[$14>>0]|0; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $16 = $15&255; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $17 = $4; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $18 = $17&255; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $19 = ($16|0)==($18|0); //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   if ($19) {
-   $20 = $6; //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   $21 = $5; //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-   __ZN5Synth9pitchBendEhs($7,$20,$21); //@line 65 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $20 = $6; //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   $21 = $5; //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+   __ZN5Synth9pitchBendEhs($7,$20,$21); //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   }
-  $22 = $6; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $23 = (($22) + -1)<<24>>24; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $6 = $23; //@line 63 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $22 = $6; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $23 = (($22) + -1)<<24>>24; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $6 = $23; //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  }
- STACKTOP = sp;return; //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ STACKTOP = sp;return; //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
 }
 function __ZN10emscripten8internal13MethodInvokerIM9MidiSynthFvhsEvPS2_JhsEE6invokeERKS4_S5_hs($0,$1,$2,$3) {
  $0 = $0|0;
@@ -6704,31 +6696,31 @@ function __ZN10emscripten8internal13MethodInvokerIM9MidiSynthFvhsEvPS2_JhsEE6inv
  $5 = $1;
  $6 = $2;
  $7 = $3;
- $8 = $5; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($8)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = $4; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$10>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($10)) + 4|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = $$field2 >> 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $12 = (($9) + ($11)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $13 = $$field2 & 1; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $14 = ($13|0)!=(0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $8 = $5; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = (__ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($8)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = $4; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$10>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($10)) + 4|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = $$field2 >> 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $12 = (($9) + ($11)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $13 = $$field2 & 1; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $14 = ($13|0)!=(0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if ($14) {
-  $15 = HEAP32[$12>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $16 = (($15) + ($$field)|0); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $17 = HEAP32[$16>>2]|0; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $15 = HEAP32[$12>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $16 = (($15) + ($$field)|0); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $17 = HEAP32[$16>>2]|0; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $23 = $17;
  } else {
-  $18 = $$field; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $18 = $$field; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   $23 = $18;
  }
- $19 = $6; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $20 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($19)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $21 = $7; //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $22 = (__ZN10emscripten8internal11BindingTypeIsE12fromWireTypeEs($21)|0); //@line 511 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_viii[$23 & 127]($12,$20,$22); //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 510 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $19 = $6; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $20 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($19)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $21 = $7; //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $22 = (__ZN10emscripten8internal11BindingTypeIsE12fromWireTypeEs($21)|0); //@line 511 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_viii[$23 & 127]($12,$20,$22); //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 510 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEE8getCountEv($0) {
  $0 = $0|0;
@@ -6736,7 +6728,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 4; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 4; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEE8getTypesEv($0) {
  $0 = $0|0;
@@ -6744,8 +6736,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvNS0_17Allow
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal10getContextIM9MidiSynthFvhsEEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -6753,20 +6745,20 @@ function __ZN10emscripten8internal10getContextIM9MidiSynthFvhsEEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(8)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index1 = ((($3)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $$field; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $$index5 = ((($2)) + 4|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$$index5>>2] = $$field2; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(8)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index1 = ((($3)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$field2 = HEAP32[$$index1>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $$field; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $$index5 = ((($2)) + 4|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$$index5>>2] = $$field2; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhsEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (736|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (736|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($0) {
  $0 = $0|0;
@@ -6774,8 +6766,8 @@ function __ZN10emscripten8internal11BindingTypeIP9MidiSynthE12fromWireTypeES3_($
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($0) {
  $0 = $0|0;
@@ -6783,8 +6775,8 @@ function __ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 254 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 254 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 254 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 254 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIsE12fromWireTypeEs($0) {
  $0 = $0|0;
@@ -6792,23 +6784,23 @@ function __ZN10emscripten8internal11BindingTypeIsE12fromWireTypeEs($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 255 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 255 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 255 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 255 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (752|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (752|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI9MidiSynthEEhhhEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (768|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (768|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI9MidiSynthEEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (788|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (788|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIP9MidiSynthE10toWireTypeES3_($0) {
  $0 = $0|0;
@@ -6816,8 +6808,8 @@ function __ZN10emscripten8internal11BindingTypeIP9MidiSynthE10toWireTypeES3_($0)
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 341 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 341 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 341 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 341 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN9MidiSynthC2Ev($0) {
  $0 = $0|0;
@@ -6827,62 +6819,62 @@ function __ZN9MidiSynthC2Ev($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $4 = $1;
- ;HEAP32[$4>>2]=0|0;HEAP32[$4+4>>2]=0|0;HEAP32[$4+8>>2]=0|0; //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
- $2 = 15; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ ;HEAP32[$4>>2]=0|0;HEAP32[$4+4>>2]=0|0;HEAP32[$4+8>>2]=0|0; //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $2 = 15; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  while(1) {
-  $5 = $2; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $6 = $5 << 24 >> 24; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $7 = ($6|0)>=(0); //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $5 = $2; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $6 = $5 << 24 >> 24; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $7 = ($6|0)>=(0); //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   if (!($7)) {
    break;
   }
-  $8 = ((($4)) + 44|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $9 = $2; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $10 = $9 << 24 >> 24; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $11 = (($8) + (($10*12)|0)|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  __ZN11Instruments13getInstrumentEhR10Instrument(0,$11); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $12 = $2; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $13 = (($12) + -1)<<24>>24; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $2 = $13; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $8 = ((($4)) + 44|0); //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $9 = $2; //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $10 = $9 << 24 >> 24; //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $11 = (($8) + (($10*12)|0)|0); //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  __ZN11Instruments13getInstrumentEhR10Instrument(0,$11); //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $12 = $2; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $13 = (($12) + -1)<<24>>24; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $2 = $13; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  }
- $3 = 15; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ $3 = 15; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  while(1) {
-  $14 = $3; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $15 = $14 << 24 >> 24; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $16 = ($15|0)>=(0); //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $14 = $3; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $15 = $14 << 24 >> 24; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $16 = ($15|0)>=(0); //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
   if (!($16)) {
    break;
   }
-  $17 = ((($4)) + 12|0); //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $18 = $3; //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $19 = $18 << 24 >> 24; //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $20 = (($17) + ($19)|0); //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  HEAP8[$20>>0] = -1; //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $21 = ((($4)) + 28|0); //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $22 = $3; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $23 = $22 << 24 >> 24; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $24 = (($21) + ($23)|0); //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  HEAP8[$24>>0] = -1; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $25 = $3; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $26 = (($25) + -1)<<24>>24; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
-  $3 = $26; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $17 = ((($4)) + 12|0); //@line 24 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $18 = $3; //@line 24 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $19 = $18 << 24 >> 24; //@line 24 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $20 = (($17) + ($19)|0); //@line 24 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  HEAP8[$20>>0] = -1; //@line 24 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $21 = ((($4)) + 28|0); //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $22 = $3; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $23 = $22 << 24 >> 24; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $24 = (($21) + ($23)|0); //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  HEAP8[$24>>0] = -1; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $25 = $3; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $26 = (($25) + -1)<<24>>24; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+  $3 = $26; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
  }
- STACKTOP = sp;return; //@line 27 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
+ STACKTOP = sp;return; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../midisynth.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIPK9MidiSynthE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (48|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (48|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIP9MidiSynthE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (8|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (8|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI9MidiSynthE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (24|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (24|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten4baseI5SynthE14convertPointerIS1_9MidiSynthEEPT0_PT_($0) {
  $0 = $0|0;
@@ -6890,8 +6882,8 @@ function __ZN10emscripten4baseI5SynthE14convertPointerIS1_9MidiSynthEEPT0_PT_($0
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1065 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 1065 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1065 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 1065 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten4baseI5SynthE14convertPointerI9MidiSynthS1_EEPT0_PT_($0) {
  $0 = $0|0;
@@ -6899,8 +6891,8 @@ function __ZN10emscripten4baseI5SynthE14convertPointerI9MidiSynthS1_EEPT0_PT_($0
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 1065 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 1065 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 1065 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 1065 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14getLightTypeIDI9MidiSynthEEPKvRKT_($0) {
  $0 = $0|0;
@@ -6908,12 +6900,12 @@ function __ZN10emscripten8internal14getLightTypeIDI9MidiSynthEEPKvRKT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return (24|0); //@line 82 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (24|0); //@line 82 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI5SynthEEhEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (792|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (792|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($0) {
  $0 = $0|0;
@@ -6921,18 +6913,18 @@ function __ZN10emscripten8internal11BindingTypeIP5SynthE12fromWireTypeES3_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI5SynthEEhhhhEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (804|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (804|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJtNS0_17AllowedRawPointerI5SynthEEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (828|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (828|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeItE10toWireTypeERKt($0) {
  $0 = $0|0;
@@ -6940,14 +6932,14 @@ function __ZN10emscripten8internal11BindingTypeItE10toWireTypeERKt($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 256 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = HEAP16[$2>>1]|0; //@line 256 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($3|0); //@line 256 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 256 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = HEAP16[$2>>1]|0; //@line 256 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($3|0); //@line 256 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI5SynthEEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (836|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (836|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIP5SynthE10toWireTypeES3_($0) {
  $0 = $0|0;
@@ -6955,23 +6947,23 @@ function __ZN10emscripten8internal11BindingTypeIP5SynthE10toWireTypeES3_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 341 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 341 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 341 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 341 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIPK5SynthE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (80|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (80|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIP5SynthE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (64|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (64|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI5SynthE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (40|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (40|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14getLightTypeIDI5SynthEEPKvRKT_($0) {
  $0 = $0|0;
@@ -6979,12 +6971,12 @@ function __ZN10emscripten8internal14getLightTypeIDI5SynthEEPKvRKT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return (40|0); //@line 82 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (40|0); //@line 82 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI4LerpEEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (840|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (840|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($0) {
  $0 = $0|0;
@@ -6992,8 +6984,8 @@ function __ZN10emscripten8internal11BindingTypeIP4LerpE12fromWireTypeES3_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNV4Lerp4stopEv($0) {
  $0 = $0|0;
@@ -7002,32 +6994,94 @@ function __ZNV4Lerp4stopEv($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $2 = $1;
- $3 = ((($2)) + 6|0); //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $4 = HEAP8[$3>>0]|0; //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $5 = $4&255; //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $6 = ((($2)) + 5|0); //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $7 = HEAP8[$6>>0]|0; //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $8 = $7&255; //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $9 = ($5|0)<($8|0); //@line 55 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $3 = ((($2)) + 6|0); //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $4 = HEAP8[$3>>0]|0; //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $5 = $4&255; //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $6 = ((($2)) + 5|0); //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $7 = HEAP8[$6>>0]|0; //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $8 = $7&255; //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $9 = ($5|0)<($8|0); //@line 61 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  if (!($9)) {
-  STACKTOP = sp;return; //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  STACKTOP = sp;return; //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  }
- $10 = ((($2)) + 5|0); //@line 56 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $11 = HEAP8[$10>>0]|0; //@line 56 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $12 = ((($2)) + 6|0); //@line 56 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP8[$12>>0] = $11; //@line 56 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- __ZNV4Lerp9loadStageEv($2); //@line 57 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return; //@line 59 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $10 = ((($2)) + 5|0); //@line 62 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $11 = HEAP8[$10>>0]|0; //@line 62 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $12 = ((($2)) + 6|0); //@line 62 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$12>>0] = $11; //@line 62 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZNV4Lerp9loadStageEv($2); //@line 63 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return; //@line 65 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+}
+function __ZNV4Lerp9loadStageEv($0) {
+ $0 = $0|0;
+ var $1 = 0, $10 = 0, $11 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
+ $2 = sp + 4|0;
+ $1 = $0;
+ $3 = $1;
+ $4 = HEAP32[$3>>2]|0; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $5 = ((($3)) + 6|0); //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $6 = HEAP8[$5>>0]|0; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZN11Instruments12getLerpStageEPK9LerpStagehRS0_($4,$6,$2); //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $7 = HEAP16[$2>>1]|0; //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $8 = ((($3)) + 10|0); //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP16[$8>>1] = $7; //@line 20 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $9 = ((($2)) + 2|0); //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $10 = HEAP8[$9>>0]|0; //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $11 = ((($3)) + 12|0); //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$11>>0] = $10; //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return; //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvNS0_17AllowedRawPointerI4LerpEEhEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (848|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (848|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+}
+function __ZNV4Lerp5startEh($0,$1) {
+ $0 = $0|0;
+ $1 = $1|0;
+ var $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0, $26 = 0, $3 = 0, $4 = 0;
+ var $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
+ $4 = sp;
+ $2 = $0;
+ $3 = $1;
+ $5 = $2;
+ $6 = $3; //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZN11Instruments14getLerpProgramEhR11LerpProgram($6,$4); //@line 49 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $7 = HEAP32[$4>>2]|0; //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP32[$5>>2] = $7; //@line 51 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $8 = ((($4)) + 5|0); //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $9 = HEAP8[$8>>0]|0; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $10 = $9&255; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $11 = $10 >> 4; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $12 = $11&255; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $13 = ((($5)) + 4|0); //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$13>>0] = $12; //@line 52 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $14 = ((($4)) + 5|0); //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $15 = HEAP8[$14>>0]|0; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $16 = $15&255; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $17 = $16 & 15; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $18 = $17&255; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $19 = ((($5)) + 5|0); //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$19>>0] = $18; //@line 53 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $20 = ((($4)) + 4|0); //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $21 = HEAP8[$20>>0]|0; //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $22 = $21&255; //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $23 = $22 << 8; //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $24 = $23&65535; //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $25 = ((($5)) + 8|0); //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP16[$25>>1] = $24; //@line 54 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $26 = ((($5)) + 6|0); //@line 55 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$26>>0] = 0; //@line 55 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZNV4Lerp9loadStageEv($5); //@line 57 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return; //@line 58 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJhNS0_17AllowedRawPointerI4LerpEEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (860|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (860|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIhE10toWireTypeERKh($0) {
  $0 = $0|0;
@@ -7035,9 +7089,9 @@ function __ZN10emscripten8internal11BindingTypeIhE10toWireTypeERKh($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 254 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = HEAP8[$2>>0]|0; //@line 254 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($3|0); //@line 254 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 254 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = HEAP8[$2>>0]|0; //@line 254 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($3|0); //@line 254 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNV4Lerp6sampleEv($0) {
  $0 = $0|0;
@@ -7049,95 +7103,95 @@ function __ZNV4Lerp6sampleEv($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $4 = $1;
- $5 = ((($4)) + 10|0); //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $6 = HEAP16[$5>>1]|0; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $7 = $6 << 16 >> 16; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $8 = ((($4)) + 8|0); //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $9 = HEAP16[$8>>1]|0; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $10 = $9 << 16 >> 16; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $11 = (($10) + ($7))|0; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $12 = $11&65535; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP16[$8>>1] = $12; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $13 = ((($4)) + 8|0); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $14 = HEAP16[$13>>1]|0; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $15 = $14 << 16 >> 16; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $16 = $15 >> 8; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $17 = $16&255; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $2 = $17; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $18 = $2; //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $19 = $18 << 24 >> 24; //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $20 = ($19|0)<(0); //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $5 = ((($4)) + 10|0); //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $6 = HEAP16[$5>>1]|0; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $7 = $6 << 16 >> 16; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $8 = ((($4)) + 8|0); //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $9 = HEAP16[$8>>1]|0; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $10 = $9 << 16 >> 16; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $11 = (($10) + ($7))|0; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $12 = $11&65535; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP16[$8>>1] = $12; //@line 26 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $13 = ((($4)) + 8|0); //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $14 = HEAP16[$13>>1]|0; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $15 = $14 << 16 >> 16; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $16 = $15 >> 8; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $17 = $16&255; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $2 = $17; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $18 = $2; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $19 = $18 << 24 >> 24; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $20 = ($19|0)<(0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  if ($20) {
   label = 3;
  } else {
-  $21 = ((($4)) + 10|0); //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $22 = HEAP16[$21>>1]|0; //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $23 = $22 << 16 >> 16; //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $24 = ($23|0)<=(0); //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $21 = ((($4)) + 10|0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $22 = HEAP16[$21>>1]|0; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $23 = $22 << 16 >> 16; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $24 = ($23|0)<=(0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
   if ($24) {
    label = 3;
   } else {
-   $31 = $2; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-   $32 = $31 << 24 >> 24; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-   $33 = ((($4)) + 12|0); //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-   $34 = HEAP8[$33>>0]|0; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-   $35 = $34 << 24 >> 24; //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-   $36 = ($32|0)>=($35|0); //@line 37 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $31 = $2; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $32 = $31 << 24 >> 24; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $33 = ((($4)) + 12|0); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $34 = HEAP8[$33>>0]|0; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $35 = $34 << 24 >> 24; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+   $36 = ($32|0)>=($35|0); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
    $38 = $36;
   }
  }
  if ((label|0) == 3) {
-  $25 = $2; //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $26 = $25 << 24 >> 24; //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $27 = ((($4)) + 12|0); //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $28 = HEAP8[$27>>0]|0; //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $29 = $28 << 24 >> 24; //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $30 = ($26|0)<=($29|0); //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $25 = $2; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $26 = $25 << 24 >> 24; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $27 = ((($4)) + 12|0); //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $28 = HEAP8[$27>>0]|0; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $29 = $28 << 24 >> 24; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $30 = ($26|0)<=($29|0); //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
   $38 = $30;
  }
- $37 = $38&1; //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $3 = $37; //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $39 = $3; //@line 39 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $40 = $39&1; //@line 39 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $37 = $38&1; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $3 = $37; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $39 = $3; //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $40 = $39&1; //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  if (!($40)) {
-  $62 = $2; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  STACKTOP = sp;return ($62|0); //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $62 = $2; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  STACKTOP = sp;return ($62|0); //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  }
- $41 = ((($4)) + 12|0); //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $42 = HEAP8[$41>>0]|0; //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $2 = $42; //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $43 = ((($4)) + 12|0); //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $44 = HEAP8[$43>>0]|0; //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $45 = $44 << 24 >> 24; //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $46 = $45 << 8; //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $47 = $46&65535; //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $48 = ((($4)) + 8|0); //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP16[$48>>1] = $47; //@line 41 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $49 = ((($4)) + 6|0); //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $50 = HEAP8[$49>>0]|0; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $51 = (($50) + 1)<<24>>24; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP8[$49>>0] = $51; //@line 42 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $52 = ((($4)) + 6|0); //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $53 = HEAP8[$52>>0]|0; //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $54 = $53&255; //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $55 = ((($4)) + 5|0); //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $56 = HEAP8[$55>>0]|0; //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $57 = $56&255; //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $58 = ($54|0)==($57|0); //@line 43 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $41 = ((($4)) + 12|0); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $42 = HEAP8[$41>>0]|0; //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $2 = $42; //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $43 = ((($4)) + 12|0); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $44 = HEAP8[$43>>0]|0; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $45 = $44 << 24 >> 24; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $46 = $45 << 8; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $47 = $46&65535; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $48 = ((($4)) + 8|0); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP16[$48>>1] = $47; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $49 = ((($4)) + 6|0); //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $50 = HEAP8[$49>>0]|0; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $51 = (($50) + 1)<<24>>24; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$49>>0] = $51; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $52 = ((($4)) + 6|0); //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $53 = HEAP8[$52>>0]|0; //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $54 = $53&255; //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $55 = ((($4)) + 5|0); //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $56 = HEAP8[$55>>0]|0; //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $57 = $56&255; //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $58 = ($54|0)==($57|0); //@line 38 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  if ($58) {
-  $59 = ((($4)) + 4|0); //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $60 = HEAP8[$59>>0]|0; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  $61 = ((($4)) + 6|0); //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
-  HEAP8[$61>>0] = $60; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $59 = ((($4)) + 4|0); //@line 39 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $60 = HEAP8[$59>>0]|0; //@line 39 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  $61 = ((($4)) + 6|0); //@line 39 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+  HEAP8[$61>>0] = $60; //@line 39 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
  }
- __ZNV4Lerp9loadStageEv($4); //@line 46 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $62 = $2; //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return ($62|0); //@line 49 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ __ZNV4Lerp9loadStageEv($4); //@line 41 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $62 = $2; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return ($62|0); //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI4LerpEEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (868|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (868|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIP4LerpE10toWireTypeES3_($0) {
  $0 = $0|0;
@@ -7145,8 +7199,8 @@ function __ZN10emscripten8internal11BindingTypeIP4LerpE10toWireTypeES3_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 341 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 341 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 341 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 341 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN4LerpC2Ev($0) {
  $0 = $0|0;
@@ -7155,35 +7209,35 @@ function __ZN4LerpC2Ev($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
  $2 = $1;
- HEAP32[$2>>2] = 0; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $3 = ((($2)) + 4|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP8[$3>>0] = -1; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $4 = ((($2)) + 5|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP8[$4>>0] = -1; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $5 = ((($2)) + 6|0); //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP8[$5>>0] = -1; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $6 = ((($2)) + 8|0); //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP16[$6>>1] = 0; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $7 = ((($2)) + 10|0); //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP16[$7>>1] = 0; //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- $8 = ((($2)) + 12|0); //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- HEAP8[$8>>0] = -128; //@line 25 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
- STACKTOP = sp;return; //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP32[$2>>2] = 0; //@line 9 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $3 = ((($2)) + 4|0); //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$3>>0] = -1; //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $4 = ((($2)) + 5|0); //@line 11 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$4>>0] = -1; //@line 11 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $5 = ((($2)) + 6|0); //@line 12 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$5>>0] = -1; //@line 12 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $6 = ((($2)) + 8|0); //@line 13 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP16[$6>>1] = 0; //@line 13 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $7 = ((($2)) + 10|0); //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP16[$7>>1] = 0; //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ $8 = ((($2)) + 12|0); //@line 15 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ HEAP8[$8>>0] = -128; //@line 15 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
+ STACKTOP = sp;return; //@line 7 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../lerp.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIPK4LerpE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (120|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (120|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIP4LerpE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (96|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (96|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI4LerpE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (112|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (112|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14getLightTypeIDI4LerpEEPKvRKT_($0) {
  $0 = $0|0;
@@ -7191,22 +7245,22 @@ function __ZN10emscripten8internal14getLightTypeIDI4LerpEEPKvRKT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return (112|0); //@line 82 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (112|0); //@line 82 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIPK10InstrumentE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (136|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (136|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIP10InstrumentE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (160|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (160|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI10InstrumentE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (152|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (152|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14getLightTypeIDI10InstrumentEEPKvRKT_($0) {
  $0 = $0|0;
@@ -7214,22 +7268,22 @@ function __ZN10emscripten8internal14getLightTypeIDI10InstrumentEEPKvRKT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return (152|0); //@line 82 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (152|0); //@line 82 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIPK11LerpProgramE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (176|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (176|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIP11LerpProgramE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (200|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (200|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI11LerpProgramE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (192|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (192|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14getLightTypeIDI11LerpProgramEEPKvRKT_($0) {
  $0 = $0|0;
@@ -7237,22 +7291,22 @@ function __ZN10emscripten8internal14getLightTypeIDI11LerpProgramEEPKvRKT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return (192|0); //@line 82 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (192|0); //@line 82 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIPK9LerpStageE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (216|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (216|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIP9LerpStageE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (240|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (240|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI9LerpStageE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (232|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (232|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14getLightTypeIDI9LerpStageEEPKvRKT_($0) {
  $0 = $0|0;
@@ -7260,7 +7314,7 @@ function __ZN10emscripten8internal14getLightTypeIDI9LerpStageEEPKvRKT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return (232|0); //@line 82 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (232|0); //@line 82 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7ret_valEEEEE11ArgTypeListIJP9MidiSynthEE8getCountEv($0) {
  $0 = $0|0;
@@ -7268,7 +7322,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7re
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7ret_valEEEEE11ArgTypeListIJP9MidiSynthEE8getTypesEv($0) {
  $0 = $0|0;
@@ -7276,8 +7330,8 @@ function __ZNK10emscripten8internal12WithPoliciesIJNS_17allow_raw_pointerINS_7re
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI9MidiSynthEEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJNS0_17AllowedRawPointerI9MidiSynthEEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal7InvokerIdJEE6invokeEPFdvE($0) {
  $0 = $0|0;
@@ -7286,11 +7340,11 @@ function __ZN10emscripten8internal7InvokerIdJEE6invokeEPFdvE($0) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = sp;
  $1 = $0;
- $3 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (+FUNCTION_TABLE_d[$3 & 63]()); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAPF64[$2>>3] = $4; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = (+__ZN10emscripten8internal11BindingTypeIdE10toWireTypeERKd($2)); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return (+$5); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $3 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (+FUNCTION_TABLE_d[$3 & 63]()); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAPF64[$2>>3] = $4; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = (+__ZN10emscripten8internal11BindingTypeIdE10toWireTypeERKd($2)); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return (+$5); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getCountEv($0) {
  $0 = $0|0;
@@ -7298,7 +7352,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getCount
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getTypesEv($0) {
  $0 = $0|0;
@@ -7306,18 +7360,18 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJdEE8getTypes
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJdEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJdEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJdiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12844|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12844|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJdEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (872|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (872|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIdE10toWireTypeERKd($0) {
  $0 = $0|0;
@@ -7325,15 +7379,15 @@ function __ZN10emscripten8internal11BindingTypeIdE10toWireTypeERKd($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 262 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = +HEAPF64[$2>>3]; //@line 262 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return (+$3); //@line 262 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 262 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = +HEAPF64[$2>>3]; //@line 262 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return (+$3); //@line 262 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDI10HeapRegionI10InstrumentEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionI10InstrumentEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionI10InstrumentEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11noncopyableD2Ev($0) {
  $0 = $0|0;
@@ -7341,7 +7395,7 @@ function __ZN10emscripten8internal11noncopyableD2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 642 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 642 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function ___clang_call_terminate($0) {
  $0 = $0|0;
@@ -7354,7 +7408,7 @@ function ___clang_call_terminate($0) {
 function __ZN10emscripten8internal11LightTypeIDI10HeapRegionI10InstrumentEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (256|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (256|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionI10InstrumentEjE7getWireIS4_EEjRKMS4_jRKT_($0,$1) {
  $0 = $0|0;
@@ -7364,12 +7418,12 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionI10InstrumentEjE7ge
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = $2; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = HEAP32[$5>>2]|0; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (($4) + ($6)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($8|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $3; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = $2; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = HEAP32[$5>>2]|0; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (($4) + ($6)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($8|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionI10InstrumentEjE7setWireIS4_EEvRKMS4_jRT_j($0,$1,$2) {
  $0 = $0|0;
@@ -7381,20 +7435,20 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionI10InstrumentEjE7se
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $5; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $4; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $3; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = HEAP32[$9>>2]|0; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (($8) + ($10)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$11>>2] = $7; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 537 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $5; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $4; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $3; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = HEAP32[$9>>2]|0; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (($8) + ($10)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$11>>2] = $7; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 537 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal6TypeIDIjE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIjE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIjE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal10getContextIM10HeapRegionI10InstrumentEjEEPT_RKS6_($0) {
  $0 = $0|0;
@@ -7402,16 +7456,16 @@ function __ZN10emscripten8internal10getContextIM10HeapRegionI10InstrumentEjEEPT_
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(4)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $4; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(4)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $4; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIjE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (680|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (680|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($0) {
  $0 = $0|0;
@@ -7419,8 +7473,8 @@ function __ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 258 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 258 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 258 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 258 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($0) {
  $0 = $0|0;
@@ -7428,9 +7482,9 @@ function __ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 258 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = HEAP32[$2>>2]|0; //@line 258 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($3|0); //@line 258 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = $1; //@line 258 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = HEAP32[$2>>2]|0; //@line 258 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($3|0); //@line 258 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11noncopyableC2Ev($0) {
  $0 = $0|0;
@@ -7438,29 +7492,29 @@ function __ZN10emscripten8internal11noncopyableC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 641 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 641 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal15raw_constructorI10HeapRegionI10InstrumentEJEEEPT_DpNS0_11BindingTypeIT0_E8WireTypeE() {
  var $0 = 0, $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = (__Znwj(12)|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(12)|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- invoke_vi(117,($2|0)); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ invoke_vi(117,($2|0)); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = __THREW__; __THREW__ = 0;
  $4 = $3&1;
  if ($4) {
   $5 = ___cxa_find_matching_catch_2()|0;
   $6 = tempRet0;
-  $0 = $5; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $1 = $6; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  __ZdlPv($2); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $7 = $0; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $8 = $1; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $0 = $5; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $1 = $6; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $7 = $0; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $8 = $1; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   ___resumeException($7|0);
   // unreachable;
  } else {
-  STACKTOP = sp;return ($2|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  STACKTOP = sp;return ($2|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
  return (0)|0;
 }
@@ -7470,17 +7524,17 @@ function __ZN10emscripten8internal14raw_destructorI10HeapRegionI10InstrumentEEEv
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal19getGenericSignatureIJiEEEPKcv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (12874|0); //@line 389 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ return (12874|0); //@line 389 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10HeapRegionI10InstrumentEC2Ev($0) {
  $0 = $0|0;
@@ -7488,18 +7542,18 @@ function __ZN10HeapRegionI10InstrumentEC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 16 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
+ STACKTOP = sp;return; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
 }
 function __ZN10emscripten8internal6TypeIDI10HeapRegionI11LerpProgramEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionI11LerpProgramEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionI11LerpProgramEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI10HeapRegionI11LerpProgramEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (264|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (264|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionI11LerpProgramEjE7getWireIS4_EEjRKMS4_jRKT_($0,$1) {
  $0 = $0|0;
@@ -7509,12 +7563,12 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionI11LerpProgramEjE7g
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = $2; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = HEAP32[$5>>2]|0; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (($4) + ($6)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($8|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $3; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = $2; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = HEAP32[$5>>2]|0; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (($4) + ($6)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($8|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionI11LerpProgramEjE7setWireIS4_EEvRKMS4_jRT_j($0,$1,$2) {
  $0 = $0|0;
@@ -7526,14 +7580,14 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionI11LerpProgramEjE7s
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $5; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $4; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $3; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = HEAP32[$9>>2]|0; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (($8) + ($10)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$11>>2] = $7; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 537 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $5; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $4; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $3; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = HEAP32[$9>>2]|0; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (($8) + ($10)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$11>>2] = $7; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 537 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM10HeapRegionI11LerpProgramEjEEPT_RKS6_($0) {
  $0 = $0|0;
@@ -7541,33 +7595,33 @@ function __ZN10emscripten8internal10getContextIM10HeapRegionI11LerpProgramEjEEPT
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(4)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $4; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(4)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $4; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal15raw_constructorI10HeapRegionI11LerpProgramEJEEEPT_DpNS0_11BindingTypeIT0_E8WireTypeE() {
  var $0 = 0, $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = (__Znwj(12)|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(12)|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- invoke_vi(118,($2|0)); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ invoke_vi(118,($2|0)); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = __THREW__; __THREW__ = 0;
  $4 = $3&1;
  if ($4) {
   $5 = ___cxa_find_matching_catch_2()|0;
   $6 = tempRet0;
-  $0 = $5; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $1 = $6; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  __ZdlPv($2); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $7 = $0; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $8 = $1; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $0 = $5; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $1 = $6; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $7 = $0; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $8 = $1; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   ___resumeException($7|0);
   // unreachable;
  } else {
-  STACKTOP = sp;return ($2|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  STACKTOP = sp;return ($2|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
  return (0)|0;
 }
@@ -7577,12 +7631,12 @@ function __ZN10emscripten8internal14raw_destructorI10HeapRegionI11LerpProgramEEE
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10HeapRegionI11LerpProgramEC2Ev($0) {
  $0 = $0|0;
@@ -7590,18 +7644,18 @@ function __ZN10HeapRegionI11LerpProgramEC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 16 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
+ STACKTOP = sp;return; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
 }
 function __ZN10emscripten8internal6TypeIDI10HeapRegionI9LerpStageEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionI9LerpStageEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionI9LerpStageEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI10HeapRegionI9LerpStageEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (272|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (272|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionI9LerpStageEjE7getWireIS4_EEjRKMS4_jRKT_($0,$1) {
  $0 = $0|0;
@@ -7611,12 +7665,12 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionI9LerpStageEjE7getW
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = $2; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = HEAP32[$5>>2]|0; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (($4) + ($6)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($8|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $3; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = $2; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = HEAP32[$5>>2]|0; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (($4) + ($6)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($8|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionI9LerpStageEjE7setWireIS4_EEvRKMS4_jRT_j($0,$1,$2) {
  $0 = $0|0;
@@ -7628,14 +7682,14 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionI9LerpStageEjE7setW
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $5; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $4; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $3; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = HEAP32[$9>>2]|0; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (($8) + ($10)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$11>>2] = $7; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 537 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $5; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $4; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $3; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = HEAP32[$9>>2]|0; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (($8) + ($10)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$11>>2] = $7; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 537 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM10HeapRegionI9LerpStageEjEEPT_RKS6_($0) {
  $0 = $0|0;
@@ -7643,33 +7697,33 @@ function __ZN10emscripten8internal10getContextIM10HeapRegionI9LerpStageEjEEPT_RK
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(4)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $4; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(4)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $4; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal15raw_constructorI10HeapRegionI9LerpStageEJEEEPT_DpNS0_11BindingTypeIT0_E8WireTypeE() {
  var $0 = 0, $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = (__Znwj(12)|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(12)|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- invoke_vi(119,($2|0)); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ invoke_vi(119,($2|0)); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = __THREW__; __THREW__ = 0;
  $4 = $3&1;
  if ($4) {
   $5 = ___cxa_find_matching_catch_2()|0;
   $6 = tempRet0;
-  $0 = $5; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $1 = $6; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  __ZdlPv($2); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $7 = $0; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $8 = $1; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $0 = $5; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $1 = $6; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $7 = $0; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $8 = $1; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   ___resumeException($7|0);
   // unreachable;
  } else {
-  STACKTOP = sp;return ($2|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  STACKTOP = sp;return ($2|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
  return (0)|0;
 }
@@ -7679,12 +7733,12 @@ function __ZN10emscripten8internal14raw_destructorI10HeapRegionI9LerpStageEEEvPT
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10HeapRegionI9LerpStageEC2Ev($0) {
  $0 = $0|0;
@@ -7692,18 +7746,18 @@ function __ZN10HeapRegionI9LerpStageEC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 16 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
+ STACKTOP = sp;return; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
 }
 function __ZN10emscripten8internal6TypeIDI10HeapRegionIhEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionIhEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionIhEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI10HeapRegionIhEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (280|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (280|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionIhEjE7getWireIS3_EEjRKMS3_jRKT_($0,$1) {
  $0 = $0|0;
@@ -7713,12 +7767,12 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionIhEjE7getWireIS3_EE
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = $2; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = HEAP32[$5>>2]|0; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (($4) + ($6)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($8|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $3; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = $2; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = HEAP32[$5>>2]|0; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (($4) + ($6)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($8|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionIhEjE7setWireIS3_EEvRKMS3_jRT_j($0,$1,$2) {
  $0 = $0|0;
@@ -7730,14 +7784,14 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionIhEjE7setWireIS3_EE
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $5; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $4; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $3; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = HEAP32[$9>>2]|0; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (($8) + ($10)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$11>>2] = $7; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 537 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $5; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $4; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $3; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = HEAP32[$9>>2]|0; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (($8) + ($10)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$11>>2] = $7; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 537 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM10HeapRegionIhEjEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -7745,33 +7799,33 @@ function __ZN10emscripten8internal10getContextIM10HeapRegionIhEjEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(4)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $4; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(4)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $4; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal15raw_constructorI10HeapRegionIhEJEEEPT_DpNS0_11BindingTypeIT0_E8WireTypeE() {
  var $0 = 0, $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = (__Znwj(12)|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(12)|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- invoke_vi(120,($2|0)); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ invoke_vi(120,($2|0)); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = __THREW__; __THREW__ = 0;
  $4 = $3&1;
  if ($4) {
   $5 = ___cxa_find_matching_catch_2()|0;
   $6 = tempRet0;
-  $0 = $5; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $1 = $6; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  __ZdlPv($2); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $7 = $0; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $8 = $1; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $0 = $5; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $1 = $6; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $7 = $0; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $8 = $1; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   ___resumeException($7|0);
   // unreachable;
  } else {
-  STACKTOP = sp;return ($2|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  STACKTOP = sp;return ($2|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
  return (0)|0;
 }
@@ -7781,12 +7835,12 @@ function __ZN10emscripten8internal14raw_destructorI10HeapRegionIhEEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10HeapRegionIhEC2Ev($0) {
  $0 = $0|0;
@@ -7794,18 +7848,18 @@ function __ZN10HeapRegionIhEC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 16 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
+ STACKTOP = sp;return; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
 }
 function __ZN10emscripten8internal6TypeIDI10HeapRegionIaEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionIaEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDI10HeapRegionIaEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDI10HeapRegionIaEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (288|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (288|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionIaEjE7getWireIS3_EEjRKMS3_jRKT_($0,$1) {
  $0 = $0|0;
@@ -7815,12 +7869,12 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionIaEjE7getWireIS3_EE
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = $2; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = HEAP32[$5>>2]|0; //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (($4) + ($6)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($8|0); //@line 527 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $3; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = $2; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = HEAP32[$5>>2]|0; //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (($4) + ($6)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = (__ZN10emscripten8internal11BindingTypeIjE10toWireTypeERKj($7)|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($8|0); //@line 527 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal12MemberAccessI10HeapRegionIaEjE7setWireIS3_EEvRKMS3_jRT_j($0,$1,$2) {
  $0 = $0|0;
@@ -7832,14 +7886,14 @@ function __ZN10emscripten8internal12MemberAccessI10HeapRegionIaEjE7setWireIS3_EE
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $5; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $8 = $4; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $9 = $3; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $10 = HEAP32[$9>>2]|0; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $11 = (($8) + ($10)|0); //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$11>>2] = $7; //@line 536 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 537 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $6 = $5; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $7 = (__ZN10emscripten8internal11BindingTypeIjE12fromWireTypeEj($6)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $8 = $4; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $9 = $3; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $10 = HEAP32[$9>>2]|0; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $11 = (($8) + ($10)|0); //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$11>>2] = $7; //@line 536 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 537 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal10getContextIM10HeapRegionIaEjEEPT_RKS5_($0) {
  $0 = $0|0;
@@ -7847,33 +7901,33 @@ function __ZN10emscripten8internal10getContextIM10HeapRegionIaEjEEPT_RKS5_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(4)|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = $1; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = HEAP32[$3>>2]|0; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- HEAP32[$2>>2] = $4; //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($2|0); //@line 558 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(4)|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = $1; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = HEAP32[$3>>2]|0; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ HEAP32[$2>>2] = $4; //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($2|0); //@line 558 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10emscripten8internal15raw_constructorI10HeapRegionIaEJEEEPT_DpNS0_11BindingTypeIT0_E8WireTypeE() {
  var $0 = 0, $1 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = (__Znwj(12)|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = (__Znwj(12)|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  __THREW__ = 0;
- invoke_vi(121,($2|0)); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ invoke_vi(121,($2|0)); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  $3 = __THREW__; __THREW__ = 0;
  $4 = $3&1;
  if ($4) {
   $5 = ___cxa_find_matching_catch_2()|0;
   $6 = tempRet0;
-  $0 = $5; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $1 = $6; //@line 448 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  __ZdlPv($2); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $7 = $0; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
-  $8 = $1; //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  $0 = $5; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $1 = $6; //@line 448 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $7 = $0; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+  $8 = $1; //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
   ___resumeException($7|0);
   // unreachable;
  } else {
-  STACKTOP = sp;return ($2|0); //@line 445 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  STACKTOP = sp;return ($2|0); //@line 445 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
  return (0)|0;
 }
@@ -7883,12 +7937,12 @@ function __ZN10emscripten8internal14raw_destructorI10HeapRegionIaEEEvPT_($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $3 = ($2|0)==(0|0); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $2 = $1; //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $3 = ($2|0)==(0|0); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  if (!($3)) {
-  __ZdlPv($2); //@line 452 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+  __ZdlPv($2); //@line 452 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
  }
- STACKTOP = sp;return; //@line 453 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 453 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZN10HeapRegionIaEC2Ev($0) {
  $0 = $0|0;
@@ -7896,7 +7950,7 @@ function __ZN10HeapRegionIaEC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return; //@line 16 "D:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
+ STACKTOP = sp;return; //@line 25 "C:\gh\my\x\src\firmware\arduino-gm-synth\emscripten/../instruments.h"
 }
 function __ZN10emscripten8internal7InvokerIK10HeapRegionI10InstrumentEJEE6invokeEPFS5_vE($0) {
  $0 = $0|0;
@@ -7905,10 +7959,10 @@ function __ZN10emscripten8internal7InvokerIK10HeapRegionI10InstrumentEJEE6invoke
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = sp;
  $1 = $0;
- $3 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI10InstrumentEE10toWireTypeERKS4_($2)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $3 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI10InstrumentEE10toWireTypeERKS4_($2)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI10InstrumentEEE8getCountEv($0) {
  $0 = $0|0;
@@ -7916,7 +7970,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI10InstrumentEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -7924,13 +7978,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI10InstrumentEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI10InstrumentEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI10InstrumentEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (876|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (876|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI10InstrumentEE10toWireTypeERKS4_($0) {
  $0 = $0|0;
@@ -7938,10 +7992,10 @@ function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI10Instrument
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(12)|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = $1; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__Znwj(12)|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = $1; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal7InvokerIK10HeapRegionI11LerpProgramEJEE6invokeEPFS5_vE($0) {
  $0 = $0|0;
@@ -7950,10 +8004,10 @@ function __ZN10emscripten8internal7InvokerIK10HeapRegionI11LerpProgramEJEE6invok
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = sp;
  $1 = $0;
- $3 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI11LerpProgramEE10toWireTypeERKS4_($2)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $3 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI11LerpProgramEE10toWireTypeERKS4_($2)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI11LerpProgramEEE8getCountEv($0) {
  $0 = $0|0;
@@ -7961,7 +8015,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI11LerpProgramEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -7969,13 +8023,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI11LerpProgramEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI11LerpProgramEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI11LerpProgramEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (880|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (880|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI11LerpProgramEE10toWireTypeERKS4_($0) {
  $0 = $0|0;
@@ -7983,10 +8037,10 @@ function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI11LerpProgra
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(12)|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = $1; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__Znwj(12)|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = $1; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal7InvokerIK10HeapRegionI9LerpStageEJEE6invokeEPFS5_vE($0) {
  $0 = $0|0;
@@ -7995,10 +8049,10 @@ function __ZN10emscripten8internal7InvokerIK10HeapRegionI9LerpStageEJEE6invokeEP
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = sp;
  $1 = $0;
- $3 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI9LerpStageEE10toWireTypeERKS4_($2)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $3 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI9LerpStageEE10toWireTypeERKS4_($2)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI9LerpStageEEE8getCountEv($0) {
  $0 = $0|0;
@@ -8006,7 +8060,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionI9LerpStageEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -8014,13 +8068,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI9LerpStageEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI9LerpStageEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionI9LerpStageEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (884|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (884|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI9LerpStageEE10toWireTypeERKS4_($0) {
  $0 = $0|0;
@@ -8028,10 +8082,10 @@ function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionI9LerpStageEE
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(12)|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = $1; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__Znwj(12)|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = $1; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal7InvokerIK10HeapRegionIaEJEE6invokeEPFS4_vE($0) {
  $0 = $0|0;
@@ -8040,10 +8094,10 @@ function __ZN10emscripten8internal7InvokerIK10HeapRegionIaEJEE6invokeEPFS4_vE($0
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = sp;
  $1 = $0;
- $3 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIaEE10toWireTypeERKS3_($2)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $3 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIaEE10toWireTypeERKS3_($2)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIaEEE8getCountEv($0) {
  $0 = $0|0;
@@ -8051,7 +8105,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIaEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -8059,13 +8113,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionIaEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionIaEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionIaEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (888|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (888|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIaEE10toWireTypeERKS3_($0) {
  $0 = $0|0;
@@ -8073,10 +8127,10 @@ function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIaEE10toWireT
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(12)|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = $1; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__Znwj(12)|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = $1; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal7InvokerIK10HeapRegionIhEJEE6invokeEPFS4_vE($0) {
  $0 = $0|0;
@@ -8085,10 +8139,10 @@ function __ZN10emscripten8internal7InvokerIK10HeapRegionIhEJEE6invokeEPFS4_vE($0
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = sp;
  $1 = $0;
- $3 = $1; //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIhEE10toWireTypeERKS3_($2)|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return ($4|0); //@line 329 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $3 = $1; //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vi[$3 & 127]($2); //@line 330 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $4 = (__ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIhEE10toWireTypeERKS3_($2)|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return ($4|0); //@line 329 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIhEEE8getCountEv($0) {
  $0 = $0|0;
@@ -8096,7 +8150,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 1; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 1; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegionIhEEE8getTypesEv($0) {
  $0 = $0|0;
@@ -8104,13 +8158,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJK10HeapRegio
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionIhEEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionIhEEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJK10HeapRegionIhEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (892|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (892|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIhEE10toWireTypeERKS3_($0) {
  $0 = $0|0;
@@ -8118,10 +8172,10 @@ function __ZN10emscripten8internal18GenericBindingTypeI10HeapRegionIhEE10toWireT
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__Znwj(12)|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- $3 = $1; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 354 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__Znwj(12)|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ $3 = $1; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ ;HEAP32[$2>>2]=HEAP32[$3>>2]|0;HEAP32[$2+4>>2]=HEAP32[$3+4>>2]|0;HEAP32[$2+8>>2]=HEAP32[$3+8>>2]|0; //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 354 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal7InvokerIvJhEE6invokeEPFvhEh($0,$1) {
  $0 = $0|0;
@@ -8131,11 +8185,11 @@ function __ZN10emscripten8internal7InvokerIvJhEE6invokeEPFvhEh($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 343 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $5 = $3; //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- $6 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($5)|0); //@line 344 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- FUNCTION_TABLE_vi[$4 & 127]($6); //@line 343 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
- STACKTOP = sp;return; //@line 343 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/bind.h"
+ $4 = $2; //@line 343 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $5 = $3; //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ $6 = (__ZN10emscripten8internal11BindingTypeIhE12fromWireTypeEh($5)|0); //@line 344 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ FUNCTION_TABLE_vi[$4 & 127]($6); //@line 343 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
+ STACKTOP = sp;return; //@line 343 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/bind.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getCountEv($0) {
  $0 = $0|0;
@@ -8143,7 +8197,7 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getCoun
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- STACKTOP = sp;return 2; //@line 224 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ STACKTOP = sp;return 2; //@line 224 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getTypesEv($0) {
  $0 = $0|0;
@@ -8151,13 +8205,13 @@ function __ZNK10emscripten8internal12WithPoliciesIJEE11ArgTypeListIJvhEE8getType
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvhEEEE3getEv()|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- STACKTOP = sp;return ($2|0); //@line 228 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $2 = (__ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvhEEEE3getEv()|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ STACKTOP = sp;return ($2|0); //@line 228 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal14ArgArrayGetterINS0_8TypeListIJvhEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (896|0); //@line 208 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (896|0); //@line 208 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __GLOBAL__sub_I_main_cpp() {
  var label = 0, sp = 0;
@@ -8169,14 +8223,22 @@ function __GLOBAL__sub_I_main_cpp() {
 function ___cxx_global_var_init_4() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN7ssd1306C2Ev(39410); //@line 13 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- return; //@line 13 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN7ssd1306C2Ev(39410); //@line 13 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ return; //@line 13 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function ___cxx_global_var_init_1() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN9MidiSynthC2Ev(38328); //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- return; //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN9MidiSynthC2Ev(38328); //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ return; //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+}
+function __ZN7ssd1306C2Ev($0) {
+ $0 = $0|0;
+ var $1 = 0, label = 0, sp = 0;
+ sp = STACKTOP;
+ STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
+ $1 = $0;
+ STACKTOP = sp;return; //@line 37 "C:\gh\my\x\src\firmware\arduino-gm-synth/ssd1306.h"
 }
 function __Z6noteOnhhh($0,$1,$2) {
  $0 = $0|0;
@@ -8188,11 +8250,11 @@ function __Z6noteOnhhh($0,$1,$2) {
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $3; //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $7 = $4; //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $8 = $5; //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- __ZN9MidiSynth10midiNoteOnEhhh(38328,$6,$7,$8); //@line 17 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- STACKTOP = sp;return; //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $6 = $3; //@line 17 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $7 = $4; //@line 17 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $8 = $5; //@line 17 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN9MidiSynth10midiNoteOnEhhh(38328,$6,$7,$8); //@line 17 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ STACKTOP = sp;return; //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function __Z7noteOffhh($0,$1) {
  $0 = $0|0;
@@ -8202,10 +8264,10 @@ function __Z7noteOffhh($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $5 = $3; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- __ZN9MidiSynth11midiNoteOffEhh(38328,$4,$5); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $4 = $2; //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $5 = $3; //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN9MidiSynth11midiNoteOffEhh(38328,$4,$5); //@line 21 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ STACKTOP = sp;return; //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function __Z5sysexhPh($0,$1) {
  $0 = $0|0;
@@ -8215,7 +8277,7 @@ function __Z5sysexhPh($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- STACKTOP = sp;return; //@line 24 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ STACKTOP = sp;return; //@line 24 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function __Z13controlChangehhh($0,$1,$2) {
  $0 = $0|0;
@@ -8227,11 +8289,11 @@ function __Z13controlChangehhh($0,$1,$2) {
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $3; //@line 27 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $7 = $4; //@line 27 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $8 = $5; //@line 27 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- __ZN9MidiSynth17midiControlChangeEhhh(38328,$6,$7,$8); //@line 27 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- STACKTOP = sp;return; //@line 28 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $6 = $3; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $7 = $4; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $8 = $5; //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN9MidiSynth17midiControlChangeEhhh(38328,$6,$7,$8); //@line 27 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ STACKTOP = sp;return; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function __ZN9MidiSynth17midiControlChangeEhhh($0,$1,$2,$3) {
  $0 = $0|0;
@@ -8247,54 +8309,54 @@ function __ZN9MidiSynth17midiControlChangeEhhh($0,$1,$2,$3) {
  $6 = $2;
  $7 = $3;
  $9 = $4;
- $10 = $6; //@line 71 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
- $11 = $10&255; //@line 71 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
- $cond = ($11|0)==(123); //@line 71 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $10 = $6; //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $11 = $10&255; //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $cond = ($11|0)==(123); //@line 71 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
  if (!($cond)) {
-  STACKTOP = sp;return; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  STACKTOP = sp;return; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
  }
- $12 = $7; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
- $13 = $12&255; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
- $cond1 = ($13|0)==(0); //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $12 = $7; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $13 = $12&255; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $cond1 = ($13|0)==(0); //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
  if (!($cond1)) {
-  STACKTOP = sp;return; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  STACKTOP = sp;return; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
  }
- $8 = 15; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ $8 = 15; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
  while(1) {
-  $14 = $8; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $15 = $14 << 24 >> 24; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $16 = ($15|0)>=(0); //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $14 = $8; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $15 = $14 << 24 >> 24; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $16 = ($15|0)>=(0); //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
   if (!($16)) {
    break;
   }
-  $17 = ((($9)) + 28|0); //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $18 = $8; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $19 = $18 << 24 >> 24; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $20 = (($17) + ($19)|0); //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $21 = HEAP8[$20>>0]|0; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $22 = $21&255; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $23 = $5; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $24 = $23&255; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $25 = ($22|0)==($24|0); //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $17 = ((($9)) + 28|0); //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $18 = $8; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $19 = $18 << 24 >> 24; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $20 = (($17) + ($19)|0); //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $21 = HEAP8[$20>>0]|0; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $22 = $21&255; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $23 = $5; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $24 = $23&255; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $25 = ($22|0)==($24|0); //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
   if ($25) {
-   $26 = $8; //@line 77 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   __ZN5Synth7noteOffEh($9,$26); //@line 77 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $27 = ((($9)) + 28|0); //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $28 = $8; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $29 = $28 << 24 >> 24; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $30 = (($27) + ($29)|0); //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   HEAP8[$30>>0] = -1; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $31 = ((($9)) + 12|0); //@line 79 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $32 = $8; //@line 79 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $33 = $32 << 24 >> 24; //@line 79 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   $34 = (($31) + ($33)|0); //@line 79 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-   HEAP8[$34>>0] = -1; //@line 79 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $26 = $8; //@line 77 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   __ZN5Synth7noteOffEh($9,$26); //@line 77 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $27 = ((($9)) + 28|0); //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $28 = $8; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $29 = $28 << 24 >> 24; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $30 = (($27) + ($29)|0); //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   HEAP8[$30>>0] = -1; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $31 = ((($9)) + 12|0); //@line 79 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $32 = $8; //@line 79 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $33 = $32 << 24 >> 24; //@line 79 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   $34 = (($31) + ($33)|0); //@line 79 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+   HEAP8[$34>>0] = -1; //@line 79 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
   }
-  $35 = $8; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $36 = (($35) + -1)<<24>>24; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
-  $8 = $36; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $35 = $8; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $36 = (($35) + -1)<<24>>24; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+  $8 = $36; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
  }
- STACKTOP = sp;return; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
+ STACKTOP = sp;return; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth/midisynth.h"
 }
 function __Z13programChangehh($0,$1) {
  $0 = $0|0;
@@ -8304,10 +8366,10 @@ function __Z13programChangehh($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $5 = $3; //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- __ZN9MidiSynth17midiProgramChangeEhh(38328,$4,$5); //@line 31 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- STACKTOP = sp;return; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $4 = $2; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $5 = $3; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN9MidiSynth17midiProgramChangeEhh(38328,$4,$5); //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ STACKTOP = sp;return; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function __Z9pitchBendhs($0,$1) {
  $0 = $0|0;
@@ -8317,10 +8379,10 @@ function __Z9pitchBendhs($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- $5 = $3; //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- __ZN9MidiSynth13midiPitchBendEhs(38328,$4,$5); //@line 35 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
- STACKTOP = sp;return; //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $4 = $2; //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ $5 = $3; //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ __ZN9MidiSynth13midiPitchBendEhs(38328,$4,$5); //@line 35 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
+ STACKTOP = sp;return; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\main.cpp"
 }
 function __Z17TIMER2_COMPA_vectv() {
  var $0 = 0, $1 = 0, $10 = 0, $100 = 0, $101 = 0, $102 = 0, $103 = 0, $104 = 0, $105 = 0, $106 = 0, $107 = 0, $108 = 0, $109 = 0, $11 = 0, $110 = 0, $111 = 0, $112 = 0, $113 = 0, $114 = 0, $115 = 0;
@@ -8352,599 +8414,599 @@ function __Z17TIMER2_COMPA_vectv() {
  var $83 = 0, $84 = 0, $85 = 0, $86 = 0, $87 = 0, $88 = 0, $89 = 0, $9 = 0, $90 = 0, $91 = 0, $92 = 0, $93 = 0, $94 = 0, $95 = 0, $96 = 0, $97 = 0, $98 = 0, $99 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 48|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(48|0);
- __Z3seiv(); //@line 69 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $38 = HEAP16[3263]|0; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $39 = $38&65535; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $40 = $39 >> 1; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $41 = HEAP16[3263]|0; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $42 = $41&65535; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $43 = $42 & 1; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $44 = (0 - ($43))|0; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $45 = $44 & 46080; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $46 = $40 ^ $45; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $47 = $46&65535; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[3263] = $47; //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $48 = HEAP8[39491]|0; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $49 = (($48) + 1)<<24>>24; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[39491] = $49; //@line 76 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $50 = HEAP8[39491]|0; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $51 = $50&255; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $52 = $51 & 15; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $53 = $52&255; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $0 = $53; //@line 78 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $54 = $0; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $55 = $54&255; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $56 = (39443 + ($55)|0); //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $57 = HEAP8[$56>>0]|0; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $58 = $57&1; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __Z3seiv(); //@line 69 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $38 = HEAP16[3263]|0; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $39 = $38&65535; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $40 = $39 >> 1; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $41 = HEAP16[3263]|0; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $42 = $41&65535; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $43 = $42 & 1; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $44 = (0 - ($43))|0; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $45 = $44 & 46080; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $46 = $40 ^ $45; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $47 = $46&65535; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[3263] = $47; //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $48 = HEAP8[39491]|0; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $49 = (($48) + 1)<<24>>24; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[39491] = $49; //@line 76 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $50 = HEAP8[39491]|0; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $51 = $50&255; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $52 = $51 & 15; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $53 = $52&255; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $0 = $53; //@line 78 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $54 = $0; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $55 = $54&255; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $56 = (39443 + ($55)|0); //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $57 = HEAP8[$56>>0]|0; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $58 = $57&1; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  if ($58) {
-  $59 = HEAP16[3263]|0; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $60 = $59&255; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $61 = $0; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $62 = $61&255; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $63 = (39411 + ($62)|0); //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  HEAP8[$63>>0] = $60; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $59 = HEAP16[3263]|0; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $60 = $59&255; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $61 = $0; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $62 = $61&255; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $63 = (39411 + ($62)|0); //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  HEAP8[$63>>0] = $60; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  }
- $64 = HEAP8[39491]|0; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $65 = $64&255; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $66 = $65 & 240; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $67 = $66&255; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $1 = $67; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $68 = $1; //@line 85 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $69 = $68&255; //@line 85 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $64 = HEAP8[39491]|0; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $65 = $64&255; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $66 = $65 & 240; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $67 = $66&255; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $1 = $67; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $68 = $1; //@line 85 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $69 = $68&255; //@line 85 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  switch ($69|0) {
  case 0:  {
-  $70 = $0; //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $71 = $70&255; //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $72 = (1160 + ($71<<4)|0); //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $73 = (__ZNV4Lerp6sampleEv($72)|0); //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $74 = $73&255; //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $75 = (($74) - 64)|0; //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $76 = $75&255; //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $2 = $76; //@line 87 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $77 = $0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $78 = $77&255; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $79 = (39376 + ($78<<1)|0); //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $80 = HEAP16[$79>>1]|0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $81 = $80&65535; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $82 = $2; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $83 = $82 << 24 >> 24; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $84 = (($81) + ($83))|0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $85 = $84&65535; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $86 = $0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $87 = $86&255; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $88 = (39312 + ($87<<1)|0); //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  HEAP16[$88>>1] = $85; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $70 = $0; //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $71 = $70&255; //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $72 = (1160 + ($71<<4)|0); //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $73 = (__ZNV4Lerp6sampleEv($72)|0); //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $74 = $73&255; //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $75 = (($74) - 64)|0; //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $76 = $75&255; //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $2 = $76; //@line 87 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $77 = $0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $78 = $77&255; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $79 = (39376 + ($78<<1)|0); //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $80 = HEAP16[$79>>1]|0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $81 = $80&65535; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $82 = $2; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $83 = $82 << 24 >> 24; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $84 = (($81) + ($83))|0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $85 = $84&65535; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $86 = $0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $87 = $86&255; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $88 = (39312 + ($87<<1)|0); //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  HEAP16[$88>>1] = $85; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   break;
  }
  case 80:  {
-  $89 = $0; //@line 93 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $90 = $89&255; //@line 93 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $91 = (1416 + ($90<<4)|0); //@line 93 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $92 = (__ZNV4Lerp6sampleEv($91)|0); //@line 93 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $3 = $92; //@line 93 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $93 = $0; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $94 = $93&255; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $95 = (38628 + ($94<<2)|0); //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $96 = HEAP32[$95>>2]|0; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $97 = $3; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $98 = $97 << 24 >> 24; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $99 = (($96) + ($98)|0); //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $100 = $0; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $101 = $100&255; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $102 = (38564 + ($101<<2)|0); //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  HEAP32[$102>>2] = $99; //@line 94 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $89 = $0; //@line 93 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $90 = $89&255; //@line 93 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $91 = (1416 + ($90<<4)|0); //@line 93 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $92 = (__ZNV4Lerp6sampleEv($91)|0); //@line 93 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $3 = $92; //@line 93 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $93 = $0; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $94 = $93&255; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $95 = (38628 + ($94<<2)|0); //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $96 = HEAP32[$95>>2]|0; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $97 = $3; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $98 = $97 << 24 >> 24; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $99 = (($96) + ($98)|0); //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $100 = $0; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $101 = $100&255; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $102 = (38564 + ($101<<2)|0); //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  HEAP32[$102>>2] = $99; //@line 94 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   break;
  }
  case 160:  {
-  $103 = $0; //@line 99 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $104 = $103&255; //@line 99 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $105 = (904 + ($104<<4)|0); //@line 99 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $106 = (__ZNV4Lerp6sampleEv($105)|0); //@line 99 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $107 = $106&255; //@line 99 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $4 = $107; //@line 99 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $108 = $4; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $109 = $108&65535; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $110 = $0; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $111 = $110&255; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $112 = (39459 + ($111)|0); //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $113 = HEAP8[$112>>0]|0; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $114 = $113&255; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $115 = Math_imul($109, $114)|0; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $116 = $115 >> 8; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $117 = $116&255; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $118 = $0; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $119 = $118&255; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $120 = (39427 + ($119)|0); //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  HEAP8[$120>>0] = $117; //@line 100 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $103 = $0; //@line 99 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $104 = $103&255; //@line 99 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $105 = (904 + ($104<<4)|0); //@line 99 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $106 = (__ZNV4Lerp6sampleEv($105)|0); //@line 99 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $107 = $106&255; //@line 99 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $4 = $107; //@line 99 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $108 = $4; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $109 = $108&65535; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $110 = $0; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $111 = $110&255; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $112 = (39459 + ($111)|0); //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $113 = HEAP8[$112>>0]|0; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $114 = $113&255; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $115 = Math_imul($109, $114)|0; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $116 = $115 >> 8; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $117 = $116&255; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $118 = $0; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $119 = $118&255; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $120 = (39427 + ($119)|0); //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  HEAP8[$120>>0] = $117; //@line 100 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   break;
  }
  default: {
  }
  }
- $121 = HEAP8[39408]|0; //@line 110 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $122 = $121&255; //@line 110 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $123 = $122 & -5; //@line 110 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $124 = $123&255; //@line 110 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[39408] = $124; //@line 110 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $125 = HEAP16[19656]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $126 = $125&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $127 = HEAP16[19640]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $128 = $127&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $129 = (($128) + ($126))|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $130 = $129&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[19640] = $130; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $131 = HEAP16[19640]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $132 = $131&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $133 = $132 >> 8; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $134 = $133&255; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $5 = $134; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $135 = HEAP16[(39314)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $136 = $135&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $137 = HEAP16[(39282)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $138 = $137&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $139 = (($138) + ($136))|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $140 = $139&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39282)>>1] = $140; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $141 = HEAP16[(39282)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $142 = $141&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $143 = $142 >> 8; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $144 = $143&255; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $6 = $144; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $145 = HEAP16[(39316)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $146 = $145&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $147 = HEAP16[(39284)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $148 = $147&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $149 = (($148) + ($146))|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $150 = $149&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39284)>>1] = $150; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $151 = HEAP16[(39284)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $152 = $151&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $153 = $152 >> 8; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $154 = $153&255; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $7 = $154; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $155 = HEAP16[(39318)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $156 = $155&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $157 = HEAP16[(39286)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $158 = $157&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $159 = (($158) + ($156))|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $160 = $159&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39286)>>1] = $160; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $161 = HEAP16[(39286)>>1]|0; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $162 = $161&65535; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $163 = $162 >> 8; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $164 = $163&255; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $8 = $164; //@line 127 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $165 = HEAP16[(39320)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $166 = $165&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $167 = HEAP16[(39288)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $168 = $167&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $169 = (($168) + ($166))|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $170 = $169&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39288)>>1] = $170; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $171 = HEAP16[(39288)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $172 = $171&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $173 = $172 >> 8; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $174 = $173&255; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $9 = $174; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $175 = HEAP16[(39322)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $176 = $175&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $177 = HEAP16[(39290)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $178 = $177&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $179 = (($178) + ($176))|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $180 = $179&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39290)>>1] = $180; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $181 = HEAP16[(39290)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $182 = $181&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $183 = $182 >> 8; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $184 = $183&255; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $10 = $184; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $185 = HEAP16[(39324)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $186 = $185&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $187 = HEAP16[(39292)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $188 = $187&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $189 = (($188) + ($186))|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $190 = $189&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39292)>>1] = $190; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $191 = HEAP16[(39292)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $192 = $191&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $193 = $192 >> 8; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $194 = $193&255; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $11 = $194; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $195 = HEAP16[(39326)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $196 = $195&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $197 = HEAP16[(39294)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $198 = $197&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $199 = (($198) + ($196))|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $200 = $199&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39294)>>1] = $200; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $201 = HEAP16[(39294)>>1]|0; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $202 = $201&65535; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $203 = $202 >> 8; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $204 = $203&255; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $12 = $204; //@line 128 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $205 = HEAP32[9641]|0; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $206 = $5; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $207 = $206&255; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $208 = (($205) + ($207)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $209 = (__Z13pgm_read_bytePVKv($208)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $13 = $209; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $210 = HEAP32[(38568)>>2]|0; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $211 = $6; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $212 = $211&255; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $213 = (($210) + ($212)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $214 = (__Z13pgm_read_bytePVKv($213)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $14 = $214; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $215 = HEAP32[(38572)>>2]|0; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $216 = $7; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $217 = $216&255; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $218 = (($215) + ($217)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $219 = (__Z13pgm_read_bytePVKv($218)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $15 = $219; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $220 = HEAP32[(38576)>>2]|0; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $221 = $8; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $222 = $221&255; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $223 = (($220) + ($222)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $224 = (__Z13pgm_read_bytePVKv($223)|0); //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $16 = $224; //@line 130 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $225 = HEAP32[(38580)>>2]|0; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $226 = $9; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $227 = $226&255; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $228 = (($225) + ($227)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $229 = (__Z13pgm_read_bytePVKv($228)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $17 = $229; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $230 = HEAP32[(38584)>>2]|0; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $231 = $10; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $232 = $231&255; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $233 = (($230) + ($232)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $234 = (__Z13pgm_read_bytePVKv($233)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $18 = $234; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $235 = HEAP32[(38588)>>2]|0; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $236 = $11; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $237 = $236&255; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $238 = (($235) + ($237)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $239 = (__Z13pgm_read_bytePVKv($238)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $19 = $239; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $240 = HEAP32[(38592)>>2]|0; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $241 = $12; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $242 = $241&255; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $243 = (($240) + ($242)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $244 = (__Z13pgm_read_bytePVKv($243)|0); //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $20 = $244; //@line 131 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $245 = $13; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $246 = $245 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $247 = HEAP8[39411]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $248 = $247 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $249 = $246 ^ $248; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $250 = HEAP8[39427]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $251 = $250&255; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $252 = Math_imul($249, $251)|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $253 = $14; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $254 = $253 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $255 = HEAP8[(39412)>>0]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $256 = $255 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $257 = $254 ^ $256; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $258 = HEAP8[(39428)>>0]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $259 = $258&255; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $260 = Math_imul($257, $259)|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $261 = (($252) + ($260))|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $262 = $15; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $263 = $262 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $264 = HEAP8[(39413)>>0]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $265 = $264 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $266 = $263 ^ $265; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $267 = HEAP8[(39429)>>0]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $268 = $267&255; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $269 = Math_imul($266, $268)|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $270 = (($261) + ($269))|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $271 = $16; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $272 = $271 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $273 = HEAP8[(39414)>>0]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $274 = $273 << 24 >> 24; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $275 = $272 ^ $274; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $276 = HEAP8[(39430)>>0]|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $277 = $276&255; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $278 = Math_imul($275, $277)|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $279 = (($270) + ($278))|0; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $280 = $279 >> 1; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $281 = $280&65535; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $21 = $281; //@line 133 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $282 = $17; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $283 = $282 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $284 = HEAP8[(39415)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $285 = $284 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $286 = $283 ^ $285; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $287 = HEAP8[(39431)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $288 = $287&255; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $289 = Math_imul($286, $288)|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $290 = $18; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $291 = $290 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $292 = HEAP8[(39416)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $293 = $292 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $294 = $291 ^ $293; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $295 = HEAP8[(39432)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $296 = $295&255; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $297 = Math_imul($294, $296)|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $298 = (($289) + ($297))|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $299 = $19; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $300 = $299 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $301 = HEAP8[(39417)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $302 = $301 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $303 = $300 ^ $302; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $304 = HEAP8[(39433)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $305 = $304&255; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $306 = Math_imul($303, $305)|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $307 = (($298) + ($306))|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $308 = $20; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $309 = $308 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $310 = HEAP8[(39418)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $311 = $310 << 24 >> 24; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $312 = $309 ^ $311; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $313 = HEAP8[(39434)>>0]|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $314 = $313&255; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $315 = Math_imul($312, $314)|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $316 = (($307) + ($315))|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $317 = $316 >> 1; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $318 = $21; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $319 = $318 << 16 >> 16; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $320 = (($319) + ($317))|0; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $321 = $320&65535; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $21 = $321; //@line 134 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $121 = HEAP8[39408]|0; //@line 110 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $122 = $121&255; //@line 110 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $123 = $122 & -5; //@line 110 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $124 = $123&255; //@line 110 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[39408] = $124; //@line 110 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $125 = HEAP16[19656]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $126 = $125&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $127 = HEAP16[19640]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $128 = $127&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $129 = (($128) + ($126))|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $130 = $129&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[19640] = $130; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $131 = HEAP16[19640]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $132 = $131&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $133 = $132 >> 8; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $134 = $133&255; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $5 = $134; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $135 = HEAP16[(39314)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $136 = $135&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $137 = HEAP16[(39282)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $138 = $137&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $139 = (($138) + ($136))|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $140 = $139&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39282)>>1] = $140; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $141 = HEAP16[(39282)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $142 = $141&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $143 = $142 >> 8; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $144 = $143&255; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $6 = $144; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $145 = HEAP16[(39316)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $146 = $145&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $147 = HEAP16[(39284)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $148 = $147&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $149 = (($148) + ($146))|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $150 = $149&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39284)>>1] = $150; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $151 = HEAP16[(39284)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $152 = $151&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $153 = $152 >> 8; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $154 = $153&255; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $7 = $154; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $155 = HEAP16[(39318)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $156 = $155&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $157 = HEAP16[(39286)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $158 = $157&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $159 = (($158) + ($156))|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $160 = $159&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39286)>>1] = $160; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $161 = HEAP16[(39286)>>1]|0; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $162 = $161&65535; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $163 = $162 >> 8; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $164 = $163&255; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $8 = $164; //@line 127 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $165 = HEAP16[(39320)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $166 = $165&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $167 = HEAP16[(39288)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $168 = $167&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $169 = (($168) + ($166))|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $170 = $169&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39288)>>1] = $170; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $171 = HEAP16[(39288)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $172 = $171&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $173 = $172 >> 8; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $174 = $173&255; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $9 = $174; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $175 = HEAP16[(39322)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $176 = $175&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $177 = HEAP16[(39290)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $178 = $177&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $179 = (($178) + ($176))|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $180 = $179&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39290)>>1] = $180; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $181 = HEAP16[(39290)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $182 = $181&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $183 = $182 >> 8; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $184 = $183&255; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $10 = $184; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $185 = HEAP16[(39324)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $186 = $185&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $187 = HEAP16[(39292)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $188 = $187&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $189 = (($188) + ($186))|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $190 = $189&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39292)>>1] = $190; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $191 = HEAP16[(39292)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $192 = $191&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $193 = $192 >> 8; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $194 = $193&255; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $11 = $194; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $195 = HEAP16[(39326)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $196 = $195&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $197 = HEAP16[(39294)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $198 = $197&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $199 = (($198) + ($196))|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $200 = $199&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39294)>>1] = $200; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $201 = HEAP16[(39294)>>1]|0; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $202 = $201&65535; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $203 = $202 >> 8; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $204 = $203&255; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $12 = $204; //@line 128 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $205 = HEAP32[9641]|0; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $206 = $5; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $207 = $206&255; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $208 = (($205) + ($207)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $209 = (__Z13pgm_read_bytePVKv($208)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $13 = $209; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $210 = HEAP32[(38568)>>2]|0; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $211 = $6; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $212 = $211&255; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $213 = (($210) + ($212)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $214 = (__Z13pgm_read_bytePVKv($213)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $14 = $214; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $215 = HEAP32[(38572)>>2]|0; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $216 = $7; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $217 = $216&255; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $218 = (($215) + ($217)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $219 = (__Z13pgm_read_bytePVKv($218)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $15 = $219; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $220 = HEAP32[(38576)>>2]|0; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $221 = $8; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $222 = $221&255; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $223 = (($220) + ($222)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $224 = (__Z13pgm_read_bytePVKv($223)|0); //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $16 = $224; //@line 130 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $225 = HEAP32[(38580)>>2]|0; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $226 = $9; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $227 = $226&255; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $228 = (($225) + ($227)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $229 = (__Z13pgm_read_bytePVKv($228)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $17 = $229; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $230 = HEAP32[(38584)>>2]|0; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $231 = $10; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $232 = $231&255; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $233 = (($230) + ($232)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $234 = (__Z13pgm_read_bytePVKv($233)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $18 = $234; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $235 = HEAP32[(38588)>>2]|0; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $236 = $11; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $237 = $236&255; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $238 = (($235) + ($237)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $239 = (__Z13pgm_read_bytePVKv($238)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $19 = $239; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $240 = HEAP32[(38592)>>2]|0; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $241 = $12; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $242 = $241&255; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $243 = (($240) + ($242)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $244 = (__Z13pgm_read_bytePVKv($243)|0); //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $20 = $244; //@line 131 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $245 = $13; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $246 = $245 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $247 = HEAP8[39411]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $248 = $247 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $249 = $246 ^ $248; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $250 = HEAP8[39427]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $251 = $250&255; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $252 = Math_imul($249, $251)|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $253 = $14; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $254 = $253 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $255 = HEAP8[(39412)>>0]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $256 = $255 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $257 = $254 ^ $256; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $258 = HEAP8[(39428)>>0]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $259 = $258&255; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $260 = Math_imul($257, $259)|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $261 = (($252) + ($260))|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $262 = $15; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $263 = $262 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $264 = HEAP8[(39413)>>0]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $265 = $264 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $266 = $263 ^ $265; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $267 = HEAP8[(39429)>>0]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $268 = $267&255; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $269 = Math_imul($266, $268)|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $270 = (($261) + ($269))|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $271 = $16; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $272 = $271 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $273 = HEAP8[(39414)>>0]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $274 = $273 << 24 >> 24; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $275 = $272 ^ $274; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $276 = HEAP8[(39430)>>0]|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $277 = $276&255; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $278 = Math_imul($275, $277)|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $279 = (($270) + ($278))|0; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $280 = $279 >> 1; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $281 = $280&65535; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $21 = $281; //@line 133 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $282 = $17; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $283 = $282 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $284 = HEAP8[(39415)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $285 = $284 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $286 = $283 ^ $285; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $287 = HEAP8[(39431)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $288 = $287&255; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $289 = Math_imul($286, $288)|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $290 = $18; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $291 = $290 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $292 = HEAP8[(39416)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $293 = $292 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $294 = $291 ^ $293; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $295 = HEAP8[(39432)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $296 = $295&255; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $297 = Math_imul($294, $296)|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $298 = (($289) + ($297))|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $299 = $19; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $300 = $299 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $301 = HEAP8[(39417)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $302 = $301 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $303 = $300 ^ $302; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $304 = HEAP8[(39433)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $305 = $304&255; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $306 = Math_imul($303, $305)|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $307 = (($298) + ($306))|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $308 = $20; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $309 = $308 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $310 = HEAP8[(39418)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $311 = $310 << 24 >> 24; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $312 = $309 ^ $311; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $313 = HEAP8[(39434)>>0]|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $314 = $313&255; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $315 = Math_imul($312, $314)|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $316 = (($307) + ($315))|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $317 = $316 >> 1; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $318 = $21; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $319 = $318 << 16 >> 16; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $320 = (($319) + ($317))|0; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $321 = $320&65535; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $21 = $321; //@line 134 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  while(1) {
-  $322 = 128; //@line 137 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $323 = $322 & 128; //@line 137 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $324 = ($323|0)!=(0); //@line 137 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $325 = $324 ^ 1; //@line 137 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $322 = 128; //@line 137 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $323 = $322 & 128; //@line 137 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $324 = ($323|0)!=(0); //@line 137 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $325 = $324 ^ 1; //@line 137 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   if (!($325)) {
    break;
   }
  }
- $326 = HEAP16[(39328)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $327 = $326&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $328 = HEAP16[(39296)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $329 = $328&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $330 = (($329) + ($327))|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $331 = $330&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39296)>>1] = $331; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $332 = HEAP16[(39296)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $333 = $332&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $334 = $333 >> 8; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $335 = $334&255; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $22 = $335; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $336 = HEAP16[(39330)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $337 = $336&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $338 = HEAP16[(39298)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $339 = $338&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $340 = (($339) + ($337))|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $341 = $340&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39298)>>1] = $341; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $342 = HEAP16[(39298)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $343 = $342&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $344 = $343 >> 8; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $345 = $344&255; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $23 = $345; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $346 = HEAP16[(39332)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $347 = $346&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $348 = HEAP16[(39300)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $349 = $348&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $350 = (($349) + ($347))|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $351 = $350&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39300)>>1] = $351; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $352 = HEAP16[(39300)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $353 = $352&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $354 = $353 >> 8; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $355 = $354&255; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $24 = $355; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $356 = HEAP16[(39334)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $357 = $356&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $358 = HEAP16[(39302)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $359 = $358&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $360 = (($359) + ($357))|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $361 = $360&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39302)>>1] = $361; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $362 = HEAP16[(39302)>>1]|0; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $363 = $362&65535; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $364 = $363 >> 8; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $365 = $364&255; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $25 = $365; //@line 141 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $366 = HEAP16[(39336)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $367 = $366&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $368 = HEAP16[(39304)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $369 = $368&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $370 = (($369) + ($367))|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $371 = $370&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39304)>>1] = $371; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $372 = HEAP16[(39304)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $373 = $372&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $374 = $373 >> 8; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $375 = $374&255; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $26 = $375; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $376 = HEAP16[(39338)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $377 = $376&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $378 = HEAP16[(39306)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $379 = $378&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $380 = (($379) + ($377))|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $381 = $380&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39306)>>1] = $381; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $382 = HEAP16[(39306)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $383 = $382&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $384 = $383 >> 8; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $385 = $384&255; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $27 = $385; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $386 = HEAP16[(39340)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $387 = $386&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $388 = HEAP16[(39308)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $389 = $388&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $390 = (($389) + ($387))|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $391 = $390&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39308)>>1] = $391; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $392 = HEAP16[(39308)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $393 = $392&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $394 = $393 >> 8; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $395 = $394&255; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $28 = $395; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $396 = HEAP16[(39342)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $397 = $396&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $398 = HEAP16[(39310)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $399 = $398&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $400 = (($399) + ($397))|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $401 = $400&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[(39310)>>1] = $401; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $402 = HEAP16[(39310)>>1]|0; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $403 = $402&65535; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $404 = $403 >> 8; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $405 = $404&255; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $29 = $405; //@line 142 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $406 = HEAP32[(38596)>>2]|0; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $407 = $22; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $408 = $407&255; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $409 = (($406) + ($408)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $410 = (__Z13pgm_read_bytePVKv($409)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $30 = $410; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $411 = HEAP32[(38600)>>2]|0; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $412 = $23; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $413 = $412&255; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $414 = (($411) + ($413)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $415 = (__Z13pgm_read_bytePVKv($414)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $31 = $415; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $416 = HEAP32[(38604)>>2]|0; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $417 = $24; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $418 = $417&255; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $419 = (($416) + ($418)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $420 = (__Z13pgm_read_bytePVKv($419)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $32 = $420; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $421 = HEAP32[(38608)>>2]|0; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $422 = $25; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $423 = $422&255; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $424 = (($421) + ($423)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $425 = (__Z13pgm_read_bytePVKv($424)|0); //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $33 = $425; //@line 144 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $426 = HEAP32[(38612)>>2]|0; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $427 = $26; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $428 = $427&255; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $429 = (($426) + ($428)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $430 = (__Z13pgm_read_bytePVKv($429)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $34 = $430; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $431 = HEAP32[(38616)>>2]|0; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $432 = $27; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $433 = $432&255; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $434 = (($431) + ($433)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $435 = (__Z13pgm_read_bytePVKv($434)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $35 = $435; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $436 = HEAP32[(38620)>>2]|0; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $437 = $28; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $438 = $437&255; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $439 = (($436) + ($438)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $440 = (__Z13pgm_read_bytePVKv($439)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $36 = $440; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $441 = HEAP32[(38624)>>2]|0; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $442 = $29; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $443 = $442&255; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $444 = (($441) + ($443)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $445 = (__Z13pgm_read_bytePVKv($444)|0); //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $37 = $445; //@line 145 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $446 = $30; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $447 = $446 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $448 = HEAP8[(39419)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $449 = $448 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $450 = $447 ^ $449; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $451 = HEAP8[(39435)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $452 = $451&255; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $453 = Math_imul($450, $452)|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $454 = $31; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $455 = $454 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $456 = HEAP8[(39420)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $457 = $456 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $458 = $455 ^ $457; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $459 = HEAP8[(39436)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $460 = $459&255; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $461 = Math_imul($458, $460)|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $462 = (($453) + ($461))|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $463 = $32; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $464 = $463 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $465 = HEAP8[(39421)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $466 = $465 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $467 = $464 ^ $466; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $468 = HEAP8[(39437)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $469 = $468&255; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $470 = Math_imul($467, $469)|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $471 = (($462) + ($470))|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $472 = $33; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $473 = $472 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $474 = HEAP8[(39422)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $475 = $474 << 24 >> 24; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $476 = $473 ^ $475; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $477 = HEAP8[(39438)>>0]|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $478 = $477&255; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $479 = Math_imul($476, $478)|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $480 = (($471) + ($479))|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $481 = $480 >> 1; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $482 = $21; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $483 = $482 << 16 >> 16; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $484 = (($483) + ($481))|0; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $485 = $484&65535; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $21 = $485; //@line 147 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $486 = $34; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $487 = $486 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $488 = HEAP8[(39423)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $489 = $488 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $490 = $487 ^ $489; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $491 = HEAP8[(39439)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $492 = $491&255; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $493 = Math_imul($490, $492)|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $494 = $35; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $495 = $494 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $496 = HEAP8[(39424)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $497 = $496 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $498 = $495 ^ $497; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $499 = HEAP8[(39440)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $500 = $499&255; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $501 = Math_imul($498, $500)|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $502 = (($493) + ($501))|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $503 = $36; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $504 = $503 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $505 = HEAP8[(39425)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $506 = $505 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $507 = $504 ^ $506; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $508 = HEAP8[(39441)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $509 = $508&255; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $510 = Math_imul($507, $509)|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $511 = (($502) + ($510))|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $512 = $37; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $513 = $512 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $514 = HEAP8[(39426)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $515 = $514 << 24 >> 24; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $516 = $513 ^ $515; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $517 = HEAP8[(39442)>>0]|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $518 = $517&255; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $519 = Math_imul($516, $518)|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $520 = (($511) + ($519))|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $521 = $520 >> 1; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $522 = $21; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $523 = $522 << 16 >> 16; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $524 = (($523) + ($521))|0; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $525 = $524&65535; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $21 = $525; //@line 148 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $526 = $21; //@line 150 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $527 = $526 << 16 >> 16; //@line 150 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $528 = (($527) + 32768)|0; //@line 150 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $529 = $528&65535; //@line 150 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[3262] = $529; //@line 150 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $326 = HEAP16[(39328)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $327 = $326&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $328 = HEAP16[(39296)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $329 = $328&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $330 = (($329) + ($327))|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $331 = $330&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39296)>>1] = $331; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $332 = HEAP16[(39296)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $333 = $332&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $334 = $333 >> 8; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $335 = $334&255; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $22 = $335; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $336 = HEAP16[(39330)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $337 = $336&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $338 = HEAP16[(39298)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $339 = $338&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $340 = (($339) + ($337))|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $341 = $340&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39298)>>1] = $341; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $342 = HEAP16[(39298)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $343 = $342&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $344 = $343 >> 8; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $345 = $344&255; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $23 = $345; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $346 = HEAP16[(39332)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $347 = $346&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $348 = HEAP16[(39300)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $349 = $348&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $350 = (($349) + ($347))|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $351 = $350&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39300)>>1] = $351; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $352 = HEAP16[(39300)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $353 = $352&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $354 = $353 >> 8; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $355 = $354&255; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $24 = $355; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $356 = HEAP16[(39334)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $357 = $356&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $358 = HEAP16[(39302)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $359 = $358&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $360 = (($359) + ($357))|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $361 = $360&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39302)>>1] = $361; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $362 = HEAP16[(39302)>>1]|0; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $363 = $362&65535; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $364 = $363 >> 8; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $365 = $364&255; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $25 = $365; //@line 141 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $366 = HEAP16[(39336)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $367 = $366&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $368 = HEAP16[(39304)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $369 = $368&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $370 = (($369) + ($367))|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $371 = $370&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39304)>>1] = $371; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $372 = HEAP16[(39304)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $373 = $372&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $374 = $373 >> 8; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $375 = $374&255; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $26 = $375; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $376 = HEAP16[(39338)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $377 = $376&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $378 = HEAP16[(39306)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $379 = $378&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $380 = (($379) + ($377))|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $381 = $380&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39306)>>1] = $381; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $382 = HEAP16[(39306)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $383 = $382&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $384 = $383 >> 8; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $385 = $384&255; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $27 = $385; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $386 = HEAP16[(39340)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $387 = $386&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $388 = HEAP16[(39308)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $389 = $388&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $390 = (($389) + ($387))|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $391 = $390&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39308)>>1] = $391; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $392 = HEAP16[(39308)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $393 = $392&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $394 = $393 >> 8; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $395 = $394&255; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $28 = $395; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $396 = HEAP16[(39342)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $397 = $396&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $398 = HEAP16[(39310)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $399 = $398&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $400 = (($399) + ($397))|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $401 = $400&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[(39310)>>1] = $401; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $402 = HEAP16[(39310)>>1]|0; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $403 = $402&65535; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $404 = $403 >> 8; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $405 = $404&255; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $29 = $405; //@line 142 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $406 = HEAP32[(38596)>>2]|0; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $407 = $22; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $408 = $407&255; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $409 = (($406) + ($408)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $410 = (__Z13pgm_read_bytePVKv($409)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $30 = $410; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $411 = HEAP32[(38600)>>2]|0; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $412 = $23; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $413 = $412&255; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $414 = (($411) + ($413)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $415 = (__Z13pgm_read_bytePVKv($414)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $31 = $415; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $416 = HEAP32[(38604)>>2]|0; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $417 = $24; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $418 = $417&255; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $419 = (($416) + ($418)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $420 = (__Z13pgm_read_bytePVKv($419)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $32 = $420; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $421 = HEAP32[(38608)>>2]|0; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $422 = $25; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $423 = $422&255; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $424 = (($421) + ($423)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $425 = (__Z13pgm_read_bytePVKv($424)|0); //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $33 = $425; //@line 144 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $426 = HEAP32[(38612)>>2]|0; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $427 = $26; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $428 = $427&255; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $429 = (($426) + ($428)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $430 = (__Z13pgm_read_bytePVKv($429)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $34 = $430; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $431 = HEAP32[(38616)>>2]|0; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $432 = $27; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $433 = $432&255; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $434 = (($431) + ($433)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $435 = (__Z13pgm_read_bytePVKv($434)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $35 = $435; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $436 = HEAP32[(38620)>>2]|0; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $437 = $28; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $438 = $437&255; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $439 = (($436) + ($438)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $440 = (__Z13pgm_read_bytePVKv($439)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $36 = $440; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $441 = HEAP32[(38624)>>2]|0; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $442 = $29; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $443 = $442&255; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $444 = (($441) + ($443)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $445 = (__Z13pgm_read_bytePVKv($444)|0); //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $37 = $445; //@line 145 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $446 = $30; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $447 = $446 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $448 = HEAP8[(39419)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $449 = $448 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $450 = $447 ^ $449; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $451 = HEAP8[(39435)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $452 = $451&255; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $453 = Math_imul($450, $452)|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $454 = $31; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $455 = $454 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $456 = HEAP8[(39420)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $457 = $456 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $458 = $455 ^ $457; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $459 = HEAP8[(39436)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $460 = $459&255; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $461 = Math_imul($458, $460)|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $462 = (($453) + ($461))|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $463 = $32; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $464 = $463 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $465 = HEAP8[(39421)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $466 = $465 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $467 = $464 ^ $466; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $468 = HEAP8[(39437)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $469 = $468&255; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $470 = Math_imul($467, $469)|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $471 = (($462) + ($470))|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $472 = $33; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $473 = $472 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $474 = HEAP8[(39422)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $475 = $474 << 24 >> 24; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $476 = $473 ^ $475; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $477 = HEAP8[(39438)>>0]|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $478 = $477&255; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $479 = Math_imul($476, $478)|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $480 = (($471) + ($479))|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $481 = $480 >> 1; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $482 = $21; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $483 = $482 << 16 >> 16; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $484 = (($483) + ($481))|0; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $485 = $484&65535; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $21 = $485; //@line 147 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $486 = $34; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $487 = $486 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $488 = HEAP8[(39423)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $489 = $488 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $490 = $487 ^ $489; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $491 = HEAP8[(39439)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $492 = $491&255; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $493 = Math_imul($490, $492)|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $494 = $35; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $495 = $494 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $496 = HEAP8[(39424)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $497 = $496 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $498 = $495 ^ $497; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $499 = HEAP8[(39440)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $500 = $499&255; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $501 = Math_imul($498, $500)|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $502 = (($493) + ($501))|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $503 = $36; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $504 = $503 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $505 = HEAP8[(39425)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $506 = $505 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $507 = $504 ^ $506; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $508 = HEAP8[(39441)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $509 = $508&255; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $510 = Math_imul($507, $509)|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $511 = (($502) + ($510))|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $512 = $37; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $513 = $512 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $514 = HEAP8[(39426)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $515 = $514 << 24 >> 24; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $516 = $513 ^ $515; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $517 = HEAP8[(39442)>>0]|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $518 = $517&255; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $519 = Math_imul($516, $518)|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $520 = (($511) + ($519))|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $521 = $520 >> 1; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $522 = $21; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $523 = $522 << 16 >> 16; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $524 = (($523) + ($521))|0; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $525 = $524&65535; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $21 = $525; //@line 148 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $526 = $21; //@line 150 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $527 = $526 << 16 >> 16; //@line 150 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $528 = (($527) + 32768)|0; //@line 150 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $529 = $528&65535; //@line 150 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[3262] = $529; //@line 150 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  while(1) {
-  $530 = 128; //@line 153 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $531 = $530 & 128; //@line 153 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $532 = ($531|0)!=(0); //@line 153 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $533 = $532 ^ 1; //@line 153 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $530 = 128; //@line 153 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $531 = $530 & 128; //@line 153 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $532 = ($531|0)!=(0); //@line 153 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $533 = $532 ^ 1; //@line 153 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   if (!($533)) {
    break;
   }
  }
- $534 = HEAP8[39408]|0; //@line 154 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $535 = $534&255; //@line 154 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $536 = $535 | 4; //@line 154 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $537 = $536&255; //@line 154 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[39408] = $537; //@line 154 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- STACKTOP = sp;return; //@line 158 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $534 = HEAP8[39408]|0; //@line 154 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $535 = $534&255; //@line 154 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $536 = $535 | 4; //@line 154 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $537 = $536&255; //@line 154 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[39408] = $537; //@line 154 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ STACKTOP = sp;return; //@line 158 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN5Synth6sampleEv($0) {
  $0 = $0|0;
@@ -8952,9 +9014,9 @@ function __ZN5Synth6sampleEv($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- __Z17TIMER2_COMPA_vectv(); //@line 162 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $2 = HEAP16[3262]|0; //@line 163 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- STACKTOP = sp;return ($2|0); //@line 163 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __Z17TIMER2_COMPA_vectv(); //@line 162 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $2 = HEAP16[3262]|0; //@line 163 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ STACKTOP = sp;return ($2|0); //@line 163 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN5Synth12getNextVoiceEv($0) {
  $0 = $0|0;
@@ -8965,97 +9027,97 @@ function __ZN5Synth12getNextVoiceEv($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 32|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(32|0);
  $1 = $0;
- $2 = 15; //@line 170 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $11 = $2; //@line 175 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $12 = $11&255; //@line 175 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $13 = (904 + ($12<<4)|0); //@line 175 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $5 = $13; //@line 175 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $14 = $5; //@line 176 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $15 = ((($14)) + 6|0); //@line 176 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $16 = HEAP8[$15>>0]|0; //@line 176 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $3 = $16; //@line 176 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $17 = $5; //@line 177 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $18 = ((($17)) + 8|0); //@line 177 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $19 = HEAP16[$18>>1]|0; //@line 177 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $20 = $19&255; //@line 177 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $4 = $20; //@line 177 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $6 = 14; //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $2 = 15; //@line 170 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $11 = $2; //@line 175 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $12 = $11&255; //@line 175 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $13 = (904 + ($12<<4)|0); //@line 175 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $5 = $13; //@line 175 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $14 = $5; //@line 176 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $15 = ((($14)) + 6|0); //@line 176 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $16 = HEAP8[$15>>0]|0; //@line 176 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $3 = $16; //@line 176 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $17 = $5; //@line 177 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $18 = ((($17)) + 8|0); //@line 177 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $19 = HEAP16[$18>>1]|0; //@line 177 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $20 = $19&255; //@line 177 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $4 = $20; //@line 177 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $6 = 14; //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  while(1) {
-  $21 = $6; //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $22 = $21 << 24 >> 24; //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $23 = ($22|0)>=(0); //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $21 = $6; //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $22 = $21 << 24 >> 24; //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $23 = ($22|0)>=(0); //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   if (!($23)) {
    break;
   }
-  $24 = $6; //@line 181 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $25 = $24 << 24 >> 24; //@line 181 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $26 = (904 + ($25<<4)|0); //@line 181 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $7 = $26; //@line 181 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $27 = $7; //@line 182 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $28 = ((($27)) + 6|0); //@line 182 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $29 = HEAP8[$28>>0]|0; //@line 182 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $8 = $29; //@line 182 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $30 = $8; //@line 184 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $31 = $30&255; //@line 184 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $32 = $3; //@line 184 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $33 = $32&255; //@line 184 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $34 = ($31|0)>=($33|0); //@line 184 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $24 = $6; //@line 181 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $25 = $24 << 24 >> 24; //@line 181 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $26 = (904 + ($25<<4)|0); //@line 181 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $7 = $26; //@line 181 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $27 = $7; //@line 182 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $28 = ((($27)) + 6|0); //@line 182 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $29 = HEAP8[$28>>0]|0; //@line 182 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $8 = $29; //@line 182 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $30 = $8; //@line 184 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $31 = $30&255; //@line 184 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $32 = $3; //@line 184 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $33 = $32&255; //@line 184 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $34 = ($31|0)>=($33|0); //@line 184 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   do {
    if ($34) {
-    $35 = $8; //@line 185 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $36 = $35&255; //@line 185 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $37 = $3; //@line 185 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $38 = $37&255; //@line 185 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $39 = ($36|0)==($38|0); //@line 185 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $35 = $8; //@line 185 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $36 = $35&255; //@line 185 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $37 = $3; //@line 185 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $38 = $37&255; //@line 185 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $39 = ($36|0)==($38|0); //@line 185 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
     if (!($39)) {
-     $62 = $6; //@line 198 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $2 = $62; //@line 198 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $63 = $8; //@line 199 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $3 = $63; //@line 199 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $64 = $7; //@line 200 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $65 = ((($64)) + 8|0); //@line 200 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $66 = HEAP16[$65>>1]|0; //@line 200 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $67 = $66&255; //@line 200 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $4 = $67; //@line 200 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $62 = $6; //@line 198 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $2 = $62; //@line 198 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $63 = $8; //@line 199 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $3 = $63; //@line 199 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $64 = $7; //@line 200 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $65 = ((($64)) + 8|0); //@line 200 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $66 = HEAP16[$65>>1]|0; //@line 200 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $67 = $66&255; //@line 200 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $4 = $67; //@line 200 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
      break;
     }
-    $40 = $7; //@line 186 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $41 = ((($40)) + 8|0); //@line 186 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $42 = HEAP16[$41>>1]|0; //@line 186 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $43 = $42&255; //@line 186 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $9 = $43; //@line 186 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $44 = $7; //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $45 = ((($44)) + 10|0); //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $46 = HEAP16[$45>>1]|0; //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $47 = $46 << 16 >> 16; //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $48 = ($47|0)>(0); //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $40 = $7; //@line 186 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $41 = ((($40)) + 8|0); //@line 186 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $42 = HEAP16[$41>>1]|0; //@line 186 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $43 = $42&255; //@line 186 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $9 = $43; //@line 186 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $44 = $7; //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $45 = ((($44)) + 10|0); //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $46 = HEAP16[$45>>1]|0; //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $47 = $46 << 16 >> 16; //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $48 = ($47|0)>(0); //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
     $49 = $9;
     $50 = $49 << 24 >> 24;
     $51 = $4;
     $52 = $51 << 24 >> 24;
-    $53 = ($50|0)>=($52|0); //@line 189 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $54 = ($50|0)<=($52|0); //@line 190 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $55 = $48 ? $53 : $54; //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $56 = $55&1; //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $10 = $56; //@line 188 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $57 = $10; //@line 192 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-    $58 = $57&1; //@line 192 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $53 = ($50|0)>=($52|0); //@line 189 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $54 = ($50|0)<=($52|0); //@line 190 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $55 = $48 ? $53 : $54; //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $56 = $55&1; //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $10 = $56; //@line 188 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $57 = $10; //@line 192 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+    $58 = $57&1; //@line 192 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
     if ($58) {
-     $59 = $6; //@line 193 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $2 = $59; //@line 193 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $60 = $8; //@line 194 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $3 = $60; //@line 194 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $61 = $9; //@line 195 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-     $4 = $61; //@line 195 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $59 = $6; //@line 193 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $2 = $59; //@line 193 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $60 = $8; //@line 194 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $3 = $60; //@line 194 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $61 = $9; //@line 195 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+     $4 = $61; //@line 195 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
     }
    }
   } while(0);
-  $68 = $6; //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $69 = (($68) + -1)<<24>>24; //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $6 = $69; //@line 180 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $68 = $6; //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $69 = (($68) + -1)<<24>>24; //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $6 = $69; //@line 180 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  }
- $70 = $2; //@line 205 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- STACKTOP = sp;return ($70|0); //@line 205 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $70 = $2; //@line 205 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ STACKTOP = sp;return ($70|0); //@line 205 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN5Synth6noteOnEhhhRK10Instrument($0,$1,$2,$3,$4) {
  $0 = $0|0;
@@ -9078,152 +9140,152 @@ function __ZN5Synth6noteOnEhhhRK10Instrument($0,$1,$2,$3,$4) {
  $10 = $3;
  $11 = $4;
  $18 = $7;
- $19 = $11; //@line 211 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $20 = ((($19)) + 8|0); //@line 211 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $21 = HEAP8[$20>>0]|0; //@line 211 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $12 = $21; //@line 211 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $22 = $12; //@line 212 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $23 = $22&255; //@line 212 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $24 = $23 & 2; //@line 212 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $25 = ($24|0)!=(0); //@line 212 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $19 = $11; //@line 211 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $20 = ((($19)) + 8|0); //@line 211 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $21 = HEAP8[$20>>0]|0; //@line 211 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $12 = $21; //@line 211 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $22 = $12; //@line 212 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $23 = $22&255; //@line 212 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $24 = $23 & 2; //@line 212 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $25 = ($24|0)!=(0); //@line 212 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  if ($25) {
-  $26 = $10; //@line 213 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $27 = $26&255; //@line 213 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $28 = $27 >> 1; //@line 213 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $29 = $28&255; //@line 213 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $10 = $29; //@line 213 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $26 = $10; //@line 213 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $27 = $26&255; //@line 213 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $28 = $27 >> 1; //@line 213 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $29 = $28&255; //@line 213 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $10 = $29; //@line 213 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  }
- $30 = $12; //@line 216 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $31 = $30&255; //@line 216 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $32 = $31 & 1; //@line 216 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $33 = ($32|0)!=(0); //@line 216 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $34 = $33&1; //@line 216 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $13 = $34; //@line 216 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $35 = $9; //@line 218 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $36 = $35&255; //@line 218 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $37 = $36 >> 4; //@line 218 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $38 = (12961 + ($37)|0); //@line 218 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $39 = HEAP8[$38>>0]|0; //@line 218 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $14 = $39; //@line 218 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $40 = $12; //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $41 = $40&255; //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $42 = $41 & 4; //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $43 = ($42|0)!=(0); //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $44 = $14; //@line 220 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $45 = $44&255; //@line 220 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $46 = $43 ? $45 : 0; //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $47 = $46&255; //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $15 = $47; //@line 219 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $48 = $12; //@line 223 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $49 = $48&255; //@line 223 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $50 = $49 & 8; //@line 223 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $51 = ($50|0)!=(0); //@line 223 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $30 = $12; //@line 216 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $31 = $30&255; //@line 216 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $32 = $31 & 1; //@line 216 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $33 = ($32|0)!=(0); //@line 216 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $34 = $33&1; //@line 216 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $13 = $34; //@line 216 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $35 = $9; //@line 218 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $36 = $35&255; //@line 218 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $37 = $36 >> 4; //@line 218 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $38 = (12961 + ($37)|0); //@line 218 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $39 = HEAP8[$38>>0]|0; //@line 218 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $14 = $39; //@line 218 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $40 = $12; //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $41 = $40&255; //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $42 = $41 & 4; //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $43 = ($42|0)!=(0); //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $44 = $14; //@line 220 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $45 = $44&255; //@line 220 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $46 = $43 ? $45 : 0; //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $47 = $46&255; //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $15 = $47; //@line 219 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $48 = $12; //@line 223 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $49 = $48&255; //@line 223 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $50 = $49 & 8; //@line 223 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $51 = ($50|0)!=(0); //@line 223 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  if ($51) {
-  $52 = $14; //@line 224 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $53 = $52&255; //@line 224 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $54 = $53 << 6; //@line 224 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $52 = $14; //@line 224 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $53 = $52&255; //@line 224 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $54 = $53 << 6; //@line 224 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   $56 = $54;
  } else {
   $56 = 0;
  }
- $55 = $56&255; //@line 223 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $16 = $55; //@line 223 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $57 = $9; //@line 227 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $58 = $8; //@line 227 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $59 = $58&255; //@line 227 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $60 = (39475 + ($59)|0); //@line 227 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[$60>>0] = $57; //@line 227 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $61 = $9; //@line 229 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $62 = $61&255; //@line 229 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $63 = (6528 + ($62<<1)|0); //@line 229 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $64 = (__Z13pgm_read_wordPVKv($63)|0); //@line 229 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $17 = $64; //@line 229 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $55 = $56&255; //@line 223 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $16 = $55; //@line 223 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $57 = $9; //@line 227 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $58 = $8; //@line 227 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $59 = $58&255; //@line 227 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $60 = (39475 + ($59)|0); //@line 227 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[$60>>0] = $57; //@line 227 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $61 = $9; //@line 229 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $62 = $61&255; //@line 229 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $63 = (6528 + ($62<<1)|0); //@line 229 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $64 = (__Z13pgm_read_wordPVKv($63)|0); //@line 229 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $17 = $64; //@line 229 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $6 = $18;
- __Z3cliv(); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- __Z3seiv(); //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- $65 = $11; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $66 = HEAP32[$65>>2]|0; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $67 = $16; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $68 = $67&255; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $69 = (($66) + ($68)|0); //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $70 = $8; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $71 = $70&255; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $72 = (38628 + ($71<<2)|0); //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP32[$72>>2] = $69; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $73 = $8; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $74 = $73&255; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $75 = (38564 + ($74<<2)|0); //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP32[$75>>2] = $69; //@line 238 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $76 = $8; //@line 239 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $77 = $76&255; //@line 239 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $78 = (39280 + ($77<<1)|0); //@line 239 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[$78>>1] = 0; //@line 239 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $79 = $17; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $80 = $8; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $81 = $80&255; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $82 = (39344 + ($81<<1)|0); //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[$82>>1] = $79; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $83 = HEAP16[$82>>1]|0; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $84 = $8; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $85 = $84&255; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $86 = (39376 + ($85<<1)|0); //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[$86>>1] = $83; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $87 = HEAP16[$86>>1]|0; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $88 = $8; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $89 = $88&255; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $90 = (39312 + ($89<<1)|0); //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[$90>>1] = $87; //@line 240 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $91 = $11; //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $92 = ((($91)) + 7|0); //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $93 = HEAP8[$92>>0]|0; //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $94 = $8; //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $95 = $94&255; //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $96 = (39411 + ($95)|0); //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[$96>>0] = $93; //@line 241 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $97 = $8; //@line 242 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $98 = $97&255; //@line 242 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $99 = (39427 + ($98)|0); //@line 242 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[$99>>0] = 0; //@line 242 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $100 = $13; //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $101 = $100&1; //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $102 = $8; //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $103 = $102&255; //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $104 = (39443 + ($103)|0); //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $105 = $101&1; //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[$104>>0] = $105; //@line 243 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $106 = $10; //@line 244 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $107 = $8; //@line 244 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $108 = $107&255; //@line 244 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $109 = (39459 + ($108)|0); //@line 244 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP8[$109>>0] = $106; //@line 244 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $110 = $8; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $111 = $110&255; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $112 = (904 + ($111<<4)|0); //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $113 = $11; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $114 = ((($113)) + 4|0); //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $115 = HEAP8[$114>>0]|0; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $116 = $115&255; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $117 = $15; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $118 = $117&255; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $119 = (($116) + ($118))|0; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $120 = $119&255; //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- __ZNV4Lerp5startEh($112,$120); //@line 245 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $121 = $8; //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $122 = $121&255; //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $123 = (1160 + ($122<<4)|0); //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $124 = $11; //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $125 = ((($124)) + 5|0); //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $126 = HEAP8[$125>>0]|0; //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- __ZNV4Lerp5startEh($123,$126); //@line 246 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $127 = $8; //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $128 = $127&255; //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $129 = (1416 + ($128<<4)|0); //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $130 = $11; //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $131 = ((($130)) + 6|0); //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $132 = HEAP8[$131>>0]|0; //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- __ZNV4Lerp5startEh($129,$132); //@line 247 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __Z3cliv(); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3seiv(); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ $65 = $11; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $66 = HEAP32[$65>>2]|0; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $67 = $16; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $68 = $67&255; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $69 = (($66) + ($68)|0); //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $70 = $8; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $71 = $70&255; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $72 = (38628 + ($71<<2)|0); //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP32[$72>>2] = $69; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $73 = $8; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $74 = $73&255; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $75 = (38564 + ($74<<2)|0); //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP32[$75>>2] = $69; //@line 238 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $76 = $8; //@line 239 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $77 = $76&255; //@line 239 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $78 = (39280 + ($77<<1)|0); //@line 239 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[$78>>1] = 0; //@line 239 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $79 = $17; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $80 = $8; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $81 = $80&255; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $82 = (39344 + ($81<<1)|0); //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[$82>>1] = $79; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $83 = HEAP16[$82>>1]|0; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $84 = $8; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $85 = $84&255; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $86 = (39376 + ($85<<1)|0); //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[$86>>1] = $83; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $87 = HEAP16[$86>>1]|0; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $88 = $8; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $89 = $88&255; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $90 = (39312 + ($89<<1)|0); //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[$90>>1] = $87; //@line 240 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $91 = $11; //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $92 = ((($91)) + 7|0); //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $93 = HEAP8[$92>>0]|0; //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $94 = $8; //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $95 = $94&255; //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $96 = (39411 + ($95)|0); //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[$96>>0] = $93; //@line 241 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $97 = $8; //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $98 = $97&255; //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $99 = (39427 + ($98)|0); //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[$99>>0] = 0; //@line 242 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $100 = $13; //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $101 = $100&1; //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $102 = $8; //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $103 = $102&255; //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $104 = (39443 + ($103)|0); //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $105 = $101&1; //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[$104>>0] = $105; //@line 243 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $106 = $10; //@line 244 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $107 = $8; //@line 244 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $108 = $107&255; //@line 244 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $109 = (39459 + ($108)|0); //@line 244 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP8[$109>>0] = $106; //@line 244 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $110 = $8; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $111 = $110&255; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $112 = (904 + ($111<<4)|0); //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $113 = $11; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $114 = ((($113)) + 4|0); //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $115 = HEAP8[$114>>0]|0; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $116 = $115&255; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $117 = $15; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $118 = $117&255; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $119 = (($116) + ($118))|0; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $120 = $119&255; //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __ZNV4Lerp5startEh($112,$120); //@line 245 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $121 = $8; //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $122 = $121&255; //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $123 = (1160 + ($122<<4)|0); //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $124 = $11; //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $125 = ((($124)) + 5|0); //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $126 = HEAP8[$125>>0]|0; //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __ZNV4Lerp5startEh($123,$126); //@line 246 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $127 = $8; //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $128 = $127&255; //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $129 = (1416 + ($128<<4)|0); //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $130 = $11; //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $131 = ((($130)) + 6|0); //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $132 = HEAP8[$131>>0]|0; //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __ZNV4Lerp5startEh($129,$132); //@line 247 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $5 = $18;
- STACKTOP = sp;return; //@line 250 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ STACKTOP = sp;return; //@line 250 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN5Synth7noteOffEh($0,$1) {
  $0 = $0|0;
@@ -9235,14 +9297,14 @@ function __ZN5Synth7noteOffEh($0,$1) {
  $5 = $1;
  $6 = $4;
  $3 = $6;
- __Z3cliv(); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- __Z3seiv(); //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- $7 = $5; //@line 255 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $8 = $7&255; //@line 255 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $9 = (904 + ($8<<4)|0); //@line 255 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- __ZNV4Lerp4stopEv($9); //@line 255 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __Z3cliv(); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3seiv(); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ $7 = $5; //@line 255 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $8 = $7&255; //@line 255 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $9 = (904 + ($8<<4)|0); //@line 255 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __ZNV4Lerp4stopEv($9); //@line 255 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $2 = $6;
- STACKTOP = sp;return; //@line 257 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ STACKTOP = sp;return; //@line 257 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN5Synth9pitchBendEhs($0,$1,$2) {
  $0 = $0|0;
@@ -9257,68 +9319,68 @@ function __ZN5Synth9pitchBendEhs($0,$1,$2) {
  $6 = $1;
  $7 = $2;
  $11 = $5;
- $12 = $6; //@line 260 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $13 = $12&255; //@line 260 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $14 = (39344 + ($13<<1)|0); //@line 260 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $15 = HEAP16[$14>>1]|0; //@line 260 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $8 = $15; //@line 260 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $16 = $7; //@line 261 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $17 = $16 << 16 >> 16; //@line 261 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $18 = ($17|0)>=(0); //@line 261 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $12 = $6; //@line 260 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $13 = $12&255; //@line 260 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $14 = (39344 + ($13<<1)|0); //@line 260 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $15 = HEAP16[$14>>1]|0; //@line 260 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $8 = $15; //@line 260 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $16 = $7; //@line 261 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $17 = $16 << 16 >> 16; //@line 261 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $18 = ($17|0)>=(0); //@line 261 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  if ($18) {
-  $19 = $6; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $20 = $19&255; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $21 = (39475 + ($20)|0); //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $22 = HEAP8[$21>>0]|0; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $23 = $22&255; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $24 = (($23) + 2)|0; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $25 = (6528 + ($24<<1)|0); //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $26 = (__Z13pgm_read_wordPVKv($25)|0); //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $27 = $26&65535; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $28 = $8; //@line 262 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $19 = $6; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $20 = $19&255; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $21 = (39475 + ($20)|0); //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $22 = HEAP8[$21>>0]|0; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $23 = $22&255; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $24 = (($23) + 2)|0; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $25 = (6528 + ($24<<1)|0); //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $26 = (__Z13pgm_read_wordPVKv($25)|0); //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $27 = $26&65535; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $28 = $8; //@line 262 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   $$sink = $27;$$sink2 = $28;
  } else {
-  $29 = $8; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $30 = $29&65535; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $31 = $6; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $32 = $31&255; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $33 = (39475 + ($32)|0); //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $34 = HEAP8[$33>>0]|0; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $35 = $34&255; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $36 = (($35) - 2)|0; //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $37 = (6528 + ($36<<1)|0); //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
-  $38 = (__Z13pgm_read_wordPVKv($37)|0); //@line 263 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $29 = $8; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $30 = $29&65535; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $31 = $6; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $32 = $31&255; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $33 = (39475 + ($32)|0); //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $34 = HEAP8[$33>>0]|0; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $35 = $34&255; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $36 = (($35) - 2)|0; //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $37 = (6528 + ($36<<1)|0); //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+  $38 = (__Z13pgm_read_wordPVKv($37)|0); //@line 263 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
   $$sink = $30;$$sink2 = $38;
  }
  $39 = $$sink2&65535;
  $40 = (($$sink) - ($39))|0;
- $41 = $40&65535; //@line 261 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $9 = $41; //@line 261 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $42 = $7; //@line 289 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $43 = $42 << 16 >> 16; //@line 289 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $44 = $9; //@line 289 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $45 = $44&65535; //@line 289 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $46 = Math_imul($43, $45)|0; //@line 289 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $10 = $46; //@line 289 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $47 = $10; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $48 = (($47|0) / 8192)&-1; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $49 = $48&65535; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $50 = $49 << 16 >> 16; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $51 = $8; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $52 = $51&65535; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $53 = (($52) + ($50))|0; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $54 = $53&65535; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $8 = $54; //@line 292 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $41 = $40&65535; //@line 261 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $9 = $41; //@line 261 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $42 = $7; //@line 289 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $43 = $42 << 16 >> 16; //@line 289 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $44 = $9; //@line 289 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $45 = $44&65535; //@line 289 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $46 = Math_imul($43, $45)|0; //@line 289 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $10 = $46; //@line 289 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $47 = $10; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $48 = (($47|0) / 8192)&-1; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $49 = $48&65535; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $50 = $49 << 16 >> 16; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $51 = $8; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $52 = $51&65535; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $53 = (($52) + ($50))|0; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $54 = $53&65535; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $8 = $54; //@line 292 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $4 = $11;
- __Z3cliv(); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- __Z3seiv(); //@line 34 "D:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
- $55 = $8; //@line 296 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $56 = $6; //@line 296 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $57 = $56&255; //@line 296 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- $58 = (39376 + ($57<<1)|0); //@line 296 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
- HEAP16[$58>>1] = $55; //@line 296 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ __Z3cliv(); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ __Z3seiv(); //@line 34 "C:\gh\my\x\src\firmware\arduino-gm-synth/synth.h"
+ $55 = $8; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $56 = $6; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $57 = $56&255; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ $58 = (39376 + ($57<<1)|0); //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ HEAP16[$58>>1] = $55; //@line 296 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
  $3 = $11;
- STACKTOP = sp;return; //@line 298 "D:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
+ STACKTOP = sp;return; //@line 298 "C:\gh\my\x\src\firmware\arduino-gm-synth\synth.cpp"
 }
 function __ZN11Instruments13getInstrumentEhR10Instrument($0,$1) {
  $0 = $0|0;
@@ -9328,12 +9390,12 @@ function __ZN11Instruments13getInstrumentEhR10Instrument($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $5 = $4&255; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $6 = (1672 + (($5*12)|0)|0); //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $7 = $3; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- __Z20PROGMEM_readAnythingI10InstrumentEvPKT_RS1_($6,$7); //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return; //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $4 = $2; //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $5 = $4&255; //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $6 = (1672 + (($5*12)|0)|0); //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $7 = $3; //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __Z20PROGMEM_readAnythingI10InstrumentEvPKT_RS1_($6,$7); //@line 10 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return; //@line 11 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __Z20PROGMEM_readAnythingI10InstrumentEvPKT_RS1_($0,$1) {
  $0 = $0|0;
@@ -9343,10 +9405,10 @@ function __Z20PROGMEM_readAnythingI10InstrumentEvPKT_RS1_($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $5 = $2; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- ;HEAP32[$4>>2]=HEAP32[$5>>2]|0;HEAP32[$4+4>>2]=HEAP32[$5+4>>2]|0;HEAP32[$4+8>>2]=HEAP32[$5+8>>2]|0; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return; //@line 7 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $4 = $3; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $5 = $2; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ ;HEAP32[$4>>2]=HEAP32[$5>>2]|0;HEAP32[$4+4>>2]=HEAP32[$5+4>>2]|0;HEAP32[$4+8>>2]=HEAP32[$5+8>>2]|0; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return; //@line 7 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN11Instruments17getPercussionNoteEh($0) {
  $0 = $0|0;
@@ -9354,11 +9416,11 @@ function __ZN11Instruments17getPercussionNoteEh($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $3 = $2&255; //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $4 = (33705 + ($3)|0); //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $5 = (__Z13pgm_read_bytePVKv($4)|0); //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return ($5|0); //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $2 = $1; //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $3 = $2&255; //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $4 = (33705 + ($3)|0); //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $5 = (__Z13pgm_read_bytePVKv($4)|0); //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return ($5|0); //@line 14 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN11Instruments14getLerpProgramEhR11LerpProgram($0,$1) {
  $0 = $0|0;
@@ -9368,12 +9430,12 @@ function __ZN11Instruments14getLerpProgramEhR11LerpProgram($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $2; //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $5 = $4&255; //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $6 = (3772 + ($5<<3)|0); //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $7 = $3; //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- __Z20PROGMEM_readAnythingI11LerpProgramEvPKT_RS1_($6,$7); //@line 18 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $4 = $2; //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $5 = $4&255; //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $6 = (3772 + ($5<<3)|0); //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $7 = $3; //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __Z20PROGMEM_readAnythingI11LerpProgramEvPKT_RS1_($6,$7); //@line 18 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return; //@line 19 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __Z20PROGMEM_readAnythingI11LerpProgramEvPKT_RS1_($0,$1) {
  $0 = $0|0;
@@ -9383,10 +9445,10 @@ function __Z20PROGMEM_readAnythingI11LerpProgramEvPKT_RS1_($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $5 = $2; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- ;HEAP32[$4>>2]=HEAP32[$5>>2]|0;HEAP32[$4+4>>2]=HEAP32[$5+4>>2]|0; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return; //@line 7 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $4 = $3; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $5 = $2; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ ;HEAP32[$4>>2]=HEAP32[$5>>2]|0;HEAP32[$4+4>>2]=HEAP32[$5+4>>2]|0; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return; //@line 7 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN11Instruments12getLerpStageEPK9LerpStagehRS0_($0,$1,$2) {
  $0 = $0|0;
@@ -9398,13 +9460,13 @@ function __ZN11Instruments12getLerpStageEPK9LerpStagehRS0_($0,$1,$2) {
  $3 = $0;
  $4 = $1;
  $5 = $2;
- $6 = $3; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $7 = $4; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $8 = $7&255; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $9 = (($6) + ($8<<2)|0); //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $10 = $5; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- __Z20PROGMEM_readAnythingI9LerpStageEvPKT_RS1_($9,$10); //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return; //@line 23 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $6 = $3; //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $7 = $4; //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $8 = $7&255; //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $9 = (($6) + ($8<<2)|0); //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $10 = $5; //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __Z20PROGMEM_readAnythingI9LerpStageEvPKT_RS1_($9,$10); //@line 22 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return; //@line 23 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __Z20PROGMEM_readAnythingI9LerpStageEvPKT_RS1_($0,$1) {
  $0 = $0|0;
@@ -9414,17 +9476,17 @@ function __Z20PROGMEM_readAnythingI9LerpStageEvPKT_RS1_($0,$1) {
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
  $3 = $1;
- $4 = $3; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- $5 = $2; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- ;HEAP16[$4>>1]=HEAP16[$5>>1]|0;HEAP16[$4+2>>1]=HEAP16[$5+2>>1]|0; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- STACKTOP = sp;return; //@line 7 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $4 = $3; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ $5 = $2; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ ;HEAP16[$4>>1]=HEAP16[$5>>1]|0;HEAP16[$4+2>>1]=HEAP16[$5+2>>1]|0; //@line 6 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ STACKTOP = sp;return; //@line 7 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN11Instruments18getPercussionNotesEv($0) {
  $0 = $0|0;
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN10HeapRegionIhEC2EPKhj($0,33705,47); //@line 28 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- return; //@line 28 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __ZN10HeapRegionIhEC2EPKhj($0,33705,47); //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ return; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN10HeapRegionIhEC2EPKhj($0,$1,$2) {
  $0 = $0|0;
@@ -9437,24 +9499,24 @@ function __ZN10HeapRegionIhEC2EPKhj($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $6 = $3;
- $7 = $4; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $8 = $7; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$6>>2] = $8; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $9 = HEAP32[$6>>2]|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $10 = $5; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $11 = (($9) + ($10))|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $12 = ((($6)) + 4|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$12>>2] = $11; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $13 = ((($6)) + 8|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$13>>2] = 1; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $7 = $4; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $8 = $7; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$6>>2] = $8; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $9 = HEAP32[$6>>2]|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $10 = $5; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $11 = (($9) + ($10))|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $12 = ((($6)) + 4|0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$12>>2] = $11; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $13 = ((($6)) + 8|0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$13>>2] = 1; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ STACKTOP = sp;return; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
 }
 function __ZN11Instruments12getWavetableEv($0) {
  $0 = $0|0;
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN10HeapRegionIaEC2EPKaj($0,12969,20736); //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- return; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __ZN10HeapRegionIaEC2EPKaj($0,12969,20736); //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ return; //@line 32 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN10HeapRegionIaEC2EPKaj($0,$1,$2) {
  $0 = $0|0;
@@ -9467,24 +9529,24 @@ function __ZN10HeapRegionIaEC2EPKaj($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $6 = $3;
- $7 = $4; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $8 = $7; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$6>>2] = $8; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $9 = HEAP32[$6>>2]|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $10 = $5; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $11 = (($9) + ($10))|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $12 = ((($6)) + 4|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$12>>2] = $11; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $13 = ((($6)) + 8|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$13>>2] = 1; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $7 = $4; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $8 = $7; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$6>>2] = $8; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $9 = HEAP32[$6>>2]|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $10 = $5; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $11 = (($9) + ($10))|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $12 = ((($6)) + 4|0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$12>>2] = $11; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $13 = ((($6)) + 8|0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$13>>2] = 1; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ STACKTOP = sp;return; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
 }
 function __ZN11Instruments15getLerpProgramsEv($0) {
  $0 = $0|0;
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN10HeapRegionI11LerpProgramEC2EPKS0_j($0,3772,2048); //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- return; //@line 36 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __ZN10HeapRegionI11LerpProgramEC2EPKS0_j($0,3772,2048); //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ return; //@line 36 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN10HeapRegionI11LerpProgramEC2EPKS0_j($0,$1,$2) {
  $0 = $0|0;
@@ -9497,24 +9559,24 @@ function __ZN10HeapRegionI11LerpProgramEC2EPKS0_j($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $6 = $3;
- $7 = $4; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $8 = $7; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$6>>2] = $8; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $9 = HEAP32[$6>>2]|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $10 = $5; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $11 = (($9) + ($10))|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $12 = ((($6)) + 4|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$12>>2] = $11; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $13 = ((($6)) + 8|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$13>>2] = 8; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $7 = $4; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $8 = $7; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$6>>2] = $8; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $9 = HEAP32[$6>>2]|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $10 = $5; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $11 = (($9) + ($10))|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $12 = ((($6)) + 4|0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$12>>2] = $11; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $13 = ((($6)) + 8|0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$13>>2] = 8; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ STACKTOP = sp;return; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
 }
 function __ZN11Instruments13getLerpStagesEv($0) {
  $0 = $0|0;
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN10HeapRegionI9LerpStageEC2EPKS0_j($0,6784,5484); //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- return; //@line 40 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __ZN10HeapRegionI9LerpStageEC2EPKS0_j($0,6784,5484); //@line 40 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ return; //@line 40 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN10HeapRegionI9LerpStageEC2EPKS0_j($0,$1,$2) {
  $0 = $0|0;
@@ -9527,24 +9589,24 @@ function __ZN10HeapRegionI9LerpStageEC2EPKS0_j($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $6 = $3;
- $7 = $4; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $8 = $7; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$6>>2] = $8; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $9 = HEAP32[$6>>2]|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $10 = $5; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $11 = (($9) + ($10))|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $12 = ((($6)) + 4|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$12>>2] = $11; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $13 = ((($6)) + 8|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$13>>2] = 4; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $7 = $4; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $8 = $7; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$6>>2] = $8; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $9 = HEAP32[$6>>2]|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $10 = $5; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $11 = (($9) + ($10))|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $12 = ((($6)) + 4|0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$12>>2] = $11; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $13 = ((($6)) + 8|0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$13>>2] = 4; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ STACKTOP = sp;return; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
 }
 function __ZN11Instruments14getInstrumentsEv($0) {
  $0 = $0|0;
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN10HeapRegionI10InstrumentEC2EPKS0_j($0,1672,2100); //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
- return; //@line 44 "D:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ __ZN10HeapRegionI10InstrumentEC2EPKS0_j($0,1672,2100); //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
+ return; //@line 44 "C:\gh\my\x\src\firmware\arduino-gm-synth\instruments.cpp"
 }
 function __ZN10HeapRegionI10InstrumentEC2EPKS0_j($0,$1,$2) {
  $0 = $0|0;
@@ -9557,94 +9619,94 @@ function __ZN10HeapRegionI10InstrumentEC2EPKS0_j($0,$1,$2) {
  $4 = $1;
  $5 = $2;
  $6 = $3;
- $7 = $4; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $8 = $7; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$6>>2] = $8; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $9 = HEAP32[$6>>2]|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $10 = $5; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $11 = (($9) + ($10))|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $12 = ((($6)) + 4|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$12>>2] = $11; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- $13 = ((($6)) + 8|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- HEAP32[$13>>2] = 12; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $7 = $4; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $8 = $7; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$6>>2] = $8; //@line 28 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $9 = HEAP32[$6>>2]|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $10 = $5; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $11 = (($9) + ($10))|0; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $12 = ((($6)) + 4|0); //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$12>>2] = $11; //@line 29 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ $13 = ((($6)) + 8|0); //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ HEAP32[$13>>2] = 12; //@line 30 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
+ STACKTOP = sp;return; //@line 31 "C:\gh\my\x\src\firmware\arduino-gm-synth/instruments.h"
 }
 function __Z15dispatchCommandv() {
  var $0 = 0, $1 = 0, $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0, $26 = 0;
  var $27 = 0, $28 = 0, $29 = 0, $3 = 0, $30 = 0, $31 = 0, $32 = 0, $33 = 0, $34 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = HEAP8[39494]|0; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $0 = $2; //@line 64 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $3 = HEAP32[1455]|0; //@line 66 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $2 = HEAP8[39494]|0; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $0 = $2; //@line 64 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $3 = HEAP32[1455]|0; //@line 66 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  switch ($3|0) {
  case 0:  {
-  $4 = HEAP8[33760]|0; //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $5 = $0; //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  __Z7noteOffhh($4,$5); //@line 68 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $4 = HEAP8[33760]|0; //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $5 = $0; //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  __Z7noteOffhh($4,$5); //@line 68 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   break;
  }
  case 1:  {
-  $6 = HEAP8[(39495)>>0]|0; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $7 = $6&255; //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $8 = ($7|0)==(0); //@line 72 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $6 = HEAP8[(39495)>>0]|0; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $7 = $6&255; //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $8 = ($7|0)==(0); //@line 72 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   $9 = HEAP8[33760]|0;
   $10 = $0;
   if ($8) {
-   __Z7noteOffhh($9,$10); //@line 73 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   __Z7noteOffhh($9,$10); //@line 73 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   } else {
-   $11 = HEAP8[(39495)>>0]|0; //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   __Z6noteOnhhh($9,$10,$11); //@line 75 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $11 = HEAP8[(39495)>>0]|0; //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   __Z6noteOnhhh($9,$10,$11); //@line 75 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   }
   break;
  }
  case 6:  {
-  $12 = HEAP8[(39495)>>0]|0; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $13 = $12&255; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $1 = $13; //@line 80 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $14 = $1; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $15 = $14 << 16 >> 16; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $16 = $15 << 7; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $17 = $16&65535; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $1 = $17; //@line 81 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $18 = $0; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $19 = $18&255; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $20 = $1; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $21 = $20 << 16 >> 16; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $22 = $21 | $19; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $23 = $22&65535; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $1 = $23; //@line 82 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $24 = $1; //@line 83 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $25 = $24 << 16 >> 16; //@line 83 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $26 = (($25) - 8192)|0; //@line 83 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $27 = $26&65535; //@line 83 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $1 = $27; //@line 83 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $28 = HEAP8[33760]|0; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $29 = $1; //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  __Z9pitchBendhs($28,$29); //@line 84 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $12 = HEAP8[(39495)>>0]|0; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $13 = $12&255; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $1 = $13; //@line 80 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $14 = $1; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $15 = $14 << 16 >> 16; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $16 = $15 << 7; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $17 = $16&65535; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $1 = $17; //@line 81 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $18 = $0; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $19 = $18&255; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $20 = $1; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $21 = $20 << 16 >> 16; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $22 = $21 | $19; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $23 = $22&65535; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $1 = $23; //@line 82 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $24 = $1; //@line 83 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $25 = $24 << 16 >> 16; //@line 83 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $26 = (($25) - 8192)|0; //@line 83 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $27 = $26&65535; //@line 83 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $1 = $27; //@line 83 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $28 = HEAP8[33760]|0; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $29 = $1; //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  __Z9pitchBendhs($28,$29); //@line 84 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   break;
  }
  case 3:  {
-  $30 = HEAP8[33760]|0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $31 = $0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $32 = HEAP8[(39495)>>0]|0; //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  __Z13controlChangehhh($30,$31,$32); //@line 88 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $30 = HEAP8[33760]|0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $31 = $0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $32 = HEAP8[(39495)>>0]|0; //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  __Z13controlChangehhh($30,$31,$32); //@line 88 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   break;
  }
  case 4:  {
-  $33 = HEAP8[33760]|0; //@line 92 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $34 = $0; //@line 92 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  __Z13programChangehh($33,$34); //@line 92 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $33 = HEAP8[33760]|0; //@line 92 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $34 = $0; //@line 92 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  __Z13programChangehh($33,$34); //@line 92 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   break;
  }
  default: {
-  STACKTOP = sp;return; //@line 103 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 103 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  }
  }
 }
@@ -9655,143 +9717,73 @@ function __Z16midi_decode_byteh($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = $1; //@line 106 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $3 = $2&255; //@line 106 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $4 = $3 & 128; //@line 106 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $5 = ($4|0)!=(0); //@line 106 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $2 = $1; //@line 106 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $3 = $2&255; //@line 106 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $4 = $3 & 128; //@line 106 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $5 = ($4|0)!=(0); //@line 106 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  if ($5) {
-  $6 = HEAP32[1455]|0; //@line 107 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-  $7 = ($6|0)==(7); //@line 107 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $6 = HEAP32[1455]|0; //@line 107 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  $7 = ($6|0)==(7); //@line 107 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   if ($7) {
-   $8 = HEAP8[39493]|0; //@line 108 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   __Z5sysexhPh($8,39494); //@line 108 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   HEAP32[1455] = 8; //@line 109 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   STACKTOP = sp;return; //@line 126 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $8 = HEAP8[39493]|0; //@line 108 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   __Z5sysexhPh($8,39494); //@line 108 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   HEAP32[1455] = 8; //@line 109 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   STACKTOP = sp;return; //@line 126 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   } else {
-   $9 = $1; //@line 113 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $10 = $9&255; //@line 113 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $11 = $10 >> 4; //@line 113 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $12 = (($11) - 8)|0; //@line 113 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   HEAP32[1455] = $12; //@line 113 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $13 = HEAP32[1455]|0; //@line 114 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $14 = (33752 + ($13)|0); //@line 114 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $15 = HEAP8[$14>>0]|0; //@line 114 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   HEAP8[39492] = $15; //@line 114 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   HEAP8[39493] = 0; //@line 115 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $16 = $1; //@line 116 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $17 = $16&255; //@line 116 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $18 = $17 & 15; //@line 116 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   $19 = $18&255; //@line 116 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   HEAP8[33760] = $19; //@line 116 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-   STACKTOP = sp;return; //@line 126 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $9 = $1; //@line 113 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $10 = $9&255; //@line 113 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $11 = $10 >> 4; //@line 113 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $12 = (($11) - 8)|0; //@line 113 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   HEAP32[1455] = $12; //@line 113 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $13 = HEAP32[1455]|0; //@line 114 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $14 = (33752 + ($13)|0); //@line 114 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $15 = HEAP8[$14>>0]|0; //@line 114 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   HEAP8[39492] = $15; //@line 114 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   HEAP8[39493] = 0; //@line 115 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $16 = $1; //@line 116 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $17 = $16&255; //@line 116 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $18 = $17 & 15; //@line 116 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   $19 = $18&255; //@line 116 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   HEAP8[33760] = $19; //@line 116 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+   STACKTOP = sp;return; //@line 126 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
   }
  }
- $20 = HEAP8[39492]|0; //@line 118 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $21 = $20&255; //@line 118 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $22 = ($21|0)>(0); //@line 118 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $20 = HEAP8[39492]|0; //@line 118 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $21 = $20&255; //@line 118 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $22 = ($21|0)>(0); //@line 118 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  if (!($22)) {
-  STACKTOP = sp;return; //@line 126 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 126 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  }
- $23 = $1; //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $24 = HEAP8[39493]|0; //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $25 = (($24) + 1)<<24>>24; //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- HEAP8[39493] = $25; //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $26 = $24&255; //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $27 = (39494 + ($26)|0); //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- HEAP8[$27>>0] = $23; //@line 119 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $28 = HEAP8[39492]|0; //@line 120 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $29 = (($28) + -1)<<24>>24; //@line 120 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- HEAP8[39492] = $29; //@line 120 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $30 = HEAP8[39492]|0; //@line 121 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $31 = $30&255; //@line 121 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- $32 = ($31|0)==(0); //@line 121 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $23 = $1; //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $24 = HEAP8[39493]|0; //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $25 = (($24) + 1)<<24>>24; //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ HEAP8[39493] = $25; //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $26 = $24&255; //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $27 = (39494 + ($26)|0); //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ HEAP8[$27>>0] = $23; //@line 119 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $28 = HEAP8[39492]|0; //@line 120 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $29 = (($28) + -1)<<24>>24; //@line 120 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ HEAP8[39492] = $29; //@line 120 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $30 = HEAP8[39492]|0; //@line 121 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $31 = $30&255; //@line 121 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ $32 = ($31|0)==(0); //@line 121 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  if (!($32)) {
-  STACKTOP = sp;return; //@line 126 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+  STACKTOP = sp;return; //@line 126 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
  }
- __Z15dispatchCommandv(); //@line 122 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
- STACKTOP = sp;return; //@line 126 "D:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
-}
-function __ZNV4Lerp5startEh($0,$1) {
- $0 = $0|0;
- $1 = $1|0;
- var $10 = 0, $11 = 0, $12 = 0, $13 = 0, $14 = 0, $15 = 0, $16 = 0, $17 = 0, $18 = 0, $19 = 0, $2 = 0, $20 = 0, $21 = 0, $22 = 0, $23 = 0, $24 = 0, $25 = 0, $26 = 0, $3 = 0, $4 = 0;
- var $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
- sp = STACKTOP;
- STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $4 = sp;
- $2 = $0;
- $3 = $1;
- $5 = $2;
- $6 = $3; //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- __ZN11Instruments14getLerpProgramEhR11LerpProgram($6,$4); //@line 6 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $7 = HEAP32[$4>>2]|0; //@line 8 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP32[$5>>2] = $7; //@line 8 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $8 = ((($4)) + 5|0); //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $9 = HEAP8[$8>>0]|0; //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $10 = $9&255; //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $11 = $10 >> 4; //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $12 = $11&255; //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $13 = ((($5)) + 4|0); //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP8[$13>>0] = $12; //@line 9 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $14 = ((($4)) + 5|0); //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $15 = HEAP8[$14>>0]|0; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $16 = $15&255; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $17 = $16 & 15; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $18 = $17&255; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $19 = ((($5)) + 5|0); //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP8[$19>>0] = $18; //@line 10 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $20 = ((($4)) + 4|0); //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $21 = HEAP8[$20>>0]|0; //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $22 = $21&255; //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $23 = $22 << 8; //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $24 = $23&65535; //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $25 = ((($5)) + 8|0); //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP16[$25>>1] = $24; //@line 11 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $26 = ((($5)) + 6|0); //@line 12 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP8[$26>>0] = 0; //@line 12 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- __ZNV4Lerp9loadStageEv($5); //@line 14 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- STACKTOP = sp;return; //@line 15 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
-}
-function __ZNV4Lerp9loadStageEv($0) {
- $0 = $0|0;
- var $1 = 0, $10 = 0, $11 = 0, $2 = 0, $3 = 0, $4 = 0, $5 = 0, $6 = 0, $7 = 0, $8 = 0, $9 = 0, label = 0, sp = 0;
- sp = STACKTOP;
- STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $2 = sp + 4|0;
- $1 = $0;
- $3 = $1;
- $4 = HEAP32[$3>>2]|0; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $5 = ((($3)) + 6|0); //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $6 = HEAP8[$5>>0]|0; //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- __ZN11Instruments12getLerpStageEPK9LerpStagehRS0_($4,$6,$2); //@line 19 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $7 = HEAP16[$2>>1]|0; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $8 = ((($3)) + 10|0); //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP16[$8>>1] = $7; //@line 20 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $9 = ((($2)) + 2|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $10 = HEAP8[$9>>0]|0; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- $11 = ((($3)) + 12|0); //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- HEAP8[$11>>0] = $10; //@line 21 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
- STACKTOP = sp;return; //@line 22 "D:\gh\my\x\src\firmware\arduino-gm-synth\lerp.cpp"
-}
-function __ZN7ssd1306C2Ev($0) {
- $0 = $0|0;
- var $1 = 0, label = 0, sp = 0;
- sp = STACKTOP;
- STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
- $1 = $0;
- STACKTOP = sp;return; //@line 32 "D:\gh\my\x\src\firmware\arduino-gm-synth\ssd1306.cpp"
+ __Z15dispatchCommandv(); //@line 122 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
+ STACKTOP = sp;return; //@line 126 "C:\gh\my\x\src\firmware\arduino-gm-synth\midi.cpp"
 }
 function __GLOBAL__sub_I_bind_cpp() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- ___cxx_global_var_init_56();
+ ___cxx_global_var_init_44();
  return;
 }
-function ___cxx_global_var_init_56() {
+function ___cxx_global_var_init_44() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- __ZN53EmscriptenBindingInitializer_native_and_builtin_typesC2Ev(39526); //@line 95 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- return; //@line 95 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ __ZN53EmscriptenBindingInitializer_native_and_builtin_typesC2Ev(39526); //@line 95 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ return; //@line 95 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN53EmscriptenBindingInitializer_native_and_builtin_typesC2Ev($0) {
  $0 = $0|0;
@@ -9799,60 +9791,60 @@ function __ZN53EmscriptenBindingInitializer_native_and_builtin_typesC2Ev($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIvE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_void(($2|0),(33761|0)); //@line 98 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN10emscripten8internal6TypeIDIbE3getEv()|0); //@line 100 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_bool(($3|0),(33766|0),1,1,0); //@line 100 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIcEEvPKc(33771); //@line 102 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIaEEvPKc(33776); //@line 103 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIhEEvPKc(33788); //@line 104 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIsEEvPKc(33802); //@line 105 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerItEEvPKc(33808); //@line 106 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIiEEvPKc(33823); //@line 107 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIjEEvPKc(33827); //@line 108 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerIlEEvPKc(33840); //@line 109 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L16register_integerImEEvPKc(33845); //@line 110 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L14register_floatIfEEvPKc(33859); //@line 112 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L14register_floatIdEEvPKc(33865); //@line 113 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = (__ZN10emscripten8internal6TypeIDINSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE3getEv()|0); //@line 115 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_std_string(($4|0),(33872|0)); //@line 115 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $5 = (__ZN10emscripten8internal6TypeIDINSt3__212basic_stringIhNS2_11char_traitsIhEENS2_9allocatorIhEEEEE3getEv()|0); //@line 116 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_std_string(($5|0),(33884|0)); //@line 116 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $6 = (__ZN10emscripten8internal6TypeIDINSt3__212basic_stringIwNS2_11char_traitsIwEENS2_9allocatorIwEEEEE3getEv()|0); //@line 117 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_std_wstring(($6|0),4,(33917|0)); //@line 117 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $7 = (__ZN10emscripten8internal6TypeIDINS_3valEE3getEv()|0); //@line 118 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_emval(($7|0),(33930|0)); //@line 118 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIcEEvPKc(33946); //@line 126 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIaEEvPKc(33976); //@line 127 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIhEEvPKc(34013); //@line 128 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIsEEvPKc(34052); //@line 130 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewItEEvPKc(34083); //@line 131 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIiEEvPKc(34123); //@line 132 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIjEEvPKc(34152); //@line 133 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIlEEvPKc(34190); //@line 134 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewImEEvPKc(34220); //@line 135 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIaEEvPKc(34259); //@line 137 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIhEEvPKc(34291); //@line 138 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIsEEvPKc(34324); //@line 139 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewItEEvPKc(34357); //@line 140 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIiEEvPKc(34391); //@line 141 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIjEEvPKc(34424); //@line 142 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIfEEvPKc(34458); //@line 144 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIdEEvPKc(34489); //@line 145 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __ZN12_GLOBAL__N_1L20register_memory_viewIeEEvPKc(34521); //@line 147 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 149 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIvE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_void(($2|0),(33761|0)); //@line 98 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN10emscripten8internal6TypeIDIbE3getEv()|0); //@line 100 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_bool(($3|0),(33766|0),1,1,0); //@line 100 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIcEEvPKc(33771); //@line 102 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIaEEvPKc(33776); //@line 103 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIhEEvPKc(33788); //@line 104 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIsEEvPKc(33802); //@line 105 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerItEEvPKc(33808); //@line 106 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIiEEvPKc(33823); //@line 107 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIjEEvPKc(33827); //@line 108 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerIlEEvPKc(33840); //@line 109 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L16register_integerImEEvPKc(33845); //@line 110 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L14register_floatIfEEvPKc(33859); //@line 112 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L14register_floatIdEEvPKc(33865); //@line 113 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = (__ZN10emscripten8internal6TypeIDINSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE3getEv()|0); //@line 115 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_std_string(($4|0),(33872|0)); //@line 115 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $5 = (__ZN10emscripten8internal6TypeIDINSt3__212basic_stringIhNS2_11char_traitsIhEENS2_9allocatorIhEEEEE3getEv()|0); //@line 116 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_std_string(($5|0),(33884|0)); //@line 116 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $6 = (__ZN10emscripten8internal6TypeIDINSt3__212basic_stringIwNS2_11char_traitsIwEENS2_9allocatorIwEEEEE3getEv()|0); //@line 117 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_std_wstring(($6|0),4,(33917|0)); //@line 117 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $7 = (__ZN10emscripten8internal6TypeIDINS_3valEE3getEv()|0); //@line 118 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_emval(($7|0),(33930|0)); //@line 118 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIcEEvPKc(33946); //@line 126 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIaEEvPKc(33976); //@line 127 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIhEEvPKc(34013); //@line 128 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIsEEvPKc(34052); //@line 130 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewItEEvPKc(34083); //@line 131 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIiEEvPKc(34123); //@line 132 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIjEEvPKc(34152); //@line 133 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIlEEvPKc(34190); //@line 134 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewImEEvPKc(34220); //@line 135 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIaEEvPKc(34259); //@line 137 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIhEEvPKc(34291); //@line 138 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIsEEvPKc(34324); //@line 139 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewItEEvPKc(34357); //@line 140 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIiEEvPKc(34391); //@line 141 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIjEEvPKc(34424); //@line 142 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIfEEvPKc(34458); //@line 144 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIdEEvPKc(34489); //@line 145 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __ZN12_GLOBAL__N_1L20register_memory_viewIeEEvPKc(34521); //@line 147 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 149 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal6TypeIDIvE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIvE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIvE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIbE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIbE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIbE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIcEEvPKc($0) {
  $0 = $0|0;
@@ -9860,12 +9852,12 @@ function __ZN12_GLOBAL__N_1L16register_integerIcEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIcE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = -128 << 24 >> 24; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $5 = 127 << 24 >> 24; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),1,($4|0),($5|0)); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIcE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = -128 << 24 >> 24; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $5 = 127 << 24 >> 24; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),1,($4|0),($5|0)); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIaEEvPKc($0) {
  $0 = $0|0;
@@ -9873,12 +9865,12 @@ function __ZN12_GLOBAL__N_1L16register_integerIaEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIaE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = -128 << 24 >> 24; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $5 = 127 << 24 >> 24; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),1,($4|0),($5|0)); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIaE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = -128 << 24 >> 24; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $5 = 127 << 24 >> 24; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),1,($4|0),($5|0)); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIhEEvPKc($0) {
  $0 = $0|0;
@@ -9886,12 +9878,12 @@ function __ZN12_GLOBAL__N_1L16register_integerIhEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIhE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = 0; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $5 = 255; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),1,($4|0),($5|0)); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIhE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = 0; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $5 = 255; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),1,($4|0),($5|0)); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIsEEvPKc($0) {
  $0 = $0|0;
@@ -9899,12 +9891,12 @@ function __ZN12_GLOBAL__N_1L16register_integerIsEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIsE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = -32768 << 16 >> 16; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $5 = 32767 << 16 >> 16; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),2,($4|0),($5|0)); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIsE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = -32768 << 16 >> 16; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $5 = 32767 << 16 >> 16; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),2,($4|0),($5|0)); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerItEEvPKc($0) {
  $0 = $0|0;
@@ -9912,12 +9904,12 @@ function __ZN12_GLOBAL__N_1L16register_integerItEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDItE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = 0; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $5 = 65535; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),2,($4|0),($5|0)); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDItE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = 0; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $5 = 65535; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),2,($4|0),($5|0)); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIiEEvPKc($0) {
  $0 = $0|0;
@@ -9925,10 +9917,10 @@ function __ZN12_GLOBAL__N_1L16register_integerIiEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIiE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),4,-2147483648,2147483647); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIiE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),4,-2147483648,2147483647); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIjEEvPKc($0) {
  $0 = $0|0;
@@ -9936,10 +9928,10 @@ function __ZN12_GLOBAL__N_1L16register_integerIjEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),4,0,-1); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIjE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),4,0,-1); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerIlEEvPKc($0) {
  $0 = $0|0;
@@ -9947,10 +9939,10 @@ function __ZN12_GLOBAL__N_1L16register_integerIlEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIlE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),4,-2147483648,2147483647); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIlE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),4,-2147483648,2147483647); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L16register_integerImEEvPKc($0) {
  $0 = $0|0;
@@ -9958,10 +9950,10 @@ function __ZN12_GLOBAL__N_1L16register_integerImEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDImE3getEv()|0); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_integer(($2|0),($3|0),4,0,-1); //@line 51 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 52 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDImE3getEv()|0); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_integer(($2|0),($3|0),4,0,-1); //@line 51 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 52 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L14register_floatIfEEvPKc($0) {
  $0 = $0|0;
@@ -9969,10 +9961,10 @@ function __ZN12_GLOBAL__N_1L14register_floatIfEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIfE3getEv()|0); //@line 57 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 57 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_float(($2|0),($3|0),4); //@line 57 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 58 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIfE3getEv()|0); //@line 57 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 57 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_float(($2|0),($3|0),4); //@line 57 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 58 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L14register_floatIdEEvPKc($0) {
  $0 = $0|0;
@@ -9980,34 +9972,34 @@ function __ZN12_GLOBAL__N_1L14register_floatIdEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDIdE3getEv()|0); //@line 57 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = $1; //@line 57 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_float(($2|0),($3|0),8); //@line 57 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 58 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDIdE3getEv()|0); //@line 57 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = $1; //@line 57 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_float(($2|0),($3|0),8); //@line 57 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 58 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal6TypeIDINSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINSt3__212basic_stringIhNS2_11char_traitsIhEENS2_9allocatorIhEEEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIhNS2_11char_traitsIhEENS2_9allocatorIhEEEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIhNS2_11char_traitsIhEENS2_9allocatorIhEEEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINSt3__212basic_stringIwNS2_11char_traitsIwEENS2_9allocatorIwEEEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIwNS2_11char_traitsIwEENS2_9allocatorIwEEEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIwNS2_11char_traitsIwEENS2_9allocatorIwEEEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_3valEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_3valEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_3valEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIcEEvPKc($0) {
  $0 = $0|0;
@@ -10015,11 +10007,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIcEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIcEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIcEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIcEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIcEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIaEEvPKc($0) {
  $0 = $0|0;
@@ -10027,11 +10019,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIaEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIaEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIaEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIaEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIaEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIhEEvPKc($0) {
  $0 = $0|0;
@@ -10039,11 +10031,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIhEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIhEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIhEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIhEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIhEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIsEEvPKc($0) {
  $0 = $0|0;
@@ -10051,11 +10043,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIsEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIsEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIsEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIsEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIsEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewItEEvPKc($0) {
  $0 = $0|0;
@@ -10063,11 +10055,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewItEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewItEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexItEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewItEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexItEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIiEEvPKc($0) {
  $0 = $0|0;
@@ -10075,11 +10067,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIiEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIiEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIiEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIiEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIiEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIjEEvPKc($0) {
  $0 = $0|0;
@@ -10087,11 +10079,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIjEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIjEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIjEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIjEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIjEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIlEEvPKc($0) {
  $0 = $0|0;
@@ -10099,11 +10091,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIlEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIlEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIlEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIlEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIlEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewImEEvPKc($0) {
  $0 = $0|0;
@@ -10111,11 +10103,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewImEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewImEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexImEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewImEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexImEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIfEEvPKc($0) {
  $0 = $0|0;
@@ -10123,11 +10115,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIfEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIfEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIfEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIfEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIfEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIdEEvPKc($0) {
  $0 = $0|0;
@@ -10135,11 +10127,11 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIdEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIdEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIdEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIdEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIdEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN12_GLOBAL__N_1L20register_memory_viewIeEEvPKc($0) {
  $0 = $0|0;
@@ -10147,343 +10139,343 @@ function __ZN12_GLOBAL__N_1L20register_memory_viewIeEEvPKc($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $1 = $0;
- $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIeEEE3getEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIeEENS_15TypedArrayIndexEv()|0); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- $4 = $1; //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return; //@line 92 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $2 = (__ZN10emscripten8internal6TypeIDINS_11memory_viewIeEEE3getEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $3 = (__ZN12_GLOBAL__N_118getTypedArrayIndexIeEENS_15TypedArrayIndexEv()|0); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ $4 = $1; //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ __embind_register_memory_view(($2|0),($3|0),($4|0)); //@line 91 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return; //@line 92 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIeEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIeEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIeEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIeEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 7; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 7; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIeEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (296|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (296|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIdEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIdEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIdEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIdEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 7; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 7; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIdEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (304|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (304|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIfEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIfEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIfEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIfEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 6; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 6; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIfEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (312|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (312|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewImEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewImEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewImEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexImEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 5; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 5; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewImEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (320|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (320|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIlEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIlEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIlEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIlEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 4; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 4; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIlEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (328|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (328|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIjEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIjEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIjEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIjEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 5; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 5; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIjEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (336|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (336|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIiEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIiEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIiEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIiEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 4; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 4; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIiEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (344|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (344|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewItEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewItEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewItEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexItEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 3; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 3; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewItEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (352|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (352|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIsEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIsEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIsEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIsEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 2; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 2; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIsEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (360|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (360|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIhEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIhEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIhEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIhEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 1; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 1; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIhEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (368|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (368|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIaEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIaEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIaEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIaEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 0; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 0; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIaEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (376|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (376|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDINS_11memory_viewIcEEE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIcEEE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDINS_11memory_viewIcEEE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN12_GLOBAL__N_118getTypedArrayIndexIcEENS_15TypedArrayIndexEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return 0; //@line 77 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ return 0; //@line 77 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_11memory_viewIcEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (384|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (384|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDINS_3valEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (392|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (392|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIwNS2_11char_traitsIwEENS2_9allocatorIwEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (400|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (400|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIhNS2_11char_traitsIhEENS2_9allocatorIhEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (432|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (432|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDINSt3__212basic_stringIcNS2_11char_traitsIcEENS2_9allocatorIcEEEEE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (456|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (456|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIdE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIdE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIdE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIdE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (712|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (712|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIfE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIfE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIfE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIfE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (704|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (704|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDImE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDImE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDImE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDImE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (696|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (696|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIlE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIlE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIlE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIlE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (688|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (688|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIiE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIiE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIiE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIiE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (672|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (672|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDItE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDItE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDItE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDItE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (664|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (664|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIsE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIsE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIsE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIsE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (656|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (656|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIhE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIhE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIhE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIhE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (640|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (640|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIaE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIaE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIaE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIaE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (648|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (648|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal6TypeIDIcE3getEv() {
  var $0 = 0, label = 0, sp = 0;
  sp = STACKTOP;
- $0 = (__ZN10emscripten8internal11LightTypeIDIcE3getEv()|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
- return ($0|0); //@line 98 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ $0 = (__ZN10emscripten8internal11LightTypeIDIcE3getEv()|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
+ return ($0|0); //@line 98 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIcE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (632|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (632|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIbE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (624|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (624|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function __ZN10emscripten8internal11LightTypeIDIvE3getEv() {
  var label = 0, sp = 0;
  sp = STACKTOP;
- return (608|0); //@line 62 "D:\emsdk\emscripten\1.37.35\system\include\emscripten/wire.h"
+ return (608|0); //@line 62 "C:\emsdk\emscripten\1.37.33\system\include\emscripten/wire.h"
 }
 function ___getTypeName($0) {
  $0 = $0|0;
@@ -10491,13 +10483,13 @@ function ___getTypeName($0) {
  sp = STACKTOP;
  STACKTOP = STACKTOP + 16|0; if ((STACKTOP|0) >= (STACK_MAX|0)) abortStackOverflow(16|0);
  $2 = $0;
- $3 = $2; //@line 37 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $3 = $2; //@line 37 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
  $1 = $3;
  $4 = $1;
- $5 = ((($4)) + 4|0); //@line 152 "D:\emsdk\emscripten\1.37.35\system\include\libcxx\typeinfo"
- $6 = HEAP32[$5>>2]|0; //@line 152 "D:\emsdk\emscripten\1.37.35\system\include\libcxx\typeinfo"
- $7 = (___strdup($6)|0); //@line 37 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
- STACKTOP = sp;return ($7|0); //@line 37 "D:\emsdk\emscripten\1.37.35\system\lib\embind\bind.cpp"
+ $5 = ((($4)) + 4|0); //@line 152 "C:\emsdk\emscripten\1.37.33\system\include\libcxx\typeinfo"
+ $6 = HEAP32[$5>>2]|0; //@line 152 "C:\emsdk\emscripten\1.37.33\system\include\libcxx\typeinfo"
+ $7 = (___strdup($6)|0); //@line 37 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
+ STACKTOP = sp;return ($7|0); //@line 37 "C:\emsdk\emscripten\1.37.33\system\lib\embind\bind.cpp"
 }
 function _malloc($0) {
  $0 = $0|0;
@@ -15568,7 +15560,7 @@ function _fmt_fp($0,$1,$2,$3,$4,$5) {
  $12 = tempRet0;
  $13 = ($12|0)<(0);
  if ($13) {
-  $14 = - $1;
+  $14 = -$1;
   $$0471 = $14;$$0520 = 1;$$0521 = 35657;
  } else {
   $15 = $4 & 2048;
@@ -15643,10 +15635,10 @@ function _fmt_fp($0,$1,$2,$3,$4,$5) {
       $52 = HEAP8[$$0521$>>0]|0;
       $53 = ($52<<24>>24)==(45);
       if ($53) {
-       $54 = - $35;
+       $54 = -$35;
        $55 = $54 - $50;
        $56 = $50 + $55;
-       $57 = - $56;
+       $57 = -$56;
        $$1472 = $57;
        break;
       } else {
@@ -16023,8 +16015,8 @@ function _fmt_fp($0,$1,$2,$3,$4,$5) {
      } else {
       $229 = HEAP8[$$0521>>0]|0;
       $230 = ($229<<24>>24)==(45);
-      $231 = - $$543;
-      $232 = - $$$564;
+      $231 = -$$543;
+      $232 = -$$$564;
       $$$543 = $230 ? $231 : $$543;
       $$$$564 = $230 ? $232 : $$$564;
       $$1467 = $$$$564;$$1469 = $$$543;

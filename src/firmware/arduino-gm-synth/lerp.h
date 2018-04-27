@@ -2,17 +2,7 @@
 #define __LERP_H__
 
 #include <stdint.h>
-
-struct LerpStage {
-	int16_t slope;
-	int8_t limit;
-};
-
-struct LerpProgram {
-	const LerpStage* start;
-	uint8_t initialValue;
-	uint8_t loopStartAndEnd;
-};
+#include "instruments.h"
 
 class Lerp {
 	private:
@@ -24,7 +14,12 @@ class Lerp {
 		int16_t slope = 0;
 		int8_t limit = -128;
 	
-		void loadStage() volatile;
+		void loadStage() volatile {
+			LerpStage stage;
+			Instruments::getLerpStage(pStart, stageIndex, stage);
+			slope = stage.slope;
+			limit = stage.limit;
+		}
 	
 	public:
 		uint8_t sample() volatile {
@@ -49,7 +44,18 @@ class Lerp {
 			return out;
 		}
 		
-		void start(uint8_t program) volatile;
+		void start(uint8_t programIndex) volatile {
+			LerpProgram program;
+			Instruments::getLerpProgram(programIndex, program);
+		
+			pStart = program.start;
+			loopStart = program.loopStartAndEnd >> 4;
+			loopEnd = program.loopStartAndEnd & 0x0F;
+			amp = program.initialValue << 8;
+			stageIndex = 0;
+		
+			loadStage();
+		}
 
 		void stop() volatile {
 			if (stageIndex < loopEnd) {

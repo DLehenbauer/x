@@ -1,7 +1,16 @@
 #ifndef __INSTRUMENT_H__
 #define __INSTRUMENT_H__
 
-#include "lerp.h"
+struct LerpStage {
+	int16_t slope;
+	int8_t limit;
+};
+
+struct LerpProgram {
+	const LerpStage* start;
+	uint8_t initialValue;
+	uint8_t loopStartAndEnd;
+};
 
 #ifdef __EMSCRIPTEN__
 

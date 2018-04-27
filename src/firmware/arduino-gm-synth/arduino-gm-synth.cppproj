@@ -221,9 +221,6 @@
     <Compile Include="instruments.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="lerp.cpp">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="lerp.h">
       <SubType>compile</SubType>
     </Compile>
