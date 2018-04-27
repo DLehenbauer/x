@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include "instruments.h"
 
-//#define DAC
+#define DAC
 
 #ifdef __EMSCRIPTEN__
 	#define DAC
