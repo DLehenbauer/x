@@ -7,6 +7,9 @@
 
 #include "synth.h"
 #include "lerp.h"
+#include "drivers/dac/ltc16xx.h"
+
+Ltc16xx<PinId::D10> _dac;
 
 #ifndef __EMSCRIPTEN__
 constexpr static uint16_t pitch(double note) {
@@ -105,8 +108,7 @@ SIGNAL(TIMER2_COMPA_vect) {
     // Each interrupt, we transmit the previous output to the DAC concurrently with calculating
     // the next wavOut.  This avoids unproductive busy-waiting for SPI to finish.
 #ifdef DAC    
-    PORTB &= ~_BV(DDB2);                                                // Begin transmitting upper 8-bits to DAC.
-    SPDR = wavOut >> 8;                                                 
+    _dac.sendHiByte(wavOut >> 8);										// Begin transmitting upper 8-bits to DAC.
 #endif
 
     // Macro that advances '_phase[voice]' by the sampling interval '_pitch[voice]' and stores the next 8-bit
@@ -132,7 +134,7 @@ SIGNAL(TIMER2_COMPA_vect) {
     mix += (MIX(4) + MIX(5) + MIX(6) + MIX(7)) >> 1;
 
 #ifdef DAC
-    SPDR = wavOut;                                                      // Begin transmitting the lower 8-bits.
+    _dac.sendLoByte(wavOut);											// Begin transmitting the lower 8-bits.
 #endif
 
     PHASE(8); PHASE(9); PHASE(10); PHASE(11);                           // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
@@ -147,8 +149,8 @@ SIGNAL(TIMER2_COMPA_vect) {
     wavOut = mix + 0x8000;                                              // Store resulting wave output for transmission on next interrupt.
 
 #ifdef DAC
-    PORTB |= _BV(DDB2);
-	SPSR;																// Clear SPIF flag to avoid confusing other SPI users when returning from interrupt.
+	_dac.end();
+																// Clear SPIF flag to avoid confusing other SPI users when returning from interrupt.
 #endif
 	
     TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.
@@ -300,13 +302,7 @@ uint8_t Synth::getAmp(uint8_t voice) {
 
 void Synth::begin() {
 #ifdef DAC
-    PORTB |= _BV(DDB2);                 // Set CS pin HIGH
-    DDRB |= _BV(DDB2);                  // Set CS pin as output.
-    
-    SPSR |= _BV(SPI2X);                 // SCK = F_CPU/2
-    SPCR = _BV(SPE) | _BV(MSTR);        // Enable SPI, Master
-    
-    DDRB |= _BV(DDB5) | _BV(DDB3);      // Set MOSI and SCK as outputs after enabling SPI.
+	_dac.setup();
 #else
 	//// Setup Timer1 for PWM
     //TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)

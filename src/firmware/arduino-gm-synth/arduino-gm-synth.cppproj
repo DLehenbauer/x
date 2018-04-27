@@ -203,6 +203,9 @@
     <None Include="emscripten\bindings.cpp">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="drivers\dac\ltc16xx.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="drivers\pin.h">
       <SubType>compile</SubType>
     </Compile>
