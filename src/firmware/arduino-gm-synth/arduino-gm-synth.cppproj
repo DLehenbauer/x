@@ -206,6 +206,9 @@
     <Compile Include="drivers\dac\ltc16xx.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="drivers\dac\pwm0.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="drivers\pin.h">
       <SubType>compile</SubType>
     </Compile>
@@ -237,9 +240,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="ringbuffer.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="synth.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="synth.h">

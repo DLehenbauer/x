@@ -11,6 +11,8 @@ class Ltc16xx final {
 	public:
 		void setup() { _spi.setup(); }
 	
+		void begin(uint16_t wavOut) { }			
+	
 		void sendHiByte(uint8_t hi) { 
 			_spi.begin();
 			_spi.unsafe_send(hi);
