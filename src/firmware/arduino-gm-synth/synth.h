@@ -50,7 +50,44 @@ class Synth {
 	public:
         void begin();
         
-		uint8_t getNextVoice();
+		uint8_t getNextVoice() {
+			uint8_t current = maxVoice;
+			uint8_t currentStage;
+			int8_t currentAmp;
+			
+			{
+				const volatile Lerp& currentMod	= v_ampMod[current];
+				currentStage = currentMod.stageIndex;
+				currentAmp = currentMod.amp;
+			}
+
+			for (uint8_t candidate = maxVoice - 1; candidate < maxVoice; candidate--) {
+				const volatile Lerp& candidateMod = v_ampMod[candidate];
+				const uint8_t candidateStage = candidateMod.stageIndex;
+				
+				if (candidateStage >= currentStage) {                                  // If the currently chosen voice is in a later ADSR stage, keep it.
+					if (candidateStage == currentStage) {                              // Otherwise, if both voices are in the same ADSR stage
+						const int8_t candidateAmp = candidateMod.amp;                  //   compare amplitudes to determine which voice to prefer.
+						
+						bool selectCandidate = candidateMod.slope >= 0                 // If amplitude is increasing...
+						? candidateAmp >= currentAmp							   //   prefer the lower amplitude voice
+						: candidateAmp <= currentAmp;                              //   otherwise the higher amplitude voice
+
+						if (selectCandidate) {
+							current = candidate;
+							currentStage = candidateStage;
+							currentAmp = candidateAmp;
+						}
+						} else {
+						current = candidate;											// Else, if the candidate is in a later ADSR stage, prefer it.
+						currentStage = candidateStage;
+						currentAmp = candidateMod.amp;
+					}
+				}
+			}
+			
+			return current;
+		}
         
 		void noteOn(uint8_t voice, uint8_t note, uint8_t velocity, const Instrument& instrument);
         
