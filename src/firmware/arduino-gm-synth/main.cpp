@@ -1,8 +1,15 @@
 ﻿/*
 	Baseline (w/Ltc16xx):
-				Program Memory Usage 	:	32284 bytes
+				Program Memory Usage 	:	32270 bytes
 				Data Memory Usage 		:	1021 bytes
+				
+	Pwm0: (-12B)
 */
+
+#define DAC Ltc16xx<PinId::D10>
+//#define DAC Pwm0
+//#define DAC Pwm1
+//#define DAC Pwm01
 				
 #include <stdint.h>
 #include "midi.h"
@@ -13,32 +20,17 @@
 ssd1306 display;
 MidiSynth synth;
 
-void noteOn(uint8_t channel, uint8_t note, uint8_t velocity) {
-	synth.midiNoteOn(channel, note, velocity);
-}
-
-void noteOff(uint8_t channel, uint8_t note) {
-	synth.midiNoteOff(channel, note);
-}
-
-void sysex(uint8_t cbData, uint8_t data[]) { }
-
-void controlChange(uint8_t channel, uint8_t control, uint8_t value) {
-	synth.midiControlChange(channel, control, value);
-}
-
-void programChange(uint8_t channel, uint8_t value) {
-    synth.midiProgramChange(channel, value);
-}
-
-void pitchBend(uint8_t channel, int16_t value) {
-	synth.midiPitchBend(channel, value);
-}
+void noteOn(uint8_t channel, uint8_t note, uint8_t velocity)		{ synth.midiNoteOn(channel, note, velocity); }
+void noteOff(uint8_t channel, uint8_t note)							{ synth.midiNoteOff(channel, note); }
+void sysex(uint8_t cbData, uint8_t data[])							{ }
+void controlChange(uint8_t channel, uint8_t control, uint8_t value) { synth.midiControlChange(channel, control, value); }
+void programChange(uint8_t channel, uint8_t value)					{ synth.midiProgramChange(channel, value); }
+void pitchBend(uint8_t channel, int16_t value)						{ synth.midiPitchBend(channel, value); }
 
 #include <avr/io.h>
 
 void setup() {
-    midi_setup();
+    Midi::setup();
 
     display.begin();
     display.reset();
@@ -56,15 +48,12 @@ void loop() {
     displayChannel &= 0x0F;
 
     uint8_t y = synth.getAmp(displayChannel);
-	if (y < 96) {
-		y += y >> 1;
-	} else {
-		y = 128;
-	}
+	y += y >> 1;
+	y &= 0x3F;
 	
     const uint8_t x = displayChannel << 3;
     const int8_t page = 7 - (y >> 3);
-    midi_process();
+    Midi::dispatch();
     
     synth.suspend();                                // Suspend audio processing ISR so display can use SPI.
     display.select(x, x + 6, 0, 7);             
@@ -75,7 +64,7 @@ void loop() {
         synth.suspend();                            // Suspend audio processing ISR so display can use SPI.
         display.send7(0x00);
         synth.resume();
-        midi_process();
+	    Midi::dispatch();
     }
 
     {
@@ -83,7 +72,7 @@ void loop() {
         synth.suspend();                            // Suspend audio processing ISR so display can use SPI.
         display.send7(~((1 << remainder) - 1));
         synth.resume();
-        midi_process();
+	    Midi::dispatch();
     }
 
     // Clear [page + 1 .. 7]
@@ -91,7 +80,7 @@ void loop() {
         synth.suspend();                            // Suspend audio processing ISR so display can use SPI.
         display.send7(0xFF);
         synth.resume();
-        midi_process();
+	    Midi::dispatch();
     }
 }
 

@@ -3,17 +3,26 @@
 
 class Pwm0 final {
 	private:
-	Spi<csPin> _spi;
+		uint16_t out;
 	
 	public:
-		void setup() { _spi.setup(); }
+		void setup() {
+	        // Setup Timer0 for PWM
+	        TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);   // Fast PWM (non-inverting), Top 0xFF
+	        TCCR0B = _BV(CS10);												// Prescale None
+	        DDRD |= _BV(DDD5) | _BV(DDD6);									// Output PWM to DDD5 / DDD6
+		}
 
-		void begin(uint16_t wavOut) {
-			OCR0A = wavOut >> 8;			OCR0B = wavOut & 0xFF;
+		void begin() {
+			OCR0A = out >> 8;			OCR0B = out & 0xFF;
+		}
+		
+		void set(uint16_t value) {
+			out = value;
 		}
 	
-		void sendHiByte(uint8_t hi) { }
-		void sendLoByte(uint8_t lo) { }
+		void sendHiByte() { }
+		void sendLoByte() { }
 		void end() { }
 };
 

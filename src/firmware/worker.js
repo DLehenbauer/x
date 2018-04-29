@@ -56,14 +56,14 @@ port.onmessage = e => {
             const outputData = new Float32Array(msg.length);
             const downsampleRatio = originalSampleRate / msg.rate;
             
-            let s0 = synth.sample();
-            let s1 = synth.sample();
+            let s0 = Module.sample();
+            let s1 = Module.sample();
             let j = 0, k = 1;
 
             for (let i = 0; i < outputData.length; i++, j += downsampleRatio) {
                 while (j > k) {
                     s0 = s1;
-                    s1 = synth.sample();
+                    s1 = Module.sample();
                     k++;
                 }
 

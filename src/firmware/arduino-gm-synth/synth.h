@@ -7,18 +7,18 @@
 #include "instruments.h"
 #include "lerp.h"
 #include "drivers/dac/ltc16xx.h"
+#include "drivers/dac/pwm0.h"
+#include "drivers/dac/pwm1.h"
+#include "drivers/dac/pwm01.h"
 #include <math.h>
 
-#define DAC
-
 #ifdef __EMSCRIPTEN__
-	#define DAC
 	void TIMER2_COMPA_vect();
+#else
+	constexpr static uint16_t pitch(double sampleRate, double note) {
+		return round(pow(2, (note - 69.0) / 12.0) * 440.0 / sampleRate * static_cast<double>(0xFFFF));
+	}
 #endif
-
-constexpr static uint16_t pitch(double sampleRate, double note) {
-	return round(pow(2, (note - 69.0) / 12.0) * 440.0 / sampleRate * static_cast<double>(0xFFFF));
-}
 
 class Synth {
     public:
@@ -85,30 +85,11 @@ class Synth {
 		static volatile const int8_t*	v_baseWave[Synth::numVoices];		// Original starting address in wavetable.
 		static volatile uint8_t			_note[Synth::numVoices];			// Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
 		
-		static uint16_t wavOut;												// Audio output as biased/unsigned (0 signed -> 0x8000).
-#ifdef DAC
-		static Ltc16xx<PinId::D10> _dac;
-#endif
-	
+		static DAC _dac;
 	
 	public:
         void begin(){
-#ifdef DAC
 	        _dac.setup();
-#else
-	        //// Setup Timer1 for PWM
-	        //TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);    // Toggle OC1A/OC1B on Compare Match, Fast PWM (non-inverting)
-	        //TCCR1B = _BV(WGM13) | _BV(WGM12) | _BV(CS10);       // Fast PWM, Top ICR1H/L, Prescale None
-	        //ICR1H = 0;
-	        //ICR1L = 0xFF;                                       // Top = 255 (8-bit PWM per output), 62.5khz carrier frequency
-	        //DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2
-	        //TIMSK1 = 0;
-	        
-	        // Setup Timer0 for PWM
-	        TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);   // Fast PWM (non-inverting), Top 0xFF
-	        TCCR0B = _BV(CS10);												// Prescale None
-	        DDRD |= _BV(DDD5) | _BV(DDD6);									// Output PWM to DDD5 / DDD6
-	        #endif
 
 	        TCCR2A = _BV(WGM21);                // CTC Mode (Clears timer and raises interrupt when OCR2B reaches OCR2A)
 	        TCCR2B = _BV(CS21);                 // Prescale None = C_FPU / 8 tick frequency
@@ -133,21 +114,21 @@ class Synth {
 				const volatile Lerp& candidateMod = v_ampMod[candidate];
 				const uint8_t candidateStage = candidateMod.stageIndex;
 				
-				if (candidateStage >= currentStage) {                                  // If the currently chosen voice is in a later ADSR stage, keep it.
-					if (candidateStage == currentStage) {                              // Otherwise, if both voices are in the same ADSR stage
-						const int8_t candidateAmp = candidateMod.amp;                  //   compare amplitudes to determine which voice to prefer.
+				if (candidateStage >= currentStage) {                               // If the currently chosen voice is in a later ADSR stage, keep it.
+					if (candidateStage == currentStage) {                           // Otherwise, if both voices are in the same ADSR stage
+						const int8_t candidateAmp = candidateMod.amp;               //   compare amplitudes to determine which voice to prefer.
 						
-						bool selectCandidate = candidateMod.slope >= 0                 // If amplitude is increasing...
-						? candidateAmp >= currentAmp							   //   prefer the lower amplitude voice
-						: candidateAmp <= currentAmp;                              //   otherwise the higher amplitude voice
+						bool selectCandidate = candidateMod.slope >= 0              // If amplitude is increasing...
+							? candidateAmp >= currentAmp							//   prefer the lower amplitude voice
+							: candidateAmp <= currentAmp;							//   otherwise the higher amplitude voice
 
 						if (selectCandidate) {
 							current = candidate;
 							currentStage = candidateStage;
 							currentAmp = candidateAmp;
 						}
-						} else {
-						current = candidate;											// Else, if the candidate is in a later ADSR stage, prefer it.
+					} else {
+						current = candidate;										// Else, if the candidate is in a later ADSR stage, prefer it.
 						currentStage = candidateStage;
 						currentAmp = candidateMod.amp;
 					}
@@ -247,11 +228,8 @@ class Synth {
 			return v_amp[voice];
 		}
 		
-		static void isr() __attribute__((always_inline)) {
-#ifndef DAC
-			OCR0A = wavOut >> 8;		// Update PWM outputs prior to re-enabling interrupts to write OCR0A/B			OCR0B = wavOut & 0xFF;		// as atomically as possible.
-#endif
-			
+		static uint16_t isr() __attribute__((always_inline)) {
+			_dac.begin();
 			TIMSK2 = 0;         // Disable timer2 interrupts to prevent reentrancy.
 			sei();              // Re-enable interrupts to ensure we do not miss MIDI events.
 			
@@ -292,9 +270,7 @@ class Synth {
 
 			// Each interrupt, we transmit the previous output to the DAC concurrently with calculating
 			// the next wavOut.  This avoids unproductive busy-waiting for SPI to finish.
-#ifdef DAC
-			_dac.sendHiByte(wavOut >> 8);										// Begin transmitting upper 8-bits to DAC.
-#endif
+			_dac.sendHiByte();										// Begin transmitting upper 8-bits to DAC.
 
 			// Macro that advances '_phase[voice]' by the sampling interval '_pitch[voice]' and stores the next 8-bit
 			// sample offset as 'offset##voice'.
@@ -318,9 +294,7 @@ class Synth {
 			int16_t mix = (MIX(0) + MIX(1) + MIX(2) + MIX(3)) >> 1;             // Apply xor, modulate by amp, and mix.
 			mix += (MIX(4) + MIX(5) + MIX(6) + MIX(7)) >> 1;
 
-#ifdef DAC
-			_dac.sendLoByte(wavOut);											// Begin transmitting the lower 8-bits.
-#endif
+			_dac.sendLoByte();													// Begin transmitting the lower 8-bits.
 
 			PHASE(8); PHASE(9); PHASE(10); PHASE(11);                           // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
 			PHASE(12); PHASE(13); PHASE(14); PHASE(15);                         // (Load stores should use constant offsets and results should stay in register.)
@@ -330,14 +304,18 @@ class Synth {
 			
 			mix += (MIX(8) + MIX(9) + MIX(10) + MIX(11)) >> 1;                  // Apply xor, modulate by amp, and mix.
 			mix += (MIX(12) + MIX(13) + MIX(14) + MIX(15)) >> 1;
-			
-			wavOut = mix + 0x8000;                                              // Store resulting wave output for transmission on next interrupt.
 
-#ifdef DAC
+			#undef MIX
+			#undef SAMPLE
+			#undef PHASE
+			
+			const uint16_t wavOut = mix + 0x8000;
+			_dac.set(wavOut);													// Store resulting wave output for transmission on next interrupt.
 			_dac.end();															// Clear SPIF flag to avoid confusing other SPI users when returning from interrupt.
-#endif
 			
 			TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.
+			
+			return wavOut;
 		}
 
         
@@ -361,37 +339,30 @@ class Synth {
 			Instruments::getInstrument(instrumentIndex, instrument0);
 			this->noteOn(voice, note, velocity, instrument0);
 		}
-		
-		uint16_t sample() {
-			TIMER2_COMPA_vect();
-			return wavOut;
-		}
 #endif // __EMSCRIPTEN__
 };
 
-// Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval
-constexpr uint16_t Synth::_noteToPitch[] PROGMEM;
+constexpr uint16_t Synth::_noteToPitch[] PROGMEM;							// Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval
 constexpr uint8_t Synth::offsetTable[];
+DAC Synth::_dac;
 
-volatile const int8_t*  Synth::v_wave[Synth::numVoices]    = { 0 };        // Starting address of 256b wave table.
-volatile uint16_t       Synth::v_phase[Synth::numVoices]   = { 0 };        // Phase accumulator holding the Q8.8 offset of the next sample.
-volatile uint16_t       Synth::v_pitch[Synth::numVoices]   = { 0 };        // Q8.8 sampling period, used to advance the '_phase' accumulator.
-volatile int8_t         Synth::v_xor[Synth::numVoices]     = { 0 };        // XOR bits applied to each sample (for effect).
-volatile uint8_t        Synth::v_amp[Synth::numVoices]     = { 0 };        // 6-bit amplitude scale applied to each sample.
-volatile bool           Synth::v_isNoise[Synth::numVoices] = { 0 };        // If true, '_xor' is periodically overwritten with random values.
+volatile const int8_t*  Synth::v_wave[Synth::numVoices]    = { 0 };			// Starting address of 256b wave table.
+volatile uint16_t       Synth::v_phase[Synth::numVoices]   = { 0 };			// Phase accumulator holding the Q8.8 offset of the next sample.
+volatile uint16_t       Synth::v_pitch[Synth::numVoices]   = { 0 };			// Q8.8 sampling period, used to advance the '_phase' accumulator.
+volatile int8_t         Synth::v_xor[Synth::numVoices]     = { 0 };			// XOR bits applied to each sample (for effect).
+volatile uint8_t        Synth::v_amp[Synth::numVoices]     = { 0 };			// 6-bit amplitude scale applied to each sample.
+volatile bool           Synth::v_isNoise[Synth::numVoices] = { 0 };			// If true, '_xor' is periodically overwritten with random values.
 
-volatile Lerp           Synth::v_ampMod[Synth::numVoices]  = {};           // Amplitude modulation
+volatile Lerp           Synth::v_ampMod[Synth::numVoices]  = {};			// Amplitude modulation
 volatile Lerp           Synth::v_freqMod[Synth::numVoices] = {};			// Frequency modulation
 volatile Lerp           Synth::v_waveMod[Synth::numVoices] = {};			// Wave offset modulation
 
-volatile uint8_t        Synth::v_vol[Synth::numVoices]     = { 0 };        // 7-bit volume scalar applied to ADSR output.
+volatile uint8_t        Synth::v_vol[Synth::numVoices]     = { 0 };			// 7-bit volume scalar applied to ADSR output.
 
 volatile uint16_t		Synth::v_basePitch[Synth::numVoices]	= { 0 };	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
 volatile uint16_t		Synth::v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post pitch bend, but prior to freqMod.
-volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]	= { 0 };    // Original starting address in wavetable.
+volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]		= { 0 };    // Original starting address in wavetable.
 volatile uint8_t		Synth::_note[Synth::numVoices]			= { 0 };    // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
-
-uint16_t Synth::wavOut = 0x8000;	// Audio output as biased/unsigned (0 signed -> 0x8000).
 
 SIGNAL(TIMER2_COMPA_vect) {
 	Synth::isr();

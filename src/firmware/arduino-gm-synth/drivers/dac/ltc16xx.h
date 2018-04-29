@@ -6,20 +6,25 @@
 template<PinId csPin>
 class Ltc16xx final {
 	private:
+		uint16_t out;
 		Spi<csPin> _spi;
 	
 	public:
 		void setup() { _spi.setup(); }
 	
-		void begin(uint16_t wavOut) { }			
+		void set(uint16_t value) {
+			out = value;
+		}
+
+		void begin() { }
 	
-		void sendHiByte(uint8_t hi) { 
+		void sendHiByte() { 
 			_spi.begin();
-			_spi.unsafe_send(hi);
+			_spi.unsafe_send(out >> 8);
 		}
 		
-		void sendLoByte(uint8_t lo) {
-			_spi.unsafe_send(lo);
+		void sendLoByte() {
+			_spi.unsafe_send(out);
 		}
 
 		void end() {

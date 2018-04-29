@@ -34,7 +34,14 @@ class Spi final {
 		}
 		
 		void unsafe_clearEndOfTransmissionFlag() __attribute__((always_inline)) {
+#ifdef __EMSCRIPTEN__
+			#pragma clang diagnostic push
+			#pragma clang diagnostic ignored "-Wunused-value"
+#endif
 			SPSR;
+#ifdef __EMSCRIPTEN__
+			#pragma clang diagnostic pop
+#endif
 		}
 	
 		void unsafe_send(uint8_t data) __attribute__((always_inline)) {

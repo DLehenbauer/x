@@ -209,6 +209,12 @@
     <Compile Include="drivers\dac\pwm0.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="drivers\dac\pwm01.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="drivers\dac\pwm1.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="drivers\pin.h">
       <SubType>compile</SubType>
     </Compile>
