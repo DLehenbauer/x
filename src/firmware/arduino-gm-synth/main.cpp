@@ -1,6 +1,6 @@
 ﻿/*
 	Baseline (w/Ltc16xx):
-				Program Memory Usage 	:	32270 bytes
+				Program Memory Usage 	:	32254 bytes
 				Data Memory Usage 		:	1021 bytes
 				
 	Pwm0: (-12B)
