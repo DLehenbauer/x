@@ -1,10 +1,3 @@
-/*
- * pgmspace.cpp
- *
- * Created: 2/10/2018 6:39:53 PM
- *  Author: danlehen
- */ 
-
 #include "common.h"
 #include "pgmspace.h"
 
