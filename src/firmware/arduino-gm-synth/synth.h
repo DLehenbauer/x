@@ -184,8 +184,8 @@ class Synth {
     void pitchBend(uint8_t voice, int16_t value) {
       uint16_t pitch = v_basePitch[voice];
       uint16_t delta = value >= 0
-      ? pgm_read_word(&_noteToPitch[_note[voice] + 2]) - pitch
-      : pitch - pgm_read_word(&_noteToPitch[_note[voice] - 2]);
+        ? pgm_read_word(&_noteToPitch[_note[voice] + 2]) - pitch
+        : pitch - pgm_read_word(&_noteToPitch[_note[voice] - 2]);
 
       int32_t product;
 
@@ -292,7 +292,7 @@ class Synth {
       int16_t mix = (MIX(0) + MIX(1) + MIX(2) + MIX(3)) >> 1;             // Apply xor, modulate by amp, and mix.
       mix += (MIX(4) + MIX(5) + MIX(6) + MIX(7)) >> 1;
 
-      _dac.sendLoByte();													// Begin transmitting the lower 8-bits.
+      _dac.sendLoByte();													                        // Begin transmitting the lower 8-bits.
 
       PHASE(8); PHASE(9); PHASE(10); PHASE(11);                           // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
       PHASE(12); PHASE(13); PHASE(14); PHASE(15);                         // (Load stores should use constant offsets and results should stay in register.)

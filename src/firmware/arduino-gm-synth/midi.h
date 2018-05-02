@@ -89,9 +89,8 @@ class Midi final {
     }
 
   public:
-    static void setup() {
-      constexpr uint32_t baud = 31250;
-      constexpr uint16_t ubrr = F_CPU / 16 / baud - 1;
+    static void begin(uint32_t baud) {
+      const uint16_t ubrr = F_CPU / 16 / baud - 1;
 
       UBRR0H = static_cast<uint8_t>(ubrr >> 8);           // baud
       UBRR0L = static_cast<uint8_t>(ubrr);

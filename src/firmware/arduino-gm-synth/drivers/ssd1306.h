@@ -32,9 +32,9 @@ enum Command: uint8_t {
 // A specialized driver for SSD1306-based OLED display used to concurrently update the real-time bar
 // graph in tiny time slices, interspersed with dispatching MIDI in the main loop.
 
-class ssd1306 final {
+class Ssd1306 final {
   public:
-    ssd1306() {}
+    Ssd1306() {}
   
     void begin() {
       PORTD |= _resPin | _dcPin | _csPin;             // Set display RES/DC/CS pins HIGH.
