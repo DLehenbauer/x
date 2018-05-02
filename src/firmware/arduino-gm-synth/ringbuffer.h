@@ -24,7 +24,7 @@ template<class T, uint8_t Log2Capacity> class RingBuffer {
     bool dequeue(T& value) volatile {
       if (_head == _tail) {
         return false;
-        } else {
+      } else {
         value = _buffer[_tail];
         _tail = (_tail + 1) & lengthModMask;
         return true;

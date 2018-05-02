@@ -10,30 +10,8 @@ class MidiSynth final : public Synth {
 
   public:    MidiSynth() : Synth() {      for (int8_t channel = maxMidiChannel; channel >= 0; channel--) {        Instruments::getInstrument(0, channelToInstrument[channel]);      }
       for (int8_t channel = maxMidiChannel; channel >= 0; channel--) {        voiceToNote[channel] = 0xFF;        voiceToChannel[channel] = 0xFF;      }    }
-    void midiNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {      /* TODO: Support additional GS/GM2 percussion
-      http://www.voidaudio.net/percussion.html (loads very slowly)
-    
-      27 High Q
-      28 Slap
-      29 Scratch Push
-      30 Scratch Pull
-      31 Sticks
-      32 Square Click
-      33 Metronome Click
-      34 Metronome Bell
-      ...
-      81 Shaker
-      82 Jingle Bell
-      83 Belltree
-      84 Castanets
-      85 Mute Surdo
-      86 Open Surdo
-      */
-          if (channel == percussionChannel) {						    // If playing the percussion channel        uint8_t index = note - 35;							        //	 Calculate the the index of the percussion instrument relative        if (index >= 46) { index = 45; }					      //   to the beginning of the percussion instruments (i.e., less 128).
-        note = Instruments::getPercussionNote(index);		//   Replace the note played with the appropriate frequency for the        //   percussion instrument.
-      
-        Instruments::getInstrument(0x80 + index,			  //   Load the percussion instrument into the channelToInstrument map.        channelToInstrument[percussionChannel]);		    //   (Note: percussion instruments begin at 128)      }
-      uint8_t voice = getNextVoice();									  // Find an available voice to play the note.      noteOn(voice, note, velocity, channelToInstrument[channel]);	// Play the note.
+    void midiNoteOn(uint8_t channel, uint8_t note, uint8_t velocity) {      if (channel == percussionChannel) {						    // If playing the percussion channel        note = Instruments::getPercussiveInstrument(    //   Update the channel instrument for the given note, and          note, channelToInstrument[channel]);          //   replace the note with the correct playback frequency      }                                                 //   for the instrument (expressed as a midi note).
+      uint8_t voice = getNextVoice();									  // Find an available voice and play the note.      noteOn(voice, note, velocity, channelToInstrument[channel]);
       voiceToNote[voice] = note;								        // Update our voice -> note/channel maps (used for processing MIDI      voiceToChannel[voice] = channel;						      // pitch bend and note off messages).    }
     void midiNoteOff(uint8_t channel, uint8_t note)  {      for (int8_t voice = maxVoice; voice >= 0; voice--) {						          // For each voice        if (voiceToNote[voice] == note && voiceToChannel[voice] == channel) {   //   that is currently playing the note on this channel          noteOff(voice);														                            //      stop playing the note          voiceToChannel[voice] = 0xFF;										                      //      and remove the voice from our voice -> note/channel          voiceToNote[voice] = 0xFF;											                      //      maps so we ignore it for future node off / pitch bench        }																		                                    //      messages.      }    }
     void midiProgramChange(uint8_t channel, uint8_t program) {      Instruments::getInstrument(program, channelToInstrument[channel]);			  // Load the instrument corresponding to the given MIDI program    }																				                                    // into the MIDI channel -> instrument map.
