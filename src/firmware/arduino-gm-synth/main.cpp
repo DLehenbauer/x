@@ -1,6 +1,6 @@
 ﻿/*
     Baseline (w/Ltc16xx):
-    Program Memory Usage 	:	32136 bytes
+    Program Memory Usage 	:	32156 bytes
     Data Memory Usage 		:	1022 bytes
 
     Pwm0: (-12B)
@@ -90,7 +90,7 @@ void loop() {
   // Set [page]
   {
     const uint8_t remainder = 7 - (y & 0x07);
-    display_send7(remainder);
+    display_send7(~((1 << remainder) - 1));
   }
 
   // Clear [page + 1 .. 7]
