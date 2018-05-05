@@ -31,7 +31,7 @@ class Pin {
   public:
     void output() __attribute__((always_inline)) {
       switch (pin) {
-        // PortD
+        // DDRD
         case PinId::D0: DDRD |= _BV(DDD0); break;
         case PinId::D1: DDRD |= _BV(DDD1); break;
         case PinId::D2: DDRD |= _BV(DDD2); break;

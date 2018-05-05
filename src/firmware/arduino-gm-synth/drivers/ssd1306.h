@@ -6,6 +6,8 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+#define ROTATE_180
+
 // https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
 enum Command: uint8_t {
   Command_SetMemAddressMode   = 0x20,         // 00 = Horiz, 01 = Vert, 10 = Page, 11 = Invalid
@@ -33,12 +35,22 @@ enum Command: uint8_t {
 // graph in tiny time slices, interspersed with dispatching MIDI in the main loop.
 
 class Ssd1306 final {
+  private:
+    static constexpr uint8_t _resPin = _BV(DDD2);
+    static constexpr uint8_t  _dcPin = _BV(DDD3);
+    static constexpr uint8_t  _csPin = _BV(DDD4);
+    static constexpr uint8_t _gndPin = _BV(DDD7);
+    
+    static constexpr uint8_t _cmdPins   = _csPin | _dcPin;
+    static constexpr uint8_t _dataPins  = _csPin;
+
   public:
     Ssd1306() {}
   
     void begin() {
       PORTD |= _resPin | _dcPin | _csPin;             // Set display RES/DC/CS pins HIGH.
-      DDRD  |= _resPin | _dcPin | _csPin;             // Set display RES/DC/CS pins as output.
+      PORTD &= ~_gndPin;                              // Set the gnd pin LOW.
+      DDRD  |= _resPin | _dcPin | _csPin | _gndPin;   // Set display RES/DC/CS pins as output.
 
       PORTB |= _BV(DDB2);                             // Must also set default SPI CS pin as output, even
       DDRB |= _BV(DDB2);                              // if we're not using it for the display.
@@ -132,15 +144,8 @@ class Ssd1306 final {
       send(value);
       endData();
     }
-  
+    
   private:
-    static constexpr uint8_t _resPin = _BV(DDD2);
-    static constexpr uint8_t  _dcPin = _BV(DDD3);
-    static constexpr uint8_t  _csPin = _BV(DDD4);
-  
-    static constexpr uint8_t _cmdPins   = _csPin | _dcPin;
-    static constexpr uint8_t _dataPins  = _csPin;
-
     void send(const uint8_t data) __attribute__((always_inline)) {
       SPDR = data;
       while (!(SPSR & _BV(SPIF)));

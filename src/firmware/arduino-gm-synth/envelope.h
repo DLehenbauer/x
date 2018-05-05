@@ -4,15 +4,18 @@
 #include <stdint.h>
 #include "instruments.h"
 
+/*
+    Envelope generator
+*/
 class Envelope {
   private:
     const EnvelopeStage* pStart = nullptr;
-    uint8_t loopStart = 0xFF;
-    uint8_t loopEnd = 0xFF;
-    uint8_t stageIndex = 0xFF;
-    int16_t amp = 0;
+    uint8_t loopStart   = 0xFF;
+    uint8_t loopEnd     = 0xFF;
+    uint8_t stageIndex  = 0xFF;
+    int16_t amp   = 0;
     int16_t slope = 0;
-    int8_t limit = -128;
+    int8_t  limit = -64;
   
     void loadStage() volatile {
       EnvelopeStage stage;
@@ -67,10 +70,10 @@ class Envelope {
     friend class Synth;
   
   #ifdef __EMSCRIPTEN__
-    uint8_t sampleEm() { return sample(); }
+    uint8_t sampleEm()            { return sample(); }
     void startEm(uint8_t program) { start(program); }
-    void stopEm() { stop(); }
-    uint8_t getStageIndex() { return stageIndex; }
+    void stopEm()                 { stop(); }
+    uint8_t getStageIndex()       { return stageIndex; }
   #endif // __EMSCRIPTEN__
 };
 

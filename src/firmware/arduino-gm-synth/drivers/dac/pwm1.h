@@ -1,6 +1,25 @@
 #ifndef PWM1_H_
 #define PWM1_H_
 
+/*
+    Driver for 16-bit PWM on Timer 1
+    
+    Connection to Arduino Uno
+    
+                    1M                     10uf*
+        pin 6 >----^v^v^----o--------o------|(----> audio out
+                            |        |
+                   3.9k     |       === 3.3uf**
+        pin 5 >----^v^v^----o        |
+                                    gnd
+                                                                                                         
+     * Note: A/C coupling capacitor typically optional.
+    ** Note: RC filtering capacitor can be adjusted to taste:
+     
+                2.2nf ~= 18.5 kHz
+                3.3nf ~= 12.4 kHz 
+                4.7nf ~=  8.7 kHz
+*/
 class Pwm1 final {
   private:
     uint16_t out;
@@ -15,17 +34,12 @@ class Pwm1 final {
       DDRB |= _BV(DDB1) | _BV(DDB2);                      // Output PWM to DDB1 / DDB2
     }
 
-    void begin() {
+    void set(uint16_t out) {
       OCR1B = out >> 8;      OCR1A = out & 0xFF;
-    }
-  
-    void set(uint16_t value) {
-      out = value;
     }
   
     void sendHiByte() { }
     void sendLoByte() { }
-    void end() { }
 };
 
 #endif /* PWM1_H_ */

@@ -1,15 +1,16 @@
 ﻿/*
     Baseline (w/Ltc16xx):
-    Program Memory Usage 	:	32126 bytes
+    Program Memory Usage 	:	32116 bytes
     Data Memory Usage 		:	1022 bytes
 
-    Pwm0: (-12B)
+    Pwm0:   -22B
+    Pwm01:  +46B
 */
 
-#define DAC Ltc16xx<PinId::D10>
+//#define DAC Ltc16xx<PinId::D10>
 //#define DAC Pwm0
+#define DAC Pwm01
 //#define DAC Pwm1
-//#define DAC Pwm01
 
 #include <stdint.h>
 #include "midi.h"
@@ -82,19 +83,16 @@ void loop() {
   display.select(x, x + 6, 0, 7);             // Select the 7px x 64px area of the display containing the current bar.
   synth.resume();                             // Resume audio processing.
   
-  // Set [0 .. page - 1]
-  for (int8_t i = page; i > 0; i--) {
+  for (int8_t i = page; i > 0; i--) {         // Clear 7x8 blocks above the new bar graph's current level.
     display_send7(0x00);
   }
 
-  // Set [page]
-  {
+  {                                           // Set/Clear the pixel of the 7x8 block containing the current bar graph level.
     const uint8_t remainder = 7 - (y & 0x07);
     display_send7(~((1 << remainder) - 1));
   }
 
-  // Clear [page + 1 .. 7]
-  for (int8_t i = 6 - page; i >= 0; i--) {
+  for (int8_t i = 6 - page; i >= 0; i--) {    // Set 7x8 blocks under the new bar graph's current level.
     display_send7(0xFF);
   }
 }

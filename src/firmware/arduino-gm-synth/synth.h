@@ -3,14 +3,14 @@
 
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
+#include <math.h>
 #include <stdint.h>
 #include "instruments.h"
 #include "envelope.h"
 #include "drivers/dac/ltc16xx.h"
 #include "drivers/dac/pwm0.h"
-#include "drivers/dac/pwm1.h"
 #include "drivers/dac/pwm01.h"
-#include <math.h>
+#include "drivers/dac/pwm1.h"
 
 #ifndef __EMSCRIPTEN__
 constexpr static uint16_t pitch(double sampleRate, double note) {
@@ -72,9 +72,9 @@ class Synth {
     static volatile uint8_t			  v_amp[Synth::numVoices];			  // 6-bit amplitude scale applied to each sample.
     static volatile bool			    v_isNoise[Synth::numVoices];		// If true, '_xor' is periodically overwritten with random values.
 
-    static volatile Envelope			    v_ampMod[Synth::numVoices];     // Amplitude modulation
-    static volatile Envelope			    v_freqMod[Synth::numVoices];		// Frequency modulation
-    static volatile Envelope			    v_waveMod[Synth::numVoices];		// Wave offset modulation
+    static volatile Envelope			v_ampMod[Synth::numVoices];     // Amplitude modulation
+    static volatile Envelope			v_freqMod[Synth::numVoices];		// Frequency modulation
+    static volatile Envelope			v_waveMod[Synth::numVoices];		// Wave offset modulation
 
     static volatile uint8_t			  v_vol[Synth::numVoices];			  // 7-bit volume scalar applied to ADSR output.
 
@@ -89,13 +89,14 @@ class Synth {
     void begin(){
       _dac.setup();
 
+      // Setup Timer2 for sample/mix/output ISR.
       TCCR2A = _BV(WGM21);                // CTC Mode (Clears timer and raises interrupt when OCR2B reaches OCR2A)
       TCCR2B = _BV(CS21);                 // Prescale None = C_FPU / 8 tick frequency
       OCR2A  = samplingInterval;			    // Set timer top to sampling interval
       TIMSK2 = _BV(OCIE2A);               // Enable ISR
     }
   
-    // Returns the next idle voice, if any.  If no voice is idle, uses ADSR stage and amplitude to
+    // Returns the next idle voice, if any.  If no voice is idle, uses envelope stage and amplitude to
     // choose the best candidate for note-stealing.
     uint8_t getNextVoice() {
       uint8_t current = maxVoice;
@@ -112,8 +113,8 @@ class Synth {
         const volatile Envelope& candidateMod = v_ampMod[candidate];
         const uint8_t candidateStage = candidateMod.stageIndex;
       
-        if (candidateStage >= currentStage) {                 // If the currently chosen voice is in a later ADSR stage, keep it.
-          if (candidateStage == currentStage) {               // Otherwise, if both voices are in the same ADSR stage
+        if (candidateStage >= currentStage) {                 // If the currently chosen voice is in a later amplitude stage, keep it.
+          if (candidateStage == currentStage) {               // Otherwise, if both voices are in the same amplitude stage
             const int8_t candidateAmp = candidateMod.amp;     //   compare amplitudes to determine which voice to prefer.
           
             bool selectCandidate = candidateMod.slope >= 0    // If amplitude is increasing...
@@ -161,7 +162,6 @@ class Synth {
       suspend();
 
       v_wave[voice] = v_baseWave[voice] = instrument.wave + waveOffset;
-      v_phase[voice] = 0;
       v_pitch[voice] = v_bentPitch[voice] = v_basePitch[voice] = pitch;
       v_xor[voice] = instrument.xorBits;
       v_amp[voice] = 0;
@@ -222,14 +222,13 @@ class Synth {
       resume();
     }
   
-    uint8_t getAmp(uint8_t voice) {
+    uint8_t getAmp(uint8_t voice) const {
       return v_amp[voice];
     }
   
     static uint16_t isr() __attribute__((always_inline)) {
-      _dac.begin();
       TIMSK2 = 0;         // Disable timer2 interrupts to prevent reentrancy.
-      sei();              // Re-enable interrupts to ensure we do not miss MIDI events.
+      sei();              // Re-enable interrupts to ensure USART RX ISR buffers incoming MIDI messages.
     
       {
         static uint16_t noise = 0xACE1;                   // 16-bit maximal-period Galois LFSR
@@ -268,7 +267,7 @@ class Synth {
 
       // Each interrupt, we transmit the previous output to the DAC concurrently with calculating
       // the next wavOut.  This avoids unproductive busy-waiting for SPI to finish.
-      _dac.sendHiByte();										// Begin transmitting upper 8-bits to DAC.
+      _dac.sendHiByte();										                                // Begin transmitting upper 8-bits to DAC.
 
       // Macro that advances '_phase[voice]' by the sampling interval '_pitch[voice]' and stores the next 8-bit
       // sample offset as 'offset##voice'.
@@ -286,7 +285,7 @@ class Synth {
       PHASE(0); PHASE(1); PHASE(2); PHASE(3);                             // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
       PHASE(4); PHASE(5); PHASE(6); PHASE(7);                             // (Load stores should use constant offsets and results should stay in register.)
     
-      SAMPLE(0); SAMPLE(1); SAMPLE(2); SAMPLE(3);                         // Sample the wavetables at the offsets calculated above.
+      SAMPLE(0); SAMPLE(1); SAMPLE(2); SAMPLE(3);                         // Sample the wavetable at the offsets calculated above.
       SAMPLE(4); SAMPLE(5); SAMPLE(6); SAMPLE(7);                         // (Samples should stay in register.)
     
       int16_t mix = (MIX(0) + MIX(1) + MIX(2) + MIX(3)) >> 1;             // Apply xor, modulate by amp, and mix.
@@ -297,7 +296,7 @@ class Synth {
       PHASE(8); PHASE(9); PHASE(10); PHASE(11);                           // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
       PHASE(12); PHASE(13); PHASE(14); PHASE(15);                         // (Load stores should use constant offsets and results should stay in register.)
     
-      SAMPLE(8); SAMPLE(9); SAMPLE(10); SAMPLE(11);                       // Sample the wavetables at the offsets calculated above.
+      SAMPLE(8); SAMPLE(9); SAMPLE(10); SAMPLE(11);                       // Sample the wavetable at the offsets calculated above.
       SAMPLE(12); SAMPLE(13); SAMPLE(14); SAMPLE(15);                     // (Samples should stay in register.)
     
       mix += (MIX(8) + MIX(9) + MIX(10) + MIX(11)) >> 1;                  // Apply xor, modulate by amp, and mix.
@@ -308,8 +307,7 @@ class Synth {
       #undef PHASE
     
       const uint16_t wavOut = mix + 0x8000;
-      _dac.set(wavOut);													// Store resulting wave output for transmission on next interrupt.
-      _dac.end();															// Clear SPIF flag to avoid confusing other SPI users when returning from interrupt.
+      _dac.set(wavOut);													                          // Store resulting wave output for transmission on next interrupt.
     
       TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.
     
@@ -344,23 +342,23 @@ constexpr uint16_t Synth::_noteToPitch[] PROGMEM;							// Map MIDI notes [0..12
 constexpr uint8_t Synth::offsetTable[];
 DAC Synth::_dac;
 
-volatile const int8_t*  Synth::v_wave[Synth::numVoices]     = { 0 };	// Starting address of 256b wave table.
-volatile uint16_t       Synth::v_phase[Synth::numVoices]    = { 0 };	// Phase accumulator holding the Q8.8 offset of the next sample.
-volatile uint16_t       Synth::v_pitch[Synth::numVoices]    = { 0 };	// Q8.8 sampling period, used to advance the '_phase' accumulator.
-volatile int8_t         Synth::v_xor[Synth::numVoices]      = { 0 };	// XOR bits applied to each sample (for effect).
-volatile uint8_t        Synth::v_amp[Synth::numVoices]      = { 0 };	// 6-bit amplitude scale applied to each sample.
-volatile bool           Synth::v_isNoise[Synth::numVoices]  = { 0 };	// If true, '_xor' is periodically overwritten with random values.
+volatile const int8_t*  Synth::v_wave[Synth::numVoices]       = { 0 };	// Starting address of 256b wave table.
+volatile uint16_t       Synth::v_phase[Synth::numVoices]      = { 0 };	// Phase accumulator holding the Q8.8 offset of the next sample.
+volatile uint16_t       Synth::v_pitch[Synth::numVoices]      = { 0 };	// Q8.8 sampling period, used to advance the '_phase' accumulator.
+volatile int8_t         Synth::v_xor[Synth::numVoices]        = { 0 };	// XOR bits applied to each sample (for effect).
+volatile uint8_t        Synth::v_amp[Synth::numVoices]        = { 0 };	// 6-bit amplitude scale applied to each sample.
+volatile bool           Synth::v_isNoise[Synth::numVoices]    = { 0 };	// If true, '_xor' is periodically overwritten with random values.
 
-volatile Envelope           Synth::v_ampMod[Synth::numVoices]   = {};			// Amplitude modulation
-volatile Envelope           Synth::v_freqMod[Synth::numVoices]  = {};			// Frequency modulation
-volatile Envelope           Synth::v_waveMod[Synth::numVoices]  = {};			// Wave offset modulation
+volatile Envelope       Synth::v_ampMod[Synth::numVoices]     = {};			// Amplitude modulation
+volatile Envelope       Synth::v_freqMod[Synth::numVoices]    = {};			// Frequency modulation
+volatile Envelope       Synth::v_waveMod[Synth::numVoices]    = {};			// Wave offset modulation
 
-volatile uint8_t        Synth::v_vol[Synth::numVoices]      = { 0 };	// 7-bit volume scalar applied to ADSR output.
+volatile uint8_t        Synth::v_vol[Synth::numVoices]        = { 0 };	// 7-bit volume scalar applied to ADSR output.
 
-volatile uint16_t		Synth::v_basePitch[Synth::numVoices]	  = { 0 };	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
-volatile uint16_t		Synth::v_bentPitch[Synth::numVoices]	  = { 0 };	// Q8.8 sampling post pitch bend, but prior to freqMod.
-volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]	= { 0 };  // Original starting address in wavetable.
-volatile uint8_t		Synth::_note[Synth::numVoices]			    = { 0 };  // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
+volatile uint16_t		    Synth::v_basePitch[Synth::numVoices]	= { 0 };	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
+volatile uint16_t		    Synth::v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post pitch bend, but prior to freqMod.
+volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]	  = { 0 };  // Original starting address in wavetable.
+volatile uint8_t		    Synth::_note[Synth::numVoices]			  = { 0 };  // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
 
 SIGNAL(TIMER2_COMPA_vect) {
   Synth::isr();
