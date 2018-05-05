@@ -1,6 +1,6 @@
 import Scope from '../../components/scope';
 import WaveEditor from '../../components/waveeditor';
-import LerpEditor from '../../components/lerpeditor';
+import EnvelopeEditor from '../../components/envelopeeditor';
 import InstrumentEditor from '../../components/instrumenteditor';
 import ArraySelector from '../../components/arrayselector';
 import { h, Component } from 'preact';

@@ -187,17 +187,17 @@ export default class App extends Component {
 			this.firmware.setPercussionNotes(this.state.model.persistant.synth.percussionNotes);
 			this.syncInstrument();
 		},
-		setLerpStage: (path, value) => {
-			this.set(`model.persistant.synth.lerpStages${path}`,value);
-			this.firmware.setLerpStages(this.state.model.persistant.synth.lerpStages);
+		setEnvelopeStage: (path, value) => {
+			this.set(`model.persistant.synth.envelopeStages${path}`,value);
+			this.firmware.setEnvelopeStages(this.state.model.persistant.synth.envelopeStages);
 			this.syncInstrument();
 		},
-		setLerps: (stages, programs) => {
-			this.set(['model', 'persistant', 'synth', 'lerpStages'], stages);
-			this.firmware.setLerpStages(this.state.model.persistant.synth.lerpStages);
+		setEnvelopes: (stages, programs) => {
+			this.set(['model', 'persistant', 'synth', 'envelopeStages'], stages);
+			this.firmware.setEnvelopeStages(this.state.model.persistant.synth.envelopeStages);
 
-			this.set(['model', 'persistant', 'synth', 'lerpPrograms'], programs);
-			this.firmware.setLerpPrograms(this.state.model.persistant.synth.lerpPrograms);
+			this.set(['model', 'persistant', 'synth', 'envelopePrograms'], programs);
+			this.firmware.setEnvelopePrograms(this.state.model.persistant.synth.envelopePrograms);
 
 			this.syncInstrument();
 		},

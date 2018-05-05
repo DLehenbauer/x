@@ -3,13 +3,13 @@
 
 #include <avr/pgmspace.h>
 
-struct LerpStage {
+struct EnvelopeStage {
   int16_t slope;
   int8_t limit;
 };
 
-struct LerpProgram {
-  const LerpStage* start;
+struct EnvelopeProgram {
+  const EnvelopeStage* start;
   uint8_t initialValue;
   uint8_t loopStartAndEnd;
 };
@@ -70,11 +70,11 @@ class Instruments {
       return pgm_read_byte(&percussionNotes[index]);  // Return the frequency (i.e., midi note) to play the instrument.
     }
 
-    static void getLerpProgram(uint8_t programIndex, LerpProgram& program) {
-      PROGMEM_copy(&LerpPrograms[programIndex], program);
+    static void getEnvelopeProgram(uint8_t programIndex, EnvelopeProgram& program) {
+      PROGMEM_copy(&EnvelopePrograms[programIndex], program);
     }
 
-    static void getLerpStage(const LerpStage* pStart, uint8_t stageIndex, LerpStage& stage) {
+    static void getEnvelopeStage(const EnvelopeStage* pStart, uint8_t stageIndex, EnvelopeStage& stage) {
       PROGMEM_copy(pStart + stageIndex, stage);
     }
 
@@ -87,12 +87,12 @@ class Instruments {
       return HeapRegion<int8_t>(&Waveforms[0], sizeof(Waveforms));
     }
 
-    static const HeapRegion<LerpProgram> getLerpPrograms() {
-      return HeapRegion<LerpProgram>(&LerpPrograms[0], sizeof(LerpPrograms));
+    static const HeapRegion<EnvelopeProgram> getEnvelopePrograms() {
+      return HeapRegion<EnvelopeProgram>(&EnvelopePrograms[0], sizeof(EnvelopePrograms));
     }
 
-    static const HeapRegion<LerpStage> getLerpStages() {
-      return HeapRegion<LerpStage>(&LerpStages[0], sizeof(LerpStages));
+    static const HeapRegion<EnvelopeStage> getEnvelopeStages() {
+      return HeapRegion<EnvelopeStage>(&EnvelopeStages[0], sizeof(EnvelopeStages));
     }
 
     static const HeapRegion<Instrument> getInstruments() {
@@ -101,8 +101,8 @@ class Instruments {
   #endif // __EMSCRIPTEN__
 };
 
-constexpr LerpStage Instruments::LerpStages[] PROGMEM;
-constexpr LerpProgram Instruments::LerpPrograms[] PROGMEM;
+constexpr EnvelopeStage Instruments::EnvelopeStages[] PROGMEM;
+constexpr EnvelopeProgram Instruments::EnvelopePrograms[] PROGMEM;
 constexpr Instrument Instruments::instruments[] PROGMEM;
 constexpr int8_t Instruments::Waveforms[] PROGMEM;
 constexpr uint8_t Instruments::percussionNotes[] PROGMEM;

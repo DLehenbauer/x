@@ -5,8 +5,8 @@ const originalSampleRate = Module.getSampleRate();
 const layout = {
     percussionNotes: Module.getPercussionNotes(),
     wavetable: Module.getWavetable(),
-    lerpStages: Module.getLerpStages(),
-    lerpPrograms: Module.getLerpPrograms(),
+    envelopeStages: Module.getEnvelopeStages(),
+    envelopePrograms: Module.getEnvelopePrograms(),
     instruments: Module.getInstruments(),
 }
 
@@ -82,16 +82,16 @@ port.onmessage = e => {
             }, [outputData.buffer]);
             break;
         }
-        case 'plotLerp': {
-            const lerp = new Module["Lerp"];
-            lerp.start(msg.program);
+        case 'plotEnvelope': {
+            const envelope = new Module["Envelope"];
+            envelope.start(msg.program);
 
             let previousStage = 0;
             const stageBoundaries = [];
             const u8 = new Uint8Array(msg.length);
             for (let i = 0; i < u8.length; i++) {
-                u8[i] = lerp.sample();
-                const nextStage = lerp.getStageIndex();
+                u8[i] = envelope.sample();
+                const nextStage = envelope.getStageIndex();
                 if (nextStage !== previousStage) {
                     stageBoundaries.push(i);
                     previousStage = nextStage;

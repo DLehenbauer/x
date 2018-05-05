@@ -5,7 +5,7 @@
 #include <avr/pgmspace.h>
 #include <stdint.h>
 #include "instruments.h"
-#include "lerp.h"
+#include "envelope.h"
 #include "drivers/dac/ltc16xx.h"
 #include "drivers/dac/pwm0.h"
 #include "drivers/dac/pwm1.h"
@@ -72,9 +72,9 @@ class Synth {
     static volatile uint8_t			  v_amp[Synth::numVoices];			  // 6-bit amplitude scale applied to each sample.
     static volatile bool			    v_isNoise[Synth::numVoices];		// If true, '_xor' is periodically overwritten with random values.
 
-    static volatile Lerp			    v_ampMod[Synth::numVoices];     // Amplitude modulation
-    static volatile Lerp			    v_freqMod[Synth::numVoices];		// Frequency modulation
-    static volatile Lerp			    v_waveMod[Synth::numVoices];		// Wave offset modulation
+    static volatile Envelope			    v_ampMod[Synth::numVoices];     // Amplitude modulation
+    static volatile Envelope			    v_freqMod[Synth::numVoices];		// Frequency modulation
+    static volatile Envelope			    v_waveMod[Synth::numVoices];		// Wave offset modulation
 
     static volatile uint8_t			  v_vol[Synth::numVoices];			  // 7-bit volume scalar applied to ADSR output.
 
@@ -103,13 +103,13 @@ class Synth {
       int8_t currentAmp;
     
       {
-        const volatile Lerp& currentMod	= v_ampMod[current];
+        const volatile Envelope& currentMod	= v_ampMod[current];
         currentStage = currentMod.stageIndex;
         currentAmp = currentMod.amp;
       }
 
       for (uint8_t candidate = maxVoice - 1; candidate < maxVoice; candidate--) {
-        const volatile Lerp& candidateMod = v_ampMod[candidate];
+        const volatile Envelope& candidateMod = v_ampMod[candidate];
         const uint8_t candidateStage = candidateMod.stageIndex;
       
         if (candidateStage >= currentStage) {                 // If the currently chosen voice is in a later ADSR stage, keep it.
@@ -351,9 +351,9 @@ volatile int8_t         Synth::v_xor[Synth::numVoices]      = { 0 };	// XOR bits
 volatile uint8_t        Synth::v_amp[Synth::numVoices]      = { 0 };	// 6-bit amplitude scale applied to each sample.
 volatile bool           Synth::v_isNoise[Synth::numVoices]  = { 0 };	// If true, '_xor' is periodically overwritten with random values.
 
-volatile Lerp           Synth::v_ampMod[Synth::numVoices]   = {};			// Amplitude modulation
-volatile Lerp           Synth::v_freqMod[Synth::numVoices]  = {};			// Frequency modulation
-volatile Lerp           Synth::v_waveMod[Synth::numVoices]  = {};			// Wave offset modulation
+volatile Envelope           Synth::v_ampMod[Synth::numVoices]   = {};			// Amplitude modulation
+volatile Envelope           Synth::v_freqMod[Synth::numVoices]  = {};			// Frequency modulation
+volatile Envelope           Synth::v_waveMod[Synth::numVoices]  = {};			// Wave offset modulation
 
 volatile uint8_t        Synth::v_vol[Synth::numVoices]      = { 0 };	// 7-bit volume scalar applied to ADSR output.
 

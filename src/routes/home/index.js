@@ -1,6 +1,6 @@
 import Scope from '../../components/scope';
 import WaveEditor from '../../components/waveeditor';
-import LerpEditor from '../../components/lerpeditor';
+import EnvelopeEditor from '../../components/envelopeeditor';
 import InstrumentEditor from '../../components/instrumenteditor';
 import { h, Component } from 'preact';
 import style from './style';
@@ -328,9 +328,9 @@ export default class Home extends Component {
 					<button onclick={this.onCopy}>Copy</button>
 					<button onclick={this.onPaste}>Paste</button>
 				</div>
-				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.ampMod } modType='ampMod' />
-				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.freqMod } modType='freqMod' />
-				<LerpEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.waveMod } modType='waveMod' />
+				<EnvelopeEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.ampMod } modType='ampMod' />
+				<EnvelopeEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.freqMod } modType='freqMod' />
+				<EnvelopeEditor appState={ app } actions={ actions } programIndex={ this.currentInstrument.waveMod } modType='waveMod' />
 				<InstrumentEditor appState={ app } actions={ actions } />
 			</div>
 		);

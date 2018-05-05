@@ -50,8 +50,8 @@ export default class Code extends Component {
         cs.outLn('};');
     }
 
-    lerpStages(cs, stages) {
-        this.array(cs, 'LerpStage', 'LerpStages', '', () => {
+    envelopeStages(cs, stages) {
+        this.array(cs, 'EnvelopeStage', 'EnvelopeStages', '', () => {
             stages.forEach((stage, index) => {
                 const slope = Math.max(Math.min(stage.slope, 127*256), -127*256);
                 cs.outLn(`/* ${this.hex16(index)}: */ { ${this.pad("      ", slope)}, ${this.pad("    ", stage.limit)} },`);
@@ -59,10 +59,10 @@ export default class Code extends Component {
         });
     }
 
-    lerpPrograms(cs, programs) {
-        this.array(cs, 'LerpProgram', 'LerpPrograms', '', () => {
+    envelopePrograms(cs, programs) {
+        this.array(cs, 'EnvelopeProgram', 'EnvelopePrograms', '', () => {
             programs.forEach((program, index) => {
-                cs.outLn(`/* ${this.hex8(index)}: */ { &LerpStages[0x${this.hex16(program.start)}], ${this.pad("    ", program.initialValue)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
+                cs.outLn(`/* ${this.hex8(index)}: */ { &EnvelopeStages[0x${this.hex16(program.start)}], ${this.pad("    ", program.initialValue)}, 0x${this.hex8(program.loopStart << 4 | program.loopEnd)} },`);
             });
         });
     }
@@ -118,8 +118,8 @@ export default class Code extends Component {
     }
 
     cpp(cs, model) {
-        this.lerpStages(cs, model.persistant.synth.lerpStages); cs.outLn();
-        this.lerpPrograms(cs, model.persistant.synth.lerpPrograms); cs.outLn();
+        this.envelopeStages(cs, model.persistant.synth.envelopeStages); cs.outLn();
+        this.envelopePrograms(cs, model.persistant.synth.envelopePrograms); cs.outLn();
         this.wavetable(cs, model.persistant.synth.wavetable); cs.outLn();
         this.instruments(cs, model.persistant.synth.instruments); cs.outLn();
         this.percussionNotes(cs, model.persistant.synth.percussionNotes, model.persistant.synth.instruments); cs.outLn();

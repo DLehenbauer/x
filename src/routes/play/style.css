@@ -32,7 +32,7 @@
 	border-width: var(--borderWidth);
 }
 
-.lerp {
+.envelope {
     --borderWidth: 1px;
     --height: calc(127px + var(--borderWidth) * 2);
 

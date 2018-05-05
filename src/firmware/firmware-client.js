@@ -112,8 +112,8 @@ export default class Firmware {
     setInstruments = instruments => this.store(this.marshallingInfo.instruments, instruments);
     getInstruments = () => this.load(this.marshallingInfo.instruments);
 
-    unpackLerpStages = buffer => {
-        const memory = this.marshallingInfo.lerpStages.memory;
+    unpackEnvelopeStages = buffer => {
+        const memory = this.marshallingInfo.envelopeStages.memory;
         const dv = new DataView(buffer);
 
         const stages = [];
@@ -129,8 +129,8 @@ export default class Firmware {
         return stages;
     }
 
-    packLerpStages = stages => {
-        const memory = this.marshallingInfo.lerpStages.memory;
+    packEnvelopeStages = stages => {
+        const memory = this.marshallingInfo.envelopeStages.memory;
         const buffer = new ArrayBuffer(stages.length * memory.itemSize);
         const dv = new DataView(buffer);
 
@@ -145,18 +145,18 @@ export default class Firmware {
         return buffer;
     }
 
-    setLerpStages = stages => this.store(this.marshallingInfo.lerpStages, stages);
-    getLerpStages = () => this.load(this.marshallingInfo.lerpStages);
+    setEnvelopeStages = stages => this.store(this.marshallingInfo.envelopeStages, stages);
+    getEnvelopeStages = () => this.load(this.marshallingInfo.envelopeStages);
 
-    unpackLerpPrograms = buffer => {
-        const memory = this.marshallingInfo.lerpPrograms.memory;
-        const lerpMemory = this.marshallingInfo.lerpStages.memory;
+    unpackEnvelopePrograms = buffer => {
+        const memory = this.marshallingInfo.envelopePrograms.memory;
+        const envelopeMemory = this.marshallingInfo.envelopeStages.memory;
         const dv = new DataView(buffer);
 
         const programs = [];
         for (let i = 0; i < buffer.byteLength;) {
             const startAddress = i;
-            const start = this.pointerToIndex(lerpMemory, dv.getUint32(i, /* littleEndian: */ true)); i += 4;
+            const start = this.pointerToIndex(envelopeMemory, dv.getUint32(i, /* littleEndian: */ true)); i += 4;
             const initialValue = dv.getInt8(i); i += 1;
             const loopStartAndEnd = dv.getUint8(i); i += 1;
             i += (startAddress + memory.itemSize) - i;
@@ -172,16 +172,16 @@ export default class Firmware {
         return programs;
     }
 
-    packLerpPrograms = programs => {
-        const memory = this.marshallingInfo.lerpPrograms.memory;
-        const lerpMemory = this.marshallingInfo.lerpStages.memory;
+    packEnvelopePrograms = programs => {
+        const memory = this.marshallingInfo.envelopePrograms.memory;
+        const envelopeMemory = this.marshallingInfo.envelopeStages.memory;
         const buffer = new ArrayBuffer(programs.length * memory.itemSize);
         const dv = new DataView(buffer);
 
         let i = 0;
         programs.forEach(program => {
             const startAddress = i;
-            dv.setUint32(i, this.indexToPointer(lerpMemory, program.start), /* littleEndian: */ true); i += 4;
+            dv.setUint32(i, this.indexToPointer(envelopeMemory, program.start), /* littleEndian: */ true); i += 4;
             dv.setInt8(i, program.initialValue, /* littleEndian: */ true); i += 1;
             dv.setUint8(i, program.loopStart << 4 | program.loopEnd, /* littleEndian: */ true); i += 1;
             i += (startAddress + memory.itemSize) - i;
@@ -190,8 +190,8 @@ export default class Firmware {
         return buffer;
     };
 
-    setLerpPrograms = programs => this.store(this.marshallingInfo.lerpPrograms, programs);
-    getLerpPrograms = () => this.load(this.marshallingInfo.lerpPrograms);
+    setEnvelopePrograms = programs => this.store(this.marshallingInfo.envelopePrograms, programs);
+    getEnvelopePrograms = () => this.load(this.marshallingInfo.envelopePrograms);
 
     noteOn(channel, note, velocity) {
         this.port.postMessage({type: 'noteOn', channel, note, velocity});
@@ -215,8 +215,8 @@ export default class Firmware {
         });
     }
 
-    plotLerp(program, length) {
-        return this.send({ type: 'plotLerp', program, length }).then(response => {
+    plotEnvelope(program, length) {
+        return this.send({ type: 'plotEnvelope', program, length }).then(response => {
             return { values: new Uint8Array(response.buffer), stageBoundaries: response.stageBoundaries }
         });
     }
@@ -225,8 +225,8 @@ export default class Firmware {
         percussionNotes: { unpack: this.unpackPercussionNotes, pack: this.packPercussionNotes },
         instruments: { unpack: this.unpackInstruments, pack: this.packInstruments },
         wavetable: { unpack: this.unpackWavetable, pack: this.packWavetable },
-        lerpPrograms: { unpack: this.unpackLerpPrograms, pack: this.packLerpPrograms },
-        lerpStages: { unpack: this.unpackLerpStages, pack: this.packLerpStages },
+        envelopePrograms: { unpack: this.unpackEnvelopePrograms, pack: this.packEnvelopePrograms },
+        envelopeStages: { unpack: this.unpackEnvelopeStages, pack: this.packEnvelopeStages },
     };
 
     /** Stores the given settings to the Firmware. */

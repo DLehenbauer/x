@@ -230,7 +230,7 @@
     <Compile Include="instruments.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="lerp.h">
+    <Compile Include="envelope.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.cpp">

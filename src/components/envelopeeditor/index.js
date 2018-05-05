@@ -1,21 +1,21 @@
 import { h, Component } from 'preact';
 import style from './style';
 import ArraySelector from '../arrayselector';
-import LerpCanvas from '../lerpcanvas';
+import EnvelopeCanvas from '../envelopecanvas';
 import Util from '../../common/util';
 
 const toDegrees = 180 / Math.PI;
 const toRadians = Math.PI / 180;
 
-export default class LerpEditor extends Component {
+export default class EnvelopeEditor extends Component {
     getStartValue(stageIndex) {
         const app = this.props.appState;
         const model = app.model;
 
-        const program = model.persistant.synth.lerpPrograms[this.props.programIndex];
+        const program = model.persistant.synth.envelopePrograms[this.props.programIndex];
         
         return stageIndex !== program.start
-            ? model.persistant.synth.lerpStages[stageIndex - 1].limit
+            ? model.persistant.synth.envelopeStages[stageIndex - 1].limit
             : 0;
     }
 
@@ -23,7 +23,7 @@ export default class LerpEditor extends Component {
         const app = this.props.appState;
         const model = app.model;
         
-        return model.persistant.synth.lerpStages[stageIndex].limit;
+        return model.persistant.synth.envelopeStages[stageIndex].limit;
     }
 
     sliderToSlopeAngle(stageIndex, angle) {
@@ -63,13 +63,13 @@ export default class LerpEditor extends Component {
         const path = `[${target.name}].slope`;
         const value = parseInt(target.value);
         const slope = Math.min(Math.max(Math.round(this.sliderToSlope(stageIndex, value)), -32768), 32767);
-        this.props.actions.setLerpStage(path, slope);
+        this.props.actions.setEnvelopeStage(path, slope);
     };
 
-    lerpChanged = e => {
+    envelopeChanged = e => {
         const target = e.target;
         const path = `${target.name}`
-        this.props.actions.setLerpStage(path, parseInt(target.value));
+        this.props.actions.setEnvelopeStage(path, parseInt(target.value));
     };
 
 	get currentInstrument() {
@@ -92,14 +92,14 @@ export default class LerpEditor extends Component {
 
     get currentProgram() {
         const props = this.props;
-        return props.appState.model.persistant.synth.lerpPrograms[props.programIndex];
+        return props.appState.model.persistant.synth.envelopePrograms[props.programIndex];
     }
 
     addStage = e => {
         const stageIndex = parseInt(e.target.name);
         const model = this.props.appState.model;
 
-        const programs = model.persistant.synth.lerpPrograms.slice(0);
+        const programs = model.persistant.synth.envelopePrograms.slice(0);
         this.adjustPrograms(
             programs,
             stageIndex === this.currentProgram.start
@@ -107,17 +107,17 @@ export default class LerpEditor extends Component {
                 : stageIndex,
             1);
 
-        const stages = model.persistant.synth.lerpStages.slice(0, model.persistant.synth.lerpStages.length - 2);
+        const stages = model.persistant.synth.envelopeStages.slice(0, model.persistant.synth.envelopeStages.length - 2);
         stages.splice(stageIndex, 0, { slope: 0, limit: 0 });
 
-        this.props.actions.setLerps(stages, programs);
+        this.props.actions.setEnvelopes(stages, programs);
     }
 
     removeStage = e => {
         const stageIndex = parseInt(e.target.name);
         const model = this.props.appState.model;
 
-        const programs = model.persistant.synth.lerpPrograms.slice(0);
+        const programs = model.persistant.synth.envelopePrograms.slice(0);
         this.adjustPrograms(
             programs,
             stageIndex === this.currentProgram.start
@@ -125,17 +125,17 @@ export default class LerpEditor extends Component {
                 : stageIndex,
             -1);
 
-        const stages = model.persistant.synth.lerpStages.concat({ start: 0, loopStart: 1, loopEnd: 0 });
+        const stages = model.persistant.synth.envelopeStages.concat({ start: 0, loopStart: 1, loopEnd: 0 });
         stages.splice(stageIndex, 1);
 
-        this.props.actions.setLerps(stages, programs);
+        this.props.actions.setEnvelopes(stages, programs);
     }
 
     programChanged = e => {
         const model = this.props.appState.model;
-        const programs = model.persistant.synth.lerpPrograms.slice(0);
+        const programs = model.persistant.synth.envelopePrograms.slice(0);
         programs[this.props.programIndex][e.target.name] = e.target.value;
-        this.props.actions.setLerps(model.persistant.synth.lerpStages, programs);
+        this.props.actions.setEnvelopes(model.persistant.synth.envelopeStages, programs);
     }
 
 	render(props, state) {
@@ -145,17 +145,17 @@ export default class LerpEditor extends Component {
         }
 
         const model = app.model;
-        const lerpPrograms = model.persistant.synth.lerpPrograms;
-        const programIndex = Math.min(props.programIndex, lerpPrograms.length - 1);
-        const programNames = lerpPrograms.map((lerp, index) => Util.hex8(index));
+        const envelopePrograms = model.persistant.synth.envelopePrograms;
+        const programIndex = Math.min(props.programIndex, envelopePrograms.length - 1);
+        const programNames = envelopePrograms.map((envelope, index) => Util.hex8(index));
 
-        const program = lerpPrograms[programIndex];
+        const program = envelopePrograms[programIndex];
         const rows = [];
 
-        const lerpStages = model.persistant.synth.lerpStages;
-        for (let stageIndex = program.start, stage = lerpStages[stageIndex];
+        const envelopeStages = model.persistant.synth.envelopeStages;
+        for (let stageIndex = program.start, stage = envelopeStages[stageIndex];
             stageIndex.slope !== 0 && stage.limit !== -64;
-            stage = lerpStages[++stageIndex]
+            stage = envelopeStages[++stageIndex]
         ) {
             const angle = this.slopeToSlider(stageIndex, stage.slope);
             rows.push(
@@ -175,14 +175,14 @@ export default class LerpEditor extends Component {
                         name={ `[${stageIndex}].limit` }
                         type='number' min='-128' max='127'
                         value={ stage.limit }
-                        onchange={ this.lerpChanged } />
+                        onchange={ this.envelopeChanged } />
                     <button class={style.stageAdd } name={ stageIndex + 1 } onclick={ this.addStage }>+</button>
                     <button class={style.stageRemove } name={ stageIndex } onclick={ this.removeStage }>-</button>
                 </div>
             );
         }
 		return (
-            <div class={style.lerp}>
+            <div class={style.envelope}>
                 <div class={style.selector}>
                     { props.modType }: <ArraySelector onselect={this.programSelected} selectedIndex={programIndex} options={programNames} />
                     <input name='loopStart' type='number' min='0' max='7' value={ program.loopStart } onchange={ this.programChanged } />
@@ -191,7 +191,7 @@ export default class LerpEditor extends Component {
                     <button name={ program.start } onclick={ this.addStage } disabled={ program.start === 0 }>+</button>
                 </div>
 				<div class={style.graph}>
-					<LerpCanvas appState={ app } program={ props.programIndex } />
+					<EnvelopeCanvas appState={ app } program={ props.programIndex } />
 				</div>
                 <div class={style.controls}>
                     { rows }

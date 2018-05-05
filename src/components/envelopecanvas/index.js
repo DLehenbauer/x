@@ -3,7 +3,7 @@ import Canvas from '../canvas';
 
 import Firmware from '../../firmware/firmware-client';
 
-export default class LerpCanvas extends Canvas {
+export default class EnvelopeCanvas extends Canvas {
     constructor() {
         super();
         this.firmware = new Firmware();
@@ -15,7 +15,7 @@ export default class LerpCanvas extends Canvas {
         this.firmware.connected.then(() => {
             this.firmware.storeAll(props.appState.model.persistant.synth);
         }).then(() => {
-            return this.firmware.plotLerp(props.program, width).then(plot => {
+            return this.firmware.plotEnvelope(props.program, width).then(plot => {
                 const state = this.state;
 
                 context2d.clearRect(0, 0, width, height);

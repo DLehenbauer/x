@@ -1,4 +1,4 @@
-.lerp {
+.envelope {
     display: grid;
     grid-template-areas:
       "selector selector" 

@@ -1,12 +1,12 @@
-#ifndef __LERP_H__
-#define __LERP_H__
+#ifndef __ENVELOPE_H__
+#define __ENVELOPE_H__
 
 #include <stdint.h>
 #include "instruments.h"
 
-class Lerp {
+class Envelope {
   private:
-    const LerpStage* pStart = nullptr;
+    const EnvelopeStage* pStart = nullptr;
     uint8_t loopStart = 0xFF;
     uint8_t loopEnd = 0xFF;
     uint8_t stageIndex = 0xFF;
@@ -15,8 +15,8 @@ class Lerp {
     int8_t limit = -128;
   
     void loadStage() volatile {
-      LerpStage stage;
-      Instruments::getLerpStage(pStart, stageIndex, stage);
+      EnvelopeStage stage;
+      Instruments::getEnvelopeStage(pStart, stageIndex, stage);
       slope = stage.slope;
       limit = stage.limit;
     }
@@ -45,8 +45,8 @@ class Lerp {
     }
   
     void start(uint8_t programIndex) volatile {
-      LerpProgram program;
-      Instruments::getLerpProgram(programIndex, program);
+      EnvelopeProgram program;
+      Instruments::getEnvelopeProgram(programIndex, program);
     
       pStart = program.start;
       loopStart = program.loopStartAndEnd >> 4;
@@ -74,4 +74,4 @@ class Lerp {
   #endif // __EMSCRIPTEN__
 };
 
-#endif //__LERP_H__
+#endif //__ENVELOPE_H__
