@@ -4,7 +4,7 @@
 /*
     Driver for 16-bit PWM on Timers 0 and 1 with digital filter at 62.5khz 
     
-    Connection to Arduino Uno
+    Connection to Arduino Uno:
     
                     1M                     10uf*
         pin 5 >----^v^v^----o--------o------|(----> audio out
@@ -22,7 +22,7 @@
 
                                                                                                          
        * Note: A/C coupling capacitor typically optional.
-      ** Note: RC filtering capacitor can be adjusted to taste:
+      ** Note: RC filtering capacitor can be adjusted to taste.
 */
 class Pwm01 final {
   public:

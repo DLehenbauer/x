@@ -16,9 +16,10 @@
      * Note: A/C coupling capacitor typically optional.
     ** Note: RC filtering capacitor can be adjusted to taste:
      
-                2.2nf ~= 18.5 kHz
-                3.3nf ~= 12.4 kHz 
-                4.7nf ~=  8.7 kHz
+                           8kHz      10kHz      30kHz
+                2.2nf ~=  -0.7db    -1.1db     -5.6db
+                3.3nf ~=  -1.5db    -2.2db     -8.4db
+                4.7nf ~=  -2.7db    -3.6db    -11.1db
 */
 
 class Pwm0 final {

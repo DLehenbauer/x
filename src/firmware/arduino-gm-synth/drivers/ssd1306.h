@@ -1,12 +1,27 @@
 #ifndef __SSD1306_H__
 #define __SSD1306_H__
 
+/*
+
+                  .-----------------.
+                  | .---------. GND o------< pin 7*
+                  | |         | VCC o------< +5v
+                  | |   SSD   |  D0 o------< pin 13
+                  | |  1306   |  D1 o------< pin 11
+                  | | 4-Wire  | RES o------< pin 2
+                  | |   SPI   |  DC o------< pin 3
+                  | '---------'  CS o------< pin 4
+                  '-----------------'
+
+    Notes:
+      * Connecting GND to any of the Arduino Uno's ground pins created a lot of audible line noise.
+        As a work around, this driver sets pin 7 low and uses that instead.
+*/
+
 #include <stdint.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
-#define ROTATE_180
 
 // https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
 enum Command: uint8_t {
@@ -34,6 +49,7 @@ enum Command: uint8_t {
 // A specialized driver for SSD1306-based OLED display used to concurrently update the real-time bar
 // graph in tiny time slices, interspersed with dispatching MIDI in the main loop.
 
+template <bool rotate180>
 class Ssd1306 final {
   private:
     static constexpr uint8_t _resPin = _BV(DDD2);
@@ -84,13 +100,13 @@ class Ssd1306 final {
       send(0x14);
       send(Command_SetMemAddressMode);
       send(0x00);
-    #ifndef ROTATE_180
-      send(Command_SetSegmentRemap);
-      send(Command_SetComOutScanDir);
-    #else
-      send(Command_SetSegmentRemap | 0x01);
-      send(Command_SetComOutScanDir | 0x08);
-    #endif
+      if (rotate180) {
+        send(Command_SetSegmentRemap | 0x01);
+        send(Command_SetComOutScanDir | 0x08);
+      } else {
+        send(Command_SetSegmentRemap);
+        send(Command_SetComOutScanDir);
+      }
       send(Command_SetCOMPins);
       send(0x12);
       send(Command_SetContrast);

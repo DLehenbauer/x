@@ -84,16 +84,12 @@
     Pwm01:    +68B
 */
 
-#define DAC Pwm0
-//#define DAC Ltc16xx<PinId::D10>
-//#define DAC Pwm01
-
 #include <stdint.h>
 #include "drivers/midi.h"
 #include "drivers/ssd1306.h"
 #include "midisynth.h"
 
-Ssd1306 display;    // SSD1306 driver for 128x64 OLED SPI display
+Ssd1306</* rotate 180: */ true> display;    // SSD1306 driver for 128x64 OLED SPI display
 MidiSynth synth;
 
 // The below thunks are invoked during Midi::Dispatch() and forwarded to our MidiSynth.

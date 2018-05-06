@@ -9,7 +9,7 @@
 */
 class Envelope {
   private:
-    const EnvelopeStage* pStart = nullptr;
+    const EnvelopeStage* pFirstStage = nullptr;
     uint8_t loopStart   = 0xFF;
     uint8_t loopEnd     = 0xFF;
     uint8_t stageIndex  = 0xFF;
@@ -19,7 +19,7 @@ class Envelope {
   
     void loadStage() volatile {
       EnvelopeStage stage;
-      Instruments::getEnvelopeStage(pStart, stageIndex, stage);
+      Instruments::getEnvelopeStage(pFirstStage + stageIndex, /* out: */ stage);
       slope = stage.slope;
       limit = stage.limit;
     }
@@ -51,7 +51,7 @@ class Envelope {
       EnvelopeProgram program;
       Instruments::getEnvelopeProgram(programIndex, program);
     
-      pStart = program.start;
+      pFirstStage = program.start;
       loopStart = program.loopStartAndEnd >> 4;
       loopEnd = program.loopStartAndEnd & 0x0F;
       amp = program.initialValue << 8;
@@ -67,6 +67,7 @@ class Envelope {
       }
     }
 
+    // Allow Synth::getNextVoice() to inspect private state for choosing the next best voice.
     friend class Synth;
   
   #ifdef __EMSCRIPTEN__

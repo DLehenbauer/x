@@ -74,8 +74,8 @@ class Instruments {
       PROGMEM_copy(&EnvelopePrograms[programIndex], program);
     }
 
-    static void getEnvelopeStage(const EnvelopeStage* pStart, uint8_t stageIndex, EnvelopeStage& stage) {
-      PROGMEM_copy(pStart + stageIndex, stage);
+    static void getEnvelopeStage(const EnvelopeStage* pStart, EnvelopeStage& stage) {
+      PROGMEM_copy(pStart, stage);
     }
 
   #ifdef __EMSCRIPTEN__

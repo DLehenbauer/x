@@ -12,17 +12,23 @@
 #include "drivers/dac/pwm01.h"
 #include "drivers/dac/pwm1.h"
 
+// With GCC, we can calculate the _noteToPitch table at compile time.
 #ifndef __EMSCRIPTEN__
-constexpr static uint16_t pitch(double sampleRate, double note) {
+constexpr static uint16_t interval(double sampleRate, double note) {
   return round(pow(2, (note - 69.0) / 12.0) * 440.0 / sampleRate * static_cast<double>(0xFFFF));
 }
+#endif
+
+// If unspecified, choose the default DAC.
+#ifndef DAC
+  #define DAC Pwm0
 #endif
 
 class Synth {
   public:
     constexpr static uint8_t numVoices = 16;
     constexpr static uint8_t maxVoice = Synth::numVoices - 1;
-    constexpr static uint8_t samplingInterval = 0x65
+    constexpr static uint8_t samplingInterval = 0x65      // 0x65 ~= 19.8 kHz
   #if DEBUG
       >> 1	// On Debug, halve sampling interval to avoid starving MIDI dispatch.
   #endif
@@ -31,29 +37,32 @@ class Synth {
   constexpr static double sampleRate = static_cast<double>(F_CPU) / 8.0 / static_cast<double>(Synth::samplingInterval);
   
   private:
+    // Used in 'noteOn()' to shift wave offset or amplitude modulation program based on the current note played.
+    // (e.g., to alter the waveform and sustain for instruments with a wide range like the piano where these
+    // qualities vary based on the note played.)
     static constexpr uint8_t offsetTable[] = { 0, 0, 1, 1, 2, 3, 3, 3 };
 
     // Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval
-    constexpr static uint16_t _noteToPitch[] PROGMEM = {
+    constexpr static uint16_t _noteToSamplingInterval[] PROGMEM = {
     #ifndef __EMSCRIPTEN__
-      pitch(sampleRate, 0x00), pitch(sampleRate, 0x01), pitch(sampleRate, 0x02), pitch(sampleRate, 0x03), pitch(sampleRate, 0x04), pitch(sampleRate, 0x05), pitch(sampleRate, 0x06), pitch(sampleRate, 0x07),
-      pitch(sampleRate, 0x08), pitch(sampleRate, 0x09), pitch(sampleRate, 0x0A), pitch(sampleRate, 0x0B), pitch(sampleRate, 0x0C), pitch(sampleRate, 0x0D), pitch(sampleRate, 0x0E), pitch(sampleRate, 0x0F),
-      pitch(sampleRate, 0x10), pitch(sampleRate, 0x11), pitch(sampleRate, 0x12), pitch(sampleRate, 0x13), pitch(sampleRate, 0x14), pitch(sampleRate, 0x15), pitch(sampleRate, 0x16), pitch(sampleRate, 0x17),
-      pitch(sampleRate, 0x18), pitch(sampleRate, 0x19), pitch(sampleRate, 0x1A), pitch(sampleRate, 0x1B), pitch(sampleRate, 0x1C), pitch(sampleRate, 0x1D), pitch(sampleRate, 0x1E), pitch(sampleRate, 0x1F),
-      pitch(sampleRate, 0x20), pitch(sampleRate, 0x21), pitch(sampleRate, 0x22), pitch(sampleRate, 0x23), pitch(sampleRate, 0x24), pitch(sampleRate, 0x25), pitch(sampleRate, 0x26), pitch(sampleRate, 0x27),
-      pitch(sampleRate, 0x28), pitch(sampleRate, 0x29), pitch(sampleRate, 0x2A), pitch(sampleRate, 0x2B), pitch(sampleRate, 0x2C), pitch(sampleRate, 0x2D), pitch(sampleRate, 0x2E), pitch(sampleRate, 0x2F),
-      pitch(sampleRate, 0x30), pitch(sampleRate, 0x31), pitch(sampleRate, 0x32), pitch(sampleRate, 0x33), pitch(sampleRate, 0x34), pitch(sampleRate, 0x35), pitch(sampleRate, 0x36), pitch(sampleRate, 0x37),
-      pitch(sampleRate, 0x38), pitch(sampleRate, 0x39), pitch(sampleRate, 0x3A), pitch(sampleRate, 0x3B), pitch(sampleRate, 0x3C), pitch(sampleRate, 0x3D), pitch(sampleRate, 0x3E), pitch(sampleRate, 0x3F),
-      pitch(sampleRate, 0x40), pitch(sampleRate, 0x41), pitch(sampleRate, 0x42), pitch(sampleRate, 0x43), pitch(sampleRate, 0x44), pitch(sampleRate, 0x45), pitch(sampleRate, 0x46), pitch(sampleRate, 0x47),
-      pitch(sampleRate, 0x48), pitch(sampleRate, 0x49), pitch(sampleRate, 0x4A), pitch(sampleRate, 0x4B), pitch(sampleRate, 0x4C), pitch(sampleRate, 0x4D), pitch(sampleRate, 0x4E), pitch(sampleRate, 0x4F),
-      pitch(sampleRate, 0x50), pitch(sampleRate, 0x51), pitch(sampleRate, 0x52), pitch(sampleRate, 0x53), pitch(sampleRate, 0x54), pitch(sampleRate, 0x55), pitch(sampleRate, 0x56), pitch(sampleRate, 0x57),
-      pitch(sampleRate, 0x58), pitch(sampleRate, 0x59), pitch(sampleRate, 0x5A), pitch(sampleRate, 0x5B), pitch(sampleRate, 0x5C), pitch(sampleRate, 0x5D), pitch(sampleRate, 0x5E), pitch(sampleRate, 0x5F),
-      pitch(sampleRate, 0x60), pitch(sampleRate, 0x61), pitch(sampleRate, 0x62), pitch(sampleRate, 0x63), pitch(sampleRate, 0x64), pitch(sampleRate, 0x65), pitch(sampleRate, 0x66), pitch(sampleRate, 0x67),
-      pitch(sampleRate, 0x68), pitch(sampleRate, 0x69), pitch(sampleRate, 0x6A), pitch(sampleRate, 0x6B), pitch(sampleRate, 0x6C), pitch(sampleRate, 0x6D), pitch(sampleRate, 0x6E), pitch(sampleRate, 0x6F),
-      pitch(sampleRate, 0x70), pitch(sampleRate, 0x71), pitch(sampleRate, 0x72), pitch(sampleRate, 0x73), pitch(sampleRate, 0x74), pitch(sampleRate, 0x75), pitch(sampleRate, 0x76), pitch(sampleRate, 0x77),
-      pitch(sampleRate, 0x78), pitch(sampleRate, 0x79), pitch(sampleRate, 0x7A), pitch(sampleRate, 0x7B), pitch(sampleRate, 0x7C), pitch(sampleRate, 0x7D), pitch(sampleRate, 0x7E), pitch(sampleRate, 0x7F),
+      interval(sampleRate, 0x00), interval(sampleRate, 0x01), interval(sampleRate, 0x02), interval(sampleRate, 0x03), interval(sampleRate, 0x04), interval(sampleRate, 0x05), interval(sampleRate, 0x06), interval(sampleRate, 0x07),
+      interval(sampleRate, 0x08), interval(sampleRate, 0x09), interval(sampleRate, 0x0A), interval(sampleRate, 0x0B), interval(sampleRate, 0x0C), interval(sampleRate, 0x0D), interval(sampleRate, 0x0E), interval(sampleRate, 0x0F),
+      interval(sampleRate, 0x10), interval(sampleRate, 0x11), interval(sampleRate, 0x12), interval(sampleRate, 0x13), interval(sampleRate, 0x14), interval(sampleRate, 0x15), interval(sampleRate, 0x16), interval(sampleRate, 0x17),
+      interval(sampleRate, 0x18), interval(sampleRate, 0x19), interval(sampleRate, 0x1A), interval(sampleRate, 0x1B), interval(sampleRate, 0x1C), interval(sampleRate, 0x1D), interval(sampleRate, 0x1E), interval(sampleRate, 0x1F),
+      interval(sampleRate, 0x20), interval(sampleRate, 0x21), interval(sampleRate, 0x22), interval(sampleRate, 0x23), interval(sampleRate, 0x24), interval(sampleRate, 0x25), interval(sampleRate, 0x26), interval(sampleRate, 0x27),
+      interval(sampleRate, 0x28), interval(sampleRate, 0x29), interval(sampleRate, 0x2A), interval(sampleRate, 0x2B), interval(sampleRate, 0x2C), interval(sampleRate, 0x2D), interval(sampleRate, 0x2E), interval(sampleRate, 0x2F),
+      interval(sampleRate, 0x30), interval(sampleRate, 0x31), interval(sampleRate, 0x32), interval(sampleRate, 0x33), interval(sampleRate, 0x34), interval(sampleRate, 0x35), interval(sampleRate, 0x36), interval(sampleRate, 0x37),
+      interval(sampleRate, 0x38), interval(sampleRate, 0x39), interval(sampleRate, 0x3A), interval(sampleRate, 0x3B), interval(sampleRate, 0x3C), interval(sampleRate, 0x3D), interval(sampleRate, 0x3E), interval(sampleRate, 0x3F),
+      interval(sampleRate, 0x40), interval(sampleRate, 0x41), interval(sampleRate, 0x42), interval(sampleRate, 0x43), interval(sampleRate, 0x44), interval(sampleRate, 0x45), interval(sampleRate, 0x46), interval(sampleRate, 0x47),
+      interval(sampleRate, 0x48), interval(sampleRate, 0x49), interval(sampleRate, 0x4A), interval(sampleRate, 0x4B), interval(sampleRate, 0x4C), interval(sampleRate, 0x4D), interval(sampleRate, 0x4E), interval(sampleRate, 0x4F),
+      interval(sampleRate, 0x50), interval(sampleRate, 0x51), interval(sampleRate, 0x52), interval(sampleRate, 0x53), interval(sampleRate, 0x54), interval(sampleRate, 0x55), interval(sampleRate, 0x56), interval(sampleRate, 0x57),
+      interval(sampleRate, 0x58), interval(sampleRate, 0x59), interval(sampleRate, 0x5A), interval(sampleRate, 0x5B), interval(sampleRate, 0x5C), interval(sampleRate, 0x5D), interval(sampleRate, 0x5E), interval(sampleRate, 0x5F),
+      interval(sampleRate, 0x60), interval(sampleRate, 0x61), interval(sampleRate, 0x62), interval(sampleRate, 0x63), interval(sampleRate, 0x64), interval(sampleRate, 0x65), interval(sampleRate, 0x66), interval(sampleRate, 0x67),
+      interval(sampleRate, 0x68), interval(sampleRate, 0x69), interval(sampleRate, 0x6A), interval(sampleRate, 0x6B), interval(sampleRate, 0x6C), interval(sampleRate, 0x6D), interval(sampleRate, 0x6E), interval(sampleRate, 0x6F),
+      interval(sampleRate, 0x70), interval(sampleRate, 0x71), interval(sampleRate, 0x72), interval(sampleRate, 0x73), interval(sampleRate, 0x74), interval(sampleRate, 0x75), interval(sampleRate, 0x76), interval(sampleRate, 0x77),
+      interval(sampleRate, 0x78), interval(sampleRate, 0x79), interval(sampleRate, 0x7A), interval(sampleRate, 0x7B), interval(sampleRate, 0x7C), interval(sampleRate, 0x7D), interval(sampleRate, 0x7E), interval(sampleRate, 0x7F),
     #else
-      // Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval at ~20 kHz
+      // For samplingInterval = 0x65:
       0x001B, 0x001D, 0x001E, 0x0020, 0x0022, 0x0024, 0x0026, 0x0029, 0x002B, 0x002E, 0x0030, 0x0033, 0x0036, 0x0039, 0x003D, 0x0040,
       0x0044, 0x0048, 0x004D, 0x0051, 0x0056, 0x005B, 0x0060, 0x0066, 0x006C, 0x0073, 0x0079, 0x0081, 0x0088, 0x0090, 0x0099, 0x00A2,
       0x00AC, 0x00B6, 0x00C1, 0x00CC, 0x00D8, 0x00E5, 0x00F3, 0x0101, 0x0111, 0x0121, 0x0132, 0x0144, 0x0158, 0x016C, 0x0182, 0x0199,
@@ -65,25 +74,28 @@ class Synth {
     #endif
     };
 
-    static volatile const int8_t*	v_wave[Synth::numVoices];			  // Starting address of 256b wave table.
-    static volatile uint16_t		  v_phase[Synth::numVoices];			// Phase accumulator holding the Q8.8 offset of the next sample.
-    static volatile uint16_t		  v_pitch[Synth::numVoices];			// Q8.8 sampling period, used to advance the '_phase' accumulator.
-    static volatile int8_t			  v_xor[Synth::numVoices];			  // XOR bits applied to each sample (for effect).
-    static volatile uint8_t			  v_amp[Synth::numVoices];			  // 6-bit amplitude scale applied to each sample.
-    static volatile bool			    v_isNoise[Synth::numVoices];		// If true, '_xor' is periodically overwritten with random values.
+    // Note: Members prefixed with 'v_' (as in volatile) are shared with the ISR, and should only
+    //       be accessed outside the ISR after calling 'suspend()' to suspend the ISR.
 
-    static volatile Envelope			v_ampMod[Synth::numVoices];     // Amplitude modulation
-    static volatile Envelope			v_freqMod[Synth::numVoices];		// Frequency modulation
-    static volatile Envelope			v_waveMod[Synth::numVoices];		// Wave offset modulation
+    static volatile const int8_t*	v_wave[Synth::numVoices];			    // Starting address of 256b wave table.
+    static volatile uint16_t		  v_phase[Synth::numVoices];			  // Phase accumulator holding the Q8.8 offset of the next sample.
+    static volatile uint16_t		  v_interval[Synth::numVoices];		  // Q8.8 sampling interval, used to advance the '_phase' accumulator.
+    static volatile int8_t			  v_xor[Synth::numVoices];			    // XOR bits applied to each sample (Note: clobbered if v_isNoise is true).
+    static volatile uint8_t			  v_amp[Synth::numVoices];			    // 6-bit amplitude scale applied to each sample.
+    static volatile bool			    v_isNoise[Synth::numVoices];		  // If true, '_xor' is periodically overwritten with random values.
 
-    static volatile uint8_t			  v_vol[Synth::numVoices];			  // 7-bit volume scalar applied to ADSR output.
+    static volatile Envelope			v_ampMod[Synth::numVoices];       // Amplitude modulation (0 .. 127, although most instruments peak below 96)
+    static volatile Envelope			v_freqMod[Synth::numVoices];		  // Frequency modulation (-64 .. +64)
+    static volatile Envelope			v_waveMod[Synth::numVoices];		  // Wave offset modulation (0 .. 127)
 
-    static volatile uint16_t		  v_basePitch[Synth::numVoices];	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
-    static volatile uint16_t		  v_bentPitch[Synth::numVoices];	// Q8.8 sampling post pitch bend, but prior to freqMod.
-    static volatile const int8_t*	v_baseWave[Synth::numVoices];		// Original starting address in wavetable.
-    static volatile uint8_t			  _note[Synth::numVoices];			  // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
+    static volatile uint8_t			  v_vol[Synth::numVoices];			    // Additional 7-bit volume scalar (i.e., MIDI velocity).
+
+    static          uint16_t		  _baseInterval[Synth::numVoices];  // Original Q8.8 sampling internal, prior to modulation, pitch bend, etc.
+    static volatile uint16_t		  v_bentInterval[Synth::numVoices];	// Q8.8 sampling internal post pitch bend, but prior to freqMod.
+    static volatile const int8_t*	v_baseWave[Synth::numVoices];		  // Original starting address in wavetable.
+    static volatile uint8_t			  _note[Synth::numVoices];			    // Index of '_baseInternal' in the '_noteToSamplintInterval' table (for 'pitchBend()').
   
-    static DAC _dac;
+    static DAC _dac;                                                // Used by the sampling/mixing ISR to output result.
   
   public:
     void begin(){
@@ -139,30 +151,32 @@ class Synth {
 
     void noteOn(uint8_t voice, uint8_t note, uint8_t velocity, const Instrument& instrument) {
       const uint8_t flags = instrument.flags;
-      if (flags & InstrumentFlags_HalfAmplitude) {
-        velocity >>= 1;
+      
+      if (flags & InstrumentFlags_HalfAmplitude) {                  // If the half-amplitude flag is set, play at 1/2 volume.  (Allows some
+        velocity >>= 1;                                             // reuse of amplitude envelopes for softer instruments, like hi-hats.)
       }
     
-      bool isNoise = flags & InstrumentFlags_Noise;
+      bool isNoise = flags & InstrumentFlags_Noise;                 // If true, the ISR will perodically overwrite 'v_xor[]' with a random
+                                                                    // value, mixing the wavetable sample with noise.
     
-      uint8_t noteOffset = offsetTable[note >> 4];
-      uint8_t ampOffset = flags & InstrumentFlags_SelectAmplitude
-        ? noteOffset
+      const uint8_t noteOffset = offsetTable[note >> 4];            // Optionally change the amplitude envelope from +[0 .. 3] based on the
+      uint8_t ampOffset = flags & InstrumentFlags_SelectAmplitude   // note played.  This helps with the realism of instruments with a wide
+        ? noteOffset                                                // range, like the piano, where higher notes have a shorter sustain.
         : 0;
     
-      uint8_t waveOffset = flags & InstrumentFlags_SelectWave
-        ? noteOffset << 6
+      uint8_t waveOffset = flags & InstrumentFlags_SelectWave       // Similarly, we can optionally shift the wavetable offset forward by
+        ? noteOffset << 6                                           // multiples of 64 in the range +[0 .. 192].
         : 0;
     
-      _note[voice] = note;
+      _note[voice] = note;                                          // Remember the note being played (for calculating pitch bench later).
 
-      uint16_t pitch = pgm_read_word(&_noteToPitch[note]);
+      uint16_t samplingInterval = pgm_read_word(&_noteToSamplingInterval[note]);
 
       // Suspend audio processing before updating state shared with the ISR.
       suspend();
 
       v_wave[voice] = v_baseWave[voice] = instrument.wave + waveOffset;
-      v_pitch[voice] = v_bentPitch[voice] = v_basePitch[voice] = pitch;
+      v_interval[voice] = v_bentInterval[voice] = _baseInterval[voice] = samplingInterval;
       v_xor[voice] = instrument.xorBits;
       v_amp[voice] = 0;
       v_isNoise[voice] = isNoise;
@@ -175,17 +189,19 @@ class Synth {
     }
 
     void noteOff(uint8_t voice) {
-      // Suspend audio processing before updating state shared with the ISR.
-      suspend();
-      v_ampMod[voice].stop();
-      resume();
+      suspend();                                                    // Suspend audio processing before updating state shared with the ISR.
+      v_ampMod[voice].stop();                                       // Move amplitude envelope to 'release' stage, if not there already.
+      resume();                                                     // Resume audio processing.
     }
   
     void pitchBend(uint8_t voice, int16_t value) {
-      uint16_t pitch = v_basePitch[voice];
+      uint16_t pitch = _baseInterval[voice];
+      
+      // DANGER: Bending the lowest and highest two notes will read outside the bounds
+      //         of the _noteToPitch[] table.  (Probably harmless. :)
       uint16_t delta = value >= 0
-        ? pgm_read_word(&_noteToPitch[_note[voice] + 2]) - pitch
-        : pitch - pgm_read_word(&_noteToPitch[_note[voice] - 2]);
+        ? pgm_read_word(&_noteToSamplingInterval[_note[voice] + 2]) - pitch
+        : pitch - pgm_read_word(&_noteToSamplingInterval[_note[voice] - 2]);
 
       int32_t product;
 
@@ -218,7 +234,7 @@ class Synth {
 
       // Suspend audio processing before updating state shared with the ISR.
       suspend();
-      v_bentPitch[voice] = pitch;
+      v_bentInterval[voice] = pitch;
       resume();
     }
   
@@ -247,7 +263,7 @@ class Synth {
         switch (fn) {
           case 0x00: {									                  // Advance frequency modulation and update 'v_pitch' for the current voice.
             int8_t freqMod = (v_freqMod[voice].sample() - 0x40);
-            v_pitch[voice] = v_bentPitch[voice] + freqMod;
+            v_interval[voice] = v_bentInterval[voice] + freqMod;
             break;
           }
         
@@ -265,18 +281,18 @@ class Synth {
         }
       }
 
-      // Each interrupt, we transmit the previous output to the DAC concurrently with calculating
-      // the next wavOut.  This avoids unproductive busy-waiting for SPI to finish.
+      // If using an SPI DAC, we transmit the sample computed in the previous ISR concurrently
+      // with calculating the next sample.
       _dac.sendHiByte();										                                // Begin transmitting upper 8-bits to DAC.
 
-      // Macro that advances '_phase[voice]' by the sampling interval '_pitch[voice]' and stores the next 8-bit
-      // sample offset as 'offset##voice'.
-      #define PHASE(voice) uint8_t offset##voice = ((v_phase[voice] += v_pitch[voice]) >> 8)
+      // Macro that advances 'v_phase[voice]' by the sampling interval 'v_interval[voice]' and
+      // stores the next 8-bit sample offset as 'offset##voice'.
+      #define PHASE(voice) uint8_t offset##voice = ((v_phase[voice] += v_interval[voice]) >> 8)
 
-      // Macro that samples the wavetable at the offset '_wave[voice] + offset##voice', and stores as 'sample##voice'.
+      // Macro that samples the wavetable at the offset 'v_wave[voice] + offset##voice', and stores as 'sample##voice'.
       #define SAMPLE(voice) int8_t sample##voice = (pgm_read_byte(v_wave[voice] + offset##voice))
 
-      // Macro that applies '_xor[voice]' to 'sample##voice' and multiplies by '_amp[voice]'.
+      // Macro that applies 'v_xor[voice]' to 'sample##voice' and multiplies by 'v_amp[voice]'.
       #define MIX(voice) ((sample##voice ^ v_xor[voice]) * v_amp[voice])
     
       // We The below sampling/mixing code is carefully arranged to allow the compiler to make use of fixed
@@ -291,7 +307,7 @@ class Synth {
       int16_t mix = (MIX(0) + MIX(1) + MIX(2) + MIX(3)) >> 1;             // Apply xor, modulate by amp, and mix.
       mix += (MIX(4) + MIX(5) + MIX(6) + MIX(7)) >> 1;
 
-      _dac.sendLoByte();													                        // Begin transmitting the lower 8-bits.
+      _dac.sendLoByte();													                        // First byte should be done, begin transmitting the lower 8-bits.
 
       PHASE(8); PHASE(9); PHASE(10); PHASE(11);                           // Advance the Q8.8 phase and calculate the 8-bit offsets into the wavetable.
       PHASE(12); PHASE(13); PHASE(14); PHASE(15);                         // (Load stores should use constant offsets and results should stay in register.)
@@ -308,6 +324,7 @@ class Synth {
     
       const uint16_t wavOut = mix + 0x8000;
       _dac.set(wavOut);													                          // Store resulting wave output for transmission on next interrupt.
+                                                                          // (If using SPI, also deselects DAC and clears EOT bit.)
     
       TIMSK2 = _BV(OCIE2A);                                               // Restore timer2 interrupts.
     
@@ -338,27 +355,27 @@ class Synth {
     #endif // __EMSCRIPTEN__
 };
 
-constexpr uint16_t Synth::_noteToPitch[] PROGMEM;							// Map MIDI notes [0..127] to the corresponding Q8.8 sampling interval
+constexpr uint16_t Synth::_noteToSamplingInterval[] PROGMEM;
 constexpr uint8_t Synth::offsetTable[];
 DAC Synth::_dac;
 
-volatile const int8_t*  Synth::v_wave[Synth::numVoices]       = { 0 };	// Starting address of 256b wave table.
-volatile uint16_t       Synth::v_phase[Synth::numVoices]      = { 0 };	// Phase accumulator holding the Q8.8 offset of the next sample.
-volatile uint16_t       Synth::v_pitch[Synth::numVoices]      = { 0 };	// Q8.8 sampling period, used to advance the '_phase' accumulator.
-volatile int8_t         Synth::v_xor[Synth::numVoices]        = { 0 };	// XOR bits applied to each sample (for effect).
-volatile uint8_t        Synth::v_amp[Synth::numVoices]        = { 0 };	// 6-bit amplitude scale applied to each sample.
-volatile bool           Synth::v_isNoise[Synth::numVoices]    = { 0 };	// If true, '_xor' is periodically overwritten with random values.
+volatile const int8_t*  Synth::v_wave[Synth::numVoices]         = { 0 };
+volatile uint16_t       Synth::v_phase[Synth::numVoices]        = { 0 };
+volatile uint16_t       Synth::v_interval[Synth::numVoices]     = { 0 };
+volatile int8_t         Synth::v_xor[Synth::numVoices]          = { 0 };
+volatile uint8_t        Synth::v_amp[Synth::numVoices]          = { 0 };
+volatile bool           Synth::v_isNoise[Synth::numVoices]      = { 0 };
 
-volatile Envelope       Synth::v_ampMod[Synth::numVoices]     = {};			// Amplitude modulation
-volatile Envelope       Synth::v_freqMod[Synth::numVoices]    = {};			// Frequency modulation
-volatile Envelope       Synth::v_waveMod[Synth::numVoices]    = {};			// Wave offset modulation
+volatile Envelope       Synth::v_ampMod[Synth::numVoices]       = {};
+volatile Envelope       Synth::v_freqMod[Synth::numVoices]      = {};
+volatile Envelope       Synth::v_waveMod[Synth::numVoices]      = {};
 
-volatile uint8_t        Synth::v_vol[Synth::numVoices]        = { 0 };	// 7-bit volume scalar applied to ADSR output.
+volatile uint8_t        Synth::v_vol[Synth::numVoices]          = { 0 };
 
-volatile uint16_t		    Synth::v_basePitch[Synth::numVoices]	= { 0 };	// Original Q8.8 sampling period, prior to modulation, pitch bend, etc.
-volatile uint16_t		    Synth::v_bentPitch[Synth::numVoices]	= { 0 };	// Q8.8 sampling post pitch bend, but prior to freqMod.
-volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]	  = { 0 };  // Original starting address in wavetable.
-volatile uint8_t		    Synth::_note[Synth::numVoices]			  = { 0 };  // Index of '_basePitch' in the '_pitches' table, used for pitch bend calculation.
+         uint16_t		    Synth::_baseInterval[Synth::numVoices]	= { 0 };
+volatile uint16_t		    Synth::v_bentInterval[Synth::numVoices]	= { 0 };
+volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]	    = { 0 };
+volatile uint8_t		    Synth::_note[Synth::numVoices]			    = { 0 };
 
 SIGNAL(TIMER2_COMPA_vect) {
   Synth::isr();
