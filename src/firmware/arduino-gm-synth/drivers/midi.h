@@ -25,7 +25,6 @@
         
     Notes:
         * H11L1 is a PC900 equivalent
-
 */    
 
 #ifndef __MIDI_H__
@@ -122,15 +121,11 @@ class Midi final {
     static void begin(uint32_t baud) {
       const uint16_t ubrr = F_CPU / 16 / baud - 1;
 
-      UBRR0H = static_cast<uint8_t>(ubrr >> 8);           // baud
-      UBRR0L = static_cast<uint8_t>(ubrr);
+      UBRR0H = ubrr >> 8;                     // Baud
+      UBRR0L = ubrr & 0xFF;
 
-      UCSR0C = (0 << UMSEL00) | (0 << UMSEL01) |          // async
-        (0 << UPM00)   | (0 << UPM01)   |                 // parity none
-        (0 << USBS0)   |                                  // 1 stop bits 1
-        (0 << UCSZ02)  | (1 << UCSZ01)  | (1 << UCSZ00);  // 8 data bits
-
-      UCSR0B |= _BV(RXEN0) | _BV(RXCIE0);                 // Enable receive w/interrupt
+      UCSR0C = _BV(UCSZ01)  | _BV(UCSZ00);    // Async, 8n1 (8 data bits, parity none, 1 stop bit)
+      UCSR0B |= _BV(RXEN0) | _BV(RXCIE0);     // Enable receive w/interrupt
     }
   
     static void enqueue(uint8_t byte) {
