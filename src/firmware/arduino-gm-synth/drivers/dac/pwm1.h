@@ -7,10 +7,10 @@
     Connection to Arduino Uno
     
                     1M                     10uf*
-        pin 6 >----^v^v^----o--------o------|(----> audio out
+        pin 5 >----^v^v^----o--------o------|(----> audio out
                             |        |
                    3.9k     |       === 3.3uf**
-        pin 5 >----^v^v^----o        |
+        pin 6 >----^v^v^----o        |
                                     gnd
                                                                                                          
      * Note: A/C coupling capacitor typically optional.
