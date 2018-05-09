@@ -2,6 +2,13 @@
 #define __SSD1306_H__
 
 /*
+    A specialized driver for SSD1306-based OLED display, used to concurrently update the real-time bar
+    from the main 'loop()' in tiny slices, interleaved with dispatching MIDI messages.
+    
+    Unlike the u8g2lib, the display is not double buffered in the Arduino's data memory, and we expose
+    the 'send7' command which allows us to optimally update the display in 7x8 blocks.
+    
+    Connection to Arduino Uno:
 
                   .-----------------.
                   | .---------. GND o------< pin 7*
@@ -14,8 +21,8 @@
                   '-----------------'
 
     Notes:
-      * Connecting GND to any of the Arduino Uno's ground pins created a lot of audible line noise.
-        As a work around, this driver sets pin 7 low and uses that instead.
+      * We use pin 7, which is driven low by this driver, instead of connecting to gnd to reduce
+        the amount of audio noise introduced by the OLED.  (For me, it made a big difference.)
 */
 
 #include <stdint.h>
@@ -45,9 +52,6 @@ enum Command: uint8_t {
   Command_SetColumnAddr       = 0x21,
   Command_SetPageAddr         = 0x22,
 };
-
-// A specialized driver for SSD1306-based OLED display used to concurrently update the real-time bar
-// graph in tiny time slices, interspersed with dispatching MIDI in the main loop.
 
 template <bool rotate180>
 class Ssd1306 final {
@@ -84,7 +88,7 @@ class Ssd1306 final {
       _delay_ms(100);
       PORTD |= _resPin;
 
-      // Use the same configuration as olikraus's excellent U8G2 library:
+      // Use the same configuration as olikraus's excellent u8g2 library:
       // https://github.com/olikraus/u8g2/blob/master/csrc/u8x8_d_ssd1306_128x64_noname.c
 
       beginCommand();

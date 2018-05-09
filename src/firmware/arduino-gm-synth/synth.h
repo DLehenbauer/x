@@ -1,6 +1,25 @@
 #ifndef __SYNTH_H__
 #define __SYNTH_H__
 
+/*
+    Arduino Midi Synth (Core Engine) optimized for ATMega328P @ 16mhz:
+      - 16 voices sampled & mixed in real-time at ~20kHz
+      - Wavetable and white noise sources
+      - Amplitude, frequency, and wavetable offset modulated by envelope generators
+      - Additional volume control per voice (matching MIDI velocity)
+
+    Sample, mixing, and output occurs on the Timer 2 ISR.  (Timer 2 was chosen because
+    it's PWM output pins conflict with SPI.)
+    
+    Notes:
+      - The sample/mix ISR is carefully arranged to minimize spilling registers to memory.
+      
+      - To avoid missing arriving MIDI messages, the Timer2 ISR reenables interrupts so
+        that it can be pre-empted by the USART RX ISR.
+        
+        (However, it disables Timer2 ISRs until it's ready to exit to avoid reentrancy.)
+*/
+
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <math.h>

@@ -84,6 +84,8 @@
     Pwm01:    +68B
 */
 
+#define DAC Pwm01
+
 #include <stdint.h>
 #include "drivers/midi.h"
 #include "drivers/ssd1306.h"

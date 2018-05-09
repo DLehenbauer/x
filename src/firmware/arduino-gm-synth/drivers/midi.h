@@ -1,12 +1,16 @@
 /*
+    Receives, decodes, and dispatches MIDI data arriving via the Arduino Uno's serial USART.
+    
     Sending MIDI data to the Arduino:
     
     The easiest/fastest way to send MIDI data from your computer is to use a MIDI <-> Serial Bridge:
-    http://projectgus.github.io/hairless-midiserial/
+      http://projectgus.github.io/hairless-midiserial/
     
     If you have an ISP programmer and an Uno R3 w/ATMega82U, you can make your Arduino Uno appear
     as a native USB MIDI device:
-    https://github.com/kuwatay/mocolufa
+      https://github.com/TheKikGen/USBMidiKliK
+      https://github.com/kuwatay/mocolufa
+      https://github.com/ddiakopoulos/hiduino
     
     Finally, with a bit more circuitry, you can add an 5-pin DIN serial MIDI input port to the
     Arduino and use a standard serial MIDI interface.
@@ -25,7 +29,7 @@
         
     Notes:
         * H11L1 is a PC900 equivalent
-*/    
+*/
 
 #ifndef __MIDI_H__
 #define __MIDI_H__
@@ -118,6 +122,8 @@ class Midi final {
     }
 
   public:
+    // Configure the USART to begin receiving MIDI messages at the given 'baud'.
+    // (Note: The messages are buffered until 'dispatch()' is called, usually in the main 'loop()'.)
     static void begin(uint32_t baud) {
       const uint16_t ubrr = F_CPU / 16 / baud - 1;
 
@@ -127,11 +133,14 @@ class Midi final {
       UCSR0C = _BV(UCSZ01)  | _BV(UCSZ00);    // Async, 8n1 (8 data bits, parity none, 1 stop bit)
       UCSR0B |= _BV(RXEN0) | _BV(RXCIE0);     // Enable receive w/interrupt
     }
-  
+
+    // Called by the USART RX ISR to enqueue incoming MIDI bytes.  
     static void enqueue(uint8_t byte) {
       _midiBuffer.enqueue(byte);
     }
 
+    // Called by 'dispatch()' to decode the next byte of a MIDI message.  The message is
+    // dispatched tho the appropriate handler if it completes the current message.
     static void decode(uint8_t byte) {
       if (byte & 0x80) {													        // If the high bit is set, this is the start of a new message
         if (midiStatus == MidiStatus_Extended) {					//   If the previous status was an extended message (sysex or real-time)
@@ -155,6 +164,7 @@ class Midi final {
       }
     }
 
+    // Decode and dispatch all buffered MIDI messages.  Returns once the buffer is drained.
     static void dispatch() {
       uint8_t received;
       while (_midiBuffer.dequeue(received)) {

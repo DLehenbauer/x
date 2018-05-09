@@ -4,7 +4,7 @@
 /*
     Driver for 16-bit PWM on Timer 1
     
-    Connection to Arduino Uno
+    Connection to Arduino Uno:
     
                     1M                     10uf*
         pin 5 >----^v^v^----o--------o------|(----> audio out

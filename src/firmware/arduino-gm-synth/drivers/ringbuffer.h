@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+/*
+    Simple circular buffer used by 'midi.h' to quickly save incoming MIDI bytes during the
+    USART RX ISR for later decoding and dispatch.
+*/
 template<class T, uint8_t Log2Capacity> class RingBuffer {
   private:
     static constexpr uint8_t length = (1 << Log2Capacity);

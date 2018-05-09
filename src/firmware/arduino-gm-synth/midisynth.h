@@ -1,6 +1,10 @@
 #ifndef __MIDISYNTH_H__
 #define __MIDISYNTH_H__
 
+/*
+    MidiSynth extends Synth with methods and required state for processing MIDI messages.
+*/
+
 #include <stdint.h>#include "synth.h"
 
 class MidiSynth final : public Synth {
@@ -15,7 +19,7 @@ class MidiSynth final : public Synth {
       voiceToNote[voice] = note;								        // Update our voice -> note/channel maps (used for processing MIDI      voiceToChannel[voice] = channel;						      // pitch bend and note off messages).    }
     void midiNoteOff(uint8_t channel, uint8_t note)  {      for (int8_t voice = maxVoice; voice >= 0; voice--) {						          // For each voice        if (voiceToNote[voice] == note && voiceToChannel[voice] == channel) {   //   that is currently playing the note on this channel          noteOff(voice);														                            //      stop playing the note          voiceToChannel[voice] = 0xFF;										                      //      and remove the voice from our voice -> note/channel          voiceToNote[voice] = 0xFF;											                      //      maps so we ignore it for future node off / pitch bench        }																		                                    //      messages.      }    }
     void midiProgramChange(uint8_t channel, uint8_t program) {      Instruments::getInstrument(program, channelToInstrument[channel]);			  // Load the instrument corresponding to the given MIDI program    }																				                                    // into the MIDI channel -> instrument map.
-    void midiPitchBend(uint8_t channel, int16_t value) {      for (int8_t voice = maxVoice; voice >= 0; voice--) {						// For each voice        if (voiceToChannel[voice] == channel) {									      //   which is currently playing a note on this channel          pitchBend(voice, value);											              //     update pitch bench with the given value.        }      }    }      void midiControlChange(uint8_t channel, uint8_t controller, uint8_t value) {      switch (controller) {
+    void midiPitchBend(uint8_t channel, int16_t value) {      for (int8_t voice = maxVoice; voice >= 0; voice--) {						          // For each voice        if (voiceToChannel[voice] == channel) {									                //   which is currently playing a note on this channel          pitchBend(voice, value);											                        //     update pitch bench with the given value.        }      }    }      void midiControlChange(uint8_t channel, uint8_t controller, uint8_t value) {      switch (controller) {
         case 0x7B: {
           switch (value) {
             // All Notes Off (for current channel):

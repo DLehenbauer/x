@@ -5,7 +5,10 @@
 #include "instruments.h"
 
 /*
-    Envelope generator
+    Envelope generator used for amplitude, frequency, and wavetable offset modulation.
+    
+    Each call to 'sample()' advances the envelope to the next sample and returns a value in the
+    range [0 .. 127].
 */
 class Envelope {
   private:
