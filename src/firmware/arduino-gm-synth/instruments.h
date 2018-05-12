@@ -4,31 +4,31 @@
 #include <avr/pgmspace.h>
 
 struct EnvelopeStage {
-  int16_t slope;
-  int8_t limit;
+  int16_t slope;                  // Q8.8 fixed point slope for the EnvelopeStage
+  int8_t limit;                   // Limit at which envelope will advance to the next stage
 };
 
 struct EnvelopeProgram {
-  const EnvelopeStage* start;
-  uint8_t initialValue;
-  uint8_t loopStartAndEnd;
+  const EnvelopeStage* start;     // Pointer to first EnvelopeStage in Instruments::EnvelopeStages
+  uint8_t initialValue;           // Initial value of the envelope generator
+  uint8_t loopStartAndEnd;        // loop start and end indexes nibbles packed into a byte.
 };
 
 enum InstrumentFlags : uint8_t {
   InstrumentFlags_None				      = 0,
-  InstrumentFlags_Noise				      = (1 << 0),
-  InstrumentFlags_HalfAmplitude		  = (1 << 1),
-  InstrumentFlags_SelectAmplitude		= (1 << 2),
-  InstrumentFlags_SelectWave			  = (1 << 3),
+  InstrumentFlags_Noise				      = (1 << 0),   // Instrument XOR is periodically clobbered with a random value (white noise)
+  InstrumentFlags_HalfAmplitude		  = (1 << 1),   // Note velocity is halved, reducing volume (allows some reuse of EnvelopePrograms for softer instruments)
+  InstrumentFlags_SelectAmplitude		= (1 << 2),   // +0-3 offset to the amplitude EnvelopeProgram index depending on note played.
+  InstrumentFlags_SelectWave			  = (1 << 3),   // +0-196 offset to the wavetable pointer depending on the note played.
 };
 
 struct Instrument {
-  const int8_t* wave;
-  uint8_t ampMod;
-  uint8_t freqMod;
-  uint8_t waveMod;
-  uint8_t xorBits;
-  InstrumentFlags flags;
+  const int8_t* wave;       // Pointer into the wavetable for the instrument
+  uint8_t ampMod;           // Index of EnvelopeProgram for amplitude modulation
+  uint8_t freqMod;          // Index of EnvelopeProgram for frequency modulation
+  uint8_t waveMod;          // Index of EnvelopeProgram for wavetable offset modulation
+  uint8_t xorBits;          // Xor applied to each wavetable sample
+  InstrumentFlags flags;    // Instrument flags, per above.
 };
 
 template <typename T> void PROGMEM_copy(const T* src, T& dest) {
@@ -46,7 +46,6 @@ class Instruments {
 
     static uint8_t getPercussiveInstrument(uint8_t note, Instrument& instrument) {
       /* TODO: Support additional GS/GM2 percussion
-        http://www.voidaudio.net/percussion.html (loads very slowly)
     
         27 High Q
         28 Slap

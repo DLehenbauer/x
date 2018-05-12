@@ -8,9 +8,87 @@
     
     If you have an ISP programmer and an Uno R3 w/ATMega82U, you can make your Arduino Uno appear
     as a native USB MIDI device:
-      https://github.com/TheKikGen/USBMidiKliK
       https://github.com/kuwatay/mocolufa
-      https://github.com/ddiakopoulos/hiduino
+
+    When flashing the ATMega82U, the key on the ISP connector faces the pin sockets for [SCL..D8], which
+    can be a tight fit (on one Uno, I had to bend the ISP pins slightly from the header to make room for
+    the key to fit.)
+    
+                           .---.    
+                           |o o|_  .-.
+                           |o o _| |o| SCL
+                           |o o|   |o| SDA
+                           '---'   |o| AREF
+                               1   |o| GND
+                                   |o| 13
+    
+    Testing the connection:
+    
+        > .\avrdude -c usbtiny -p m16u2
+
+        avrdude.exe: AVR device initialized and ready to accept instructions
+
+        Reading | ################################################## | 100% 0.04s
+
+        avrdude.exe: Device signature = 0x1e9489 (probably m16u2)
+
+        avrdude.exe: safemode: Fuses OK (E:F4, H:D9, L:FF)
+
+        avrdude.exe done.  Thank you.
+        
+    Backing up factory firmware:
+    
+        > .\avrdude -c usbtiny -P usb -p m16u2 -b 19200 -U flash:r:backup_flash.hex:i
+
+        avrdude.exe: AVR device initialized and ready to accept instructions
+
+        Reading | ################################################## | 100% 0.03s
+
+        avrdude.exe: Device signature = 0x1e9489 (probably m16u2)
+        avrdude.exe: reading flash memory:
+
+        Reading | ################################################## | 100% 12.63s
+
+        avrdude.exe: writing output file "backup_flash.hex"
+
+        avrdude.exe: safemode: Fuses OK (E:F4, H:D9, L:FF)
+
+        avrdude.exe done.  Thank you.
+        
+    Installing new firmware:
+    
+        > .\avrdude.exe -c usbtiny -P usb -p m16u2 -b 19200 -U flash:w:dualMoco.hex
+
+        avrdude.exe: AVR device initialized and ready to accept instructions
+
+        Reading | ################################################## | 100% 0.02s
+
+        avrdude.exe: Device signature = 0x1e9489 (probably m16u2)
+        avrdude.exe: NOTE: "flash" memory has been specified, an erase cycle will be performed
+        To disable this feature, specify the -D option.
+        avrdude.exe: erasing chip
+        avrdude.exe: reading input file "USBMidiKliK_dual.hex"
+        avrdude.exe: writing flash (8644 bytes):
+
+        Writing | ################################################## | 100% 10.34s
+
+        avrdude.exe: 8644 bytes of flash written
+        avrdude.exe: verifying flash memory against USBMidiKliK_dual.hex:
+        avrdude.exe: load data flash data from input file USBMidiKliK_dual.hex:
+        avrdude.exe: input file USBMidiKliK_dual.hex contains 8644 bytes
+        avrdude.exe: reading on-chip flash data:
+
+        Reading | ################################################## | 100% 6.69s
+
+        avrdude.exe: verifying ...
+        avrdude.exe: 8644 bytes of flash verified
+
+        avrdude.exe: safemode: Fuses OK (E:F4, H:D9, L:FF)
+
+        avrdude.exe done.  Thank you.
+      
+    TinyUSB Drivers:
+      https://learn.adafruit.com/usbtinyisp/drivers
     
     Finally, with a bit more circuitry, you can add an 5-pin DIN serial MIDI input port to the
     Arduino and use a standard serial MIDI interface.

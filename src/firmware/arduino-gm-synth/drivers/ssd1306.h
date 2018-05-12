@@ -5,9 +5,10 @@
     A specialized driver for SSD1306-based OLED display, used to concurrently update the real-time bar
     from the main 'loop()' in tiny slices, interleaved with dispatching MIDI messages.
     
-    Unlike the u8g2lib, the display is not double buffered in the Arduino's data memory, and we expose
-    the 'send7' command which allows us to optimally update the display in 7x8 blocks.
-    
+    The only drawing primitive exposed is the 'set7x8' command, which allows us to optimally update bars
+    in 7x8 blocks with no double buffering in the uC's data memory.  (The 8th column is always unset to
+    create a visual space between bars in the bar graph.)
+
     Connection to Arduino Uno:
 
                   .-----------------.
@@ -153,7 +154,7 @@ class Ssd1306 final {
       endData();
     }
   
-    void send7(uint8_t value) {
+    void set7x8(uint8_t value) {
       beginData();
       send(value);
       send(value);

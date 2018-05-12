@@ -15,7 +15,7 @@
       - The sample/mix ISR is carefully arranged to minimize spilling registers to memory.
       
       - To avoid missing arriving MIDI messages, the Timer2 ISR reenables interrupts so
-        that it can be pre-empted by the USART RX ISR.
+        that it can be preempted by the USART RX ISR.
         
         (However, it disables Timer2 ISRs until it's ready to exit to avoid reentrancy.)
 */
@@ -112,7 +112,7 @@ class Synth {
     static          uint16_t		  _baseInterval[Synth::numVoices];  // Original Q8.8 sampling internal, prior to modulation, pitch bend, etc.
     static volatile uint16_t		  v_bentInterval[Synth::numVoices];	// Q8.8 sampling internal post pitch bend, but prior to freqMod.
     static volatile const int8_t*	v_baseWave[Synth::numVoices];		  // Original starting address in wavetable.
-    static volatile uint8_t			  _note[Synth::numVoices];			    // Index of '_baseInternal' in the '_noteToSamplintInterval' table (for 'pitchBend()').
+    static          uint8_t			  _note[Synth::numVoices];			    // Index of '_baseInternal' in the '_noteToSamplintInterval' table (for 'pitchBend()').
   
     static DAC _dac;                                                // Used by the sampling/mixing ISR to output result.
   
@@ -137,7 +137,7 @@ class Synth {
       {
         const volatile Envelope& currentMod	= v_ampMod[current];
         currentStage = currentMod.stageIndex;
-        currentAmp = currentMod.amp;
+        currentAmp = currentMod.value;
       }
 
       for (uint8_t candidate = maxVoice - 1; candidate < maxVoice; candidate--) {
@@ -146,7 +146,7 @@ class Synth {
       
         if (candidateStage >= currentStage) {                 // If the currently chosen voice is in a later amplitude stage, keep it.
           if (candidateStage == currentStage) {               // Otherwise, if both voices are in the same amplitude stage
-            const int8_t candidateAmp = candidateMod.amp;     //   compare amplitudes to determine which voice to prefer.
+            const int8_t candidateAmp = candidateMod.value;     //   compare amplitudes to determine which voice to prefer.
           
             bool selectCandidate = candidateMod.slope >= 0    // If amplitude is increasing...
               ? candidateAmp >= currentAmp							      //   prefer the lower amplitude voice
@@ -160,7 +160,7 @@ class Synth {
           } else {
             current = candidate;										          // Else, if the candidate is in a later ADSR stage, prefer it.
             currentStage = candidateStage;
-            currentAmp = candidateMod.amp;
+            currentAmp = candidateMod.value;
           }
         }
       }
@@ -364,14 +364,14 @@ class Synth {
       TIMSK2 = _BV(OCIE2A);
     }
   
-    #ifdef __EMSCRIPTEN__
+  #ifdef __EMSCRIPTEN__
     Instrument instrument0;
 
     void noteOnEm(uint8_t voice, uint8_t note, uint8_t velocity, uint8_t instrumentIndex) {
       Instruments::getInstrument(instrumentIndex, instrument0);
       this->noteOn(voice, note, velocity, instrument0);
     }
-    #endif // __EMSCRIPTEN__
+  #endif // __EMSCRIPTEN__
 };
 
 constexpr uint16_t Synth::_noteToSamplingInterval[] PROGMEM;
@@ -394,7 +394,7 @@ volatile uint8_t        Synth::v_vol[Synth::numVoices]          = { 0 };
          uint16_t		    Synth::_baseInterval[Synth::numVoices]	= { 0 };
 volatile uint16_t		    Synth::v_bentInterval[Synth::numVoices]	= { 0 };
 volatile const int8_t*  Synth::v_baseWave[Synth::numVoices]	    = { 0 };
-volatile uint8_t		    Synth::_note[Synth::numVoices]			    = { 0 };
+         uint8_t		    Synth::_note[Synth::numVoices]			    = { 0 };
 
 SIGNAL(TIMER2_COMPA_vect) {
   Synth::isr();
