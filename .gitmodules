@@ -1,0 +1,3 @@
+[submodule "src/firmware"]
+	path = src/firmware
+	url = https://github.com/DLehenbauer/arduino-midi-sound-module.git

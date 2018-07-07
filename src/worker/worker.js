@@ -1,4 +1,4 @@
-importScripts('./firmware.js');
+importScripts('../firmware/arduino-midi-sound-module/firmware.js');
 
 const synth = Module.getSynth();
 const originalSampleRate = Module.getSampleRate();

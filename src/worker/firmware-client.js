@@ -21,7 +21,7 @@ export default class Firmware {
                 worker.removeEventListener('message', workerListener);
             }
     
-            worker = new Worker('firmware/worker.js');
+            worker = new Worker('worker/worker.js');
             worker.addEventListener('message', workerListener);
         });
     }

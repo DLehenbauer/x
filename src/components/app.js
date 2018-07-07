@@ -10,7 +10,7 @@ import Import from '../routes/import';
 // import Home from 'async!../routes/home';
 // import Profile from 'async!../routes/profile';
 
-import Firmware from '../firmware/firmware-client';
+import Firmware from '../worker/firmware-client';
 import Midi from '../common/midi';
 import * as uc from 'unchanged';
 

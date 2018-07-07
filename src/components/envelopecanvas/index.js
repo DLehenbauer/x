@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import Canvas from '../canvas';
 
-import Firmware from '../../firmware/firmware-client';
+import Firmware from '../../worker/firmware-client';
 
 export default class EnvelopeCanvas extends Canvas {
     constructor() {
